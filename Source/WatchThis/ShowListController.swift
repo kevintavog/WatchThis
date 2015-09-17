@@ -152,8 +152,8 @@ class ShowListController : NSWindowController
         }
 
         let slideshowController = SlideshowWindowController(windowNibName: "SlideshowWindow")
-        slideshowController.setDataModel(selectedSlideshow)
         slideshowController.window?.makeKeyAndOrderFront(self)
+        slideshowController.setDataModel(selectedSlideshow)
 
         slideshowControllers.append(slideshowController)
     }

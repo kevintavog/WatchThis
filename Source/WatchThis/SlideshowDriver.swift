@@ -21,17 +21,12 @@ class SlideshowDriver : NSObject
     }
 
     var delegate: SlideshowDriverDelegate
-    var driverState = DriverState.Created
     let slideshowData: SlideshowData
     var mediaFiles:[MediaData] = []
     var recentFiles = [MediaData]()
     var timer:NSTimer? = nil
-    var currentState: DriverState = .Created {
-        didSet {
-Logger.log("didSet")
-            delegate.stateChanged(currentState)
-        }
-    }
+
+    var driverState = DriverState.Created { didSet { delegate.stateChanged(driverState) } }
 
 
     init(data: SlideshowData, delegate: SlideshowDriverDelegate)
@@ -46,7 +41,7 @@ Logger.log("didSet")
 
     func play()
     {
-        Logger.log("SlideshowDriver.play \(currentState)")
+        Logger.log("SlideshowDriver.play \(driverState)")
         if driverState == .Playing {
             return
         }
@@ -57,12 +52,12 @@ Logger.log("didSet")
 
     func pauseOrResume()
     {
-        Logger.log("SlideshowDriver.pauseOrResume \(currentState)")
-        if currentState == .Paused {
+        Logger.log("SlideshowDriver.pauseOrResume \(driverState)")
+        if driverState == .Paused {
             play()
         }
-        else if currentState == .Playing {
-            currentState = .Paused
+        else if driverState == .Playing {
+            driverState = .Paused
             destroyTimer()
         }
     }

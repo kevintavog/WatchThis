@@ -6,8 +6,15 @@
     <objects>
         <customObject id="-2" userLabel="File's Owner" customClass="SlideshowWindowController" customModule="WatchThis" customModuleProvider="target">
             <connections>
+                <outlet property="closeButton" destination="IvJ-Kb-P7t" id="vhl-tE-gNw"/>
                 <outlet property="controlsView" destination="zDo-yA-kVL" id="123-pv-004"/>
+                <outlet property="enterFullScreenButton" destination="ats-TD-5Im" id="Zrp-91-alO"/>
+                <outlet property="exitFullScreenButton" destination="amJ-nK-yQE" id="5oD-Pn-56X"/>
                 <outlet property="infoText" destination="Byc-SG-c6g" id="123-pv-008"/>
+                <outlet property="nextButton" destination="KRq-f6-SxT" id="baQ-oG-b5f"/>
+                <outlet property="pauseButton" destination="oMV-DH-Qkh" id="FNM-o4-x56"/>
+                <outlet property="playButton" destination="nlM-YM-yzR" id="p6H-6i-D5d"/>
+                <outlet property="previousButton" destination="Uhy-M5-iyS" id="neY-TD-Qqi"/>
                 <outlet property="window" destination="2" id="6"/>
             </connections>
         </customObject>
@@ -125,25 +132,8 @@ IA
                     </customView>
                 </subviews>
             </view>
-            <connections>
-                <outlet property="delegate" destination="sSe-Dv-fnN" id="fZG-vo-VPJ"/>
-            </connections>
             <point key="canvasLocation" x="310.5" y="307.5"/>
         </window>
-        <customObject id="sSe-Dv-fnN" customClass="SlideshowWindowController" customModule="WatchThis" customModuleProvider="target">
-            <connections>
-                <outlet property="closeButton" destination="IvJ-Kb-P7t" id="sW6-M5-xYh"/>
-                <outlet property="controlsView" destination="zDo-yA-kVL" id="QOb-SV-JRP"/>
-                <outlet property="enterFullScreenButton" destination="ats-TD-5Im" id="DrB-DK-YNQ"/>
-                <outlet property="exitFullScreenButton" destination="amJ-nK-yQE" id="qoV-94-tc0"/>
-                <outlet property="infoText" destination="Byc-SG-c6g" id="emo-2o-6tu"/>
-                <outlet property="nextButton" destination="KRq-f6-SxT" id="Mgw-hm-OWf"/>
-                <outlet property="pauseButton" destination="oMV-DH-Qkh" id="bte-rz-MdX"/>
-                <outlet property="playButton" destination="nlM-YM-yzR" id="L8U-t8-BfX"/>
-                <outlet property="previousButton" destination="Uhy-M5-iyS" id="AvZ-Z4-77d"/>
-                <outlet property="window" destination="2" id="rXn-vI-M1l"/>
-            </connections>
-        </customObject>
     </objects>
     <resources>
         <image name="close" width="128" height="128"/>

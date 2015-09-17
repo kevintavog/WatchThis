@@ -27,32 +27,26 @@ class SlideshowWindowController : NSWindowController, SlideshowDriverDelegate
 
         infoText.stringValue = ""
         updateUiState()
-Logger.log("awakeFromNib: self - \(self.hashValue)")
     }
 
     func setDataModel(data: SlideshowData)
     {
         driver = SlideshowDriver(data: data, delegate: self)
-        Logger.log("setDataModel: self - \(self.hashValue); driver - \(driver?.hashValue)")
     }
 
     // MARK: Actions
     @IBAction func pause(sender: AnyObject)
     {
-Logger.log("clicked 'pause'")
-Logger.log("pause: self - \(self.hashValue); driver - \(driver?.hashValue)")
         driver?.pauseOrResume()
     }
 
     @IBAction func play(sender: AnyObject)
     {
-Logger.log("clicked 'play'")
         driver?.play()
     }
 
     @IBAction func nextImage(sender: AnyObject)
     {
-Logger.log("clicked 'next'")
         driver?.next()
     }
 
@@ -64,12 +58,13 @@ Logger.log("clicked 'next'")
 
     func stateChanged(currentState: SlideshowDriver.DriverState)
     {
-Logger.log("State changed to \(currentState)")
         updateUiState()
     }
 
     func updateUiState()
     {
-        playButton?.hidden = true
+        playButton?.hidden = driver?.driverState == .Playing
+        pauseButton?.hidden = driver?.driverState == .Paused
+        enterFullScreenButton?.hidden = true
     }
 }
