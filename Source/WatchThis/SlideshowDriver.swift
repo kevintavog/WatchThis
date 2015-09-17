@@ -64,9 +64,18 @@ class SlideshowDriver : NSObject
 
     func stop()
     {
+        Logger.log("stop \(driverState)")
+        driverState = .Stopped
+        destroyTimer()
     }
 
     func next()
+    {
+        Logger.log("SlideshowDriver.next \(driverState)")
+        nextSlide()
+    }
+
+    func nextSlide()
     {
         if mediaFiles.count == 0 {
             beginEnumerate()
@@ -86,6 +95,7 @@ class SlideshowDriver : NSObject
 
     func previous()
     {
+        Logger.log("SlideshowDriver.previous \(driverState)")
     }
 
     // MARK: Timer management
@@ -109,7 +119,7 @@ class SlideshowDriver : NSObject
     func timerFired(someTimer: NSTimer)
     {
         Async.main {
-            self.next()
+            self.nextSlide()
         }
     }
 

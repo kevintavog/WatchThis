@@ -4,7 +4,7 @@
 import AppKit
 import RangicCore
 
-class SlideshowWindowController : NSWindowController, SlideshowDriverDelegate
+class SlideshowWindowController : NSWindowController, NSWindowDelegate, SlideshowDriverDelegate
 {
     @IBOutlet weak var previousButton: NSButton!
     @IBOutlet weak var pauseButton: NSButton!
@@ -50,6 +50,16 @@ class SlideshowWindowController : NSWindowController, SlideshowDriverDelegate
         driver?.next()
     }
 
+    @IBAction func closeSlideshow(sender: AnyObject)
+    {
+        driver?.stop()
+    }
+
+    @IBAction func toggleFullScreen(sender: AnyObject)
+    {
+        window?.toggleFullScreen(sender);
+    }
+
     // MARK: SlideshowDriverDelegate
     func show(mediaData: MediaData)
     {
@@ -65,6 +75,25 @@ class SlideshowWindowController : NSWindowController, SlideshowDriverDelegate
     {
         playButton?.hidden = driver?.driverState == .Playing
         pauseButton?.hidden = driver?.driverState == .Paused
-        enterFullScreenButton?.hidden = true
+
+        let isFullScreen = ((window?.styleMask)! & NSFullScreenWindowMask) == NSFullScreenWindowMask
+        enterFullScreenButton?.hidden = isFullScreen
+        exitFullScreenButton?.hidden = !isFullScreen
+    }
+
+    // MARK: NSWindowDelegate
+    func windowWillClose(notification: NSNotification)
+    {
+        driver?.stop()
+    }
+
+    func windowDidEnterFullScreen(notification: NSNotification)
+    {
+        updateUiState()
+    }
+
+    func windowDidExitFullScreen(notification: NSNotification)
+    {
+        updateUiState()
     }
 }

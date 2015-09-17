@@ -94,6 +94,9 @@ IA
                                     <font key="font" metaFont="system"/>
                                     <string key="keyEquivalent">f</string>
                                 </buttonCell>
+                                <connections>
+                                    <action selector="toggleFullScreen:" target="-1" id="Lv6-PA-iGh"/>
+                                </connections>
                             </button>
                             <button focusRingType="none" verticalHuggingPriority="750" id="amJ-nK-yQE">
                                 <rect key="frame" x="444" y="-4" width="64" height="64"/>
@@ -103,6 +106,9 @@ IA
                                     <font key="font" metaFont="system"/>
                                     <string key="keyEquivalent">f</string>
                                 </buttonCell>
+                                <connections>
+                                    <action selector="toggleFullScreen:" target="-1" id="XtQ-Mp-Shj"/>
+                                </connections>
                             </button>
                             <button focusRingType="none" verticalHuggingPriority="750" id="IvJ-Kb-P7t">
                                 <rect key="frame" x="2" y="-4" width="64" height="64"/>
@@ -112,6 +118,9 @@ IA
                                     <font key="font" metaFont="system"/>
                                     <string key="keyEquivalent">q</string>
                                 </buttonCell>
+                                <connections>
+                                    <action selector="closeSlideshow:" target="-1" id="C4o-nv-xWT"/>
+                                </connections>
                             </button>
                         </subviews>
                     </customView>
@@ -132,6 +141,9 @@ IA
                     </customView>
                 </subviews>
             </view>
+            <connections>
+                <outlet property="delegate" destination="-2" id="5Br-by-4X5"/>
+            </connections>
             <point key="canvasLocation" x="310.5" y="307.5"/>
         </window>
     </objects>
