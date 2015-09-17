@@ -138,8 +138,21 @@ class ShowListController : NSWindowController
 
     @IBAction func run(sender: AnyObject)
     {
-        let slideshowController = SlideshowWindowController()
-        NSBundle.mainBundle().loadNibNamed("SlideshowWindow", owner: slideshowController, topLevelObjects: nil)
+        // TODO: Get the current model (edit folders if active, selected in save otherwise -  edit search in the future)
+        let selectedSlideshow = slideshowProvider.savedSlideshows[savedTableView.selectedRow]
+
+        // TODO: Or search isn't present...
+        if selectedSlideshow.folderList.count < 1 {
+            let alert = NSAlert()
+            alert.messageText = "There are no images to show because there are no folders and no search terms in this slideshow."
+            alert.alertStyle = NSAlertStyle.WarningAlertStyle
+            alert.addButtonWithTitle("Close")
+            alert.runModal()
+            return
+        }
+
+        let slideshowController = SlideshowWindowController(windowNibName: "SlideshowWindow")
+        slideshowController.setDataModel(selectedSlideshow)
         slideshowController.window?.makeKeyAndOrderFront(self)
 
         slideshowControllers.append(slideshowController)

@@ -141,9 +141,9 @@
 				44F77D561BA7A7FA000B6072 /* ShowListController.swift */,
 				44F77D581BA7CF33000B6072 /* ShowListWindow.swift */,
 				44F77D5E1BA7D864000B6072 /* SlideshowData.swift */,
+				440FD7D51BA9239E007FDB56 /* SlideshowDriver.swift */,
 				44F77D5A1BA7D66B000B6072 /* SlideshowListProvider.swift */,
 				440FD7D31BA91079007FDB56 /* SlideshowWindowController.swift */,
-				440FD7D51BA9239E007FDB56 /* SlideshowDriver.swift */,
 			);
 			path = WatchThis;
 			sourceTree = "<group>";
