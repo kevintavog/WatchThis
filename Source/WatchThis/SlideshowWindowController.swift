@@ -57,7 +57,9 @@ class SlideshowWindowController : NSWindowController, NSWindowDelegate, Slidesho
     func setDataModel(data: SlideshowData)
     {
         driver = SlideshowDriver(data: data, delegate: self)
-        window?.title = "Slideshow - \(data.name!)"
+        if let name = data.name {
+            window?.title = "Slideshow - \(name)"
+        }
     }
 
     // MARK: Actions

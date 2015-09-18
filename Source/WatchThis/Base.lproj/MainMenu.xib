@@ -19,6 +19,7 @@
                 <outlet property="savedTableView" destination="WFW-R0-oU7" id="OfF-jf-DQA"/>
                 <outlet property="slideDurationStepper" destination="l2M-vf-cbI" id="qbJ-N2-3bt"/>
                 <outlet property="slideDurationText" destination="mko-Mi-pVJ" id="CGZ-bG-ghh"/>
+                <outlet property="tabView" destination="DQh-A5-U1P" id="eCs-bu-qTS"/>
                 <outlet property="window" destination="roa-AI-TJa" id="DOP-uf-1zN"/>
             </connections>
         </customObject>
@@ -677,6 +678,9 @@ DQ
                     </tabView>
                 </subviews>
             </view>
+            <connections>
+                <outlet property="delegate" destination="-2" id="rYh-0W-xZD"/>
+            </connections>
             <point key="canvasLocation" x="419" y="333"/>
         </window>
     </objects>

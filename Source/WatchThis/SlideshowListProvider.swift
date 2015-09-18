@@ -37,14 +37,22 @@ class SlideshowListProvider
 
     func canClose() -> Bool
     {
-//        if editedSlideshow.filename != nil {
-//            editedSlideshow.filename = Preferences.lastEditedFilename
-//            editedSlideshow.name = ""
-//
-//            // save
-//
-//            editedSlideshow.filename = nil
-//        }
+        // If it hasn't been saved yet, save it as the lastEdited so it can be loaded on the next run.
+        if editedSlideshow.filename == nil {
+            editedSlideshow.filename = Preferences.lastEditedFilename
+            editedSlideshow.name = ""
+
+            do {
+                try editedSlideshow.save()
+            } catch let error as NSError {
+                Logger.log("Error saving last edited: \(error)")
+            }
+            editedSlideshow.filename = nil
+            return true
+        }
+        else {
+            Logger.log("Save edited if changed (save with a real name, change it - end up here)")
+        }
 
         return true
     }

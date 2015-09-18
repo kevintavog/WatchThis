@@ -55,6 +55,7 @@ class SlideshowData
 
     func save() throws
     {
+        Logger.log("Saving to \(filename)")
         guard filename != nil else { throw FileError.FilenameNotSet }
         guard name != nil else { throw FileError.NameNotSet }
         guard folderList.count > 0 else { throw FileError.NoFolders }

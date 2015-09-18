@@ -8,11 +8,12 @@ import RangicCore
 
 import Async
 
-class ShowListController : NSWindowController
+class ShowListController : NSWindowController, NSWindowDelegate
 {
-    let slideshowProvider = SlideshowListProvider()
+    let slideshowListProvider = SlideshowListProvider()
     var slideshowControllers = [SlideshowWindowController]()
 
+    @IBOutlet weak var tabView: NSTabView!
     @IBOutlet weak var editFilesTabItem: NSTabViewItem!
     @IBOutlet weak var editFolderTableView: NSTableView!
     @IBOutlet weak var savedTabItem: NSTabViewItem!
@@ -32,7 +33,7 @@ class ShowListController : NSWindowController
         Notifications.addObserver(self, selector: "slideshowEnumerationCompleted:", name: Notifications.SlideshowListProvider.EnumerationCompleted, object: nil)
 
         Async.background {
-            self.slideshowProvider.findSavedSlideshows()
+            self.slideshowListProvider.findSavedSlideshows()
         }
     }
 
@@ -47,7 +48,7 @@ class ShowListController : NSWindowController
     // MARK: menu handling
     @IBAction func saveEditFields(sender: AnyObject)
     {
-        if slideshowProvider.editedSlideshow.folderList.count < 1 {
+        if slideshowListProvider.editedSlideshow.folderList.count < 1 {
             let alert = NSAlert()
             alert.messageText = "Add a folder before saving."
             alert.alertStyle = NSAlertStyle.WarningAlertStyle
@@ -62,10 +63,10 @@ class ShowListController : NSWindowController
         }
 
         // Come up with a reasonable filename (unique name minus file system characters)
-        slideshowProvider.editedSlideshow.name = name
-        slideshowProvider.editedSlideshow.filename = SlideshowData.getFilenameForName(name!)
+        slideshowListProvider.editedSlideshow.name = name
+        slideshowListProvider.editedSlideshow.filename = SlideshowData.getFilenameForName(name!)
         do {
-            try slideshowProvider.editedSlideshow.save()
+            try slideshowListProvider.editedSlideshow.save()
         } catch let error as SlideshowData.FileError {
             let alert = NSAlert()
             alert.messageText = "There was an error saving the slideshow: \(error)."
@@ -107,8 +108,8 @@ class ShowListController : NSWindowController
             let name = textField.stringValue.stringByTrimmingCharactersInSet(NSCharacterSet.whitespaceCharacterSet())
 
             // TODO: Case-insensitive search
-            let matchingNames = slideshowProvider.savedSlideshows.filter(
-                { s in !(s.filename == slideshowProvider.editedSlideshow.filename)
+            let matchingNames = slideshowListProvider.savedSlideshows.filter(
+                { s in !(s.filename == slideshowListProvider.editedSlideshow.filename)
                     && !(s.name == name)
             } )
 
@@ -128,7 +129,7 @@ class ShowListController : NSWindowController
 
     @IBAction func clearEditFields(sender: AnyObject)
     {
-        slideshowProvider.editedSlideshow.reset()
+        slideshowListProvider.editedSlideshow.reset()
         updateEditData()
     }
 
@@ -138,24 +139,32 @@ class ShowListController : NSWindowController
 
     @IBAction func run(sender: AnyObject)
     {
-        // TODO: Get the current model (edit folders if active, selected in save otherwise -  edit search in the future)
-        let selectedSlideshow = slideshowProvider.savedSlideshows[savedTableView.selectedRow]
+        if let selectedSlideshow = getActiveSlideshow() {
 
-        // TODO: Or search isn't present...
-        if selectedSlideshow.folderList.count < 1 {
+            // TODO: AND search isn't present...
+            if selectedSlideshow.folderList.count < 1 {
+                let alert = NSAlert()
+                alert.messageText = "There are no images to show because there are no folders and no search terms in this slideshow."
+                alert.alertStyle = NSAlertStyle.WarningAlertStyle
+                alert.addButtonWithTitle("Close")
+                alert.runModal()
+                return
+            }
+
+            let slideshowController = SlideshowWindowController(windowNibName: "SlideshowWindow")
+            slideshowController.window?.makeKeyAndOrderFront(self)
+            slideshowController.setDataModel(selectedSlideshow)
+
+            slideshowControllers.append(slideshowController)
+        }
+        else {
             let alert = NSAlert()
-            alert.messageText = "There are no images to show because there are no folders and no search terms in this slideshow."
+            alert.messageText = "Select a slideshow to run."
             alert.alertStyle = NSAlertStyle.WarningAlertStyle
             alert.addButtonWithTitle("Close")
             alert.runModal()
             return
         }
-
-        let slideshowController = SlideshowWindowController(windowNibName: "SlideshowWindow")
-        slideshowController.window?.makeKeyAndOrderFront(self)
-        slideshowController.setDataModel(selectedSlideshow)
-
-        slideshowControllers.append(slideshowController)
     }
 
     @IBAction func addFolder(sender: AnyObject)
@@ -170,7 +179,7 @@ class ShowListController : NSWindowController
         }
 
         for folderUrl in dialog.URLs {
-            slideshowProvider.editedSlideshow.folderList.append(folderUrl.path!)
+            slideshowListProvider.editedSlideshow.folderList.append(folderUrl.path!)
         }
 
         editFolderTableView.reloadData()
@@ -182,26 +191,48 @@ class ShowListController : NSWindowController
 
             var itemsToRemove = Set<String>()
             for (_, index) in editFolderTableView.selectedRowIndexes.enumerate() {
-                itemsToRemove.insert(slideshowProvider.editedSlideshow.folderList[index])
+                itemsToRemove.insert(slideshowListProvider.editedSlideshow.folderList[index])
             }
 
-            let newFolders = slideshowProvider.editedSlideshow.folderList.filter( { f in !itemsToRemove.contains(f) })
+            let newFolders = slideshowListProvider.editedSlideshow.folderList.filter( { f in !itemsToRemove.contains(f) })
 
-            slideshowProvider.editedSlideshow.folderList = newFolders
+            slideshowListProvider.editedSlideshow.folderList = newFolders
             editFolderTableView.reloadData()
         }
     }
 
     @IBAction func slideDurationChanged(sender: AnyObject)
     {
-        slideshowProvider.editedSlideshow.slideSeconds = slideDurationStepper.doubleValue
+        slideshowListProvider.editedSlideshow.slideSeconds = slideDurationStepper.doubleValue
         updateEditData()
     }
 
     func updateEditData()
     {
-        slideDurationText.doubleValue = slideshowProvider.editedSlideshow.slideSeconds
-        slideDurationStepper.doubleValue = slideshowProvider.editedSlideshow.slideSeconds
+        slideDurationText.doubleValue = slideshowListProvider.editedSlideshow.slideSeconds
+        slideDurationStepper.doubleValue = slideshowListProvider.editedSlideshow.slideSeconds
+    }
+
+    func getActiveSlideshow() -> SlideshowData?
+    {
+        switch tabView.selectedTabViewItem?.identifier as! String {
+        case "Saved":
+            if savedTableView.selectedRow < 0 {
+                return nil
+            }
+            return slideshowListProvider.savedSlideshows[savedTableView.selectedRow]
+
+        case "EditFiles":
+            return slideshowListProvider.editedSlideshow
+
+        case "EditSearch":
+            Logger.log("Not implemented yet...: search tab")
+            return nil
+
+        default:
+            Logger.log("Unexpected tab identifier: \(tabView.selectedTabViewItem?.identifier)")
+            return nil
+        }
     }
 
     // MARK: table view data
@@ -209,9 +240,9 @@ class ShowListController : NSWindowController
     {
         switch tv.tag {
         case 0:
-            return slideshowProvider.editedSlideshow.folderList.count
+            return slideshowListProvider.editedSlideshow.folderList.count
         case 1:
-            return slideshowProvider.savedSlideshows.count
+            return slideshowListProvider.savedSlideshows.count
         default:
             Logger.log("Unknown tag: \(tv.tag)")
             return 0
@@ -222,11 +253,17 @@ class ShowListController : NSWindowController
     {
         switch tv.tag {
         case 0:
-            return slideshowProvider.editedSlideshow.folderList[row]
+            return slideshowListProvider.editedSlideshow.folderList[row]
         case 1:
-            return slideshowProvider.savedSlideshows[row].name ?? ""
+            return slideshowListProvider.savedSlideshows[row].name ?? ""
         default:
             return ""
         }
+    }
+
+    // MARK: NSWindowDelegate
+    func windowShouldClose(sender: AnyObject) -> Bool
+    {
+        return slideshowListProvider.canClose()
     }
 }
