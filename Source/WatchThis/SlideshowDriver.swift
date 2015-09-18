@@ -23,7 +23,10 @@ class SlideshowDriver : NSObject
     var delegate: SlideshowDriverDelegate
     let slideshowData: SlideshowData
     var mediaFiles:[MediaData] = []
-    var recentFiles = [MediaData]()
+    var totalCount = 0
+
+    var previousFiles = [MediaData]()
+    var previousIndex: Int? = nil
     var timer:NSTimer? = nil
 
     var driverState = DriverState.Created { didSet { delegate.stateChanged(driverState) } }
@@ -37,6 +40,16 @@ class SlideshowDriver : NSObject
         super.init()
 
         beginEnumerate()
+    }
+
+    var currentIndex: Int {
+        get {
+            var index = totalCount - mediaFiles.count
+            if previousIndex != nil {
+                index -= previousFiles.count - previousIndex! - 1
+            }
+            return index
+        }
     }
 
     func play()
@@ -77,35 +90,70 @@ class SlideshowDriver : NSObject
 
     func nextSlide()
     {
-        if mediaFiles.count == 0 {
-            beginEnumerate()
-            return
-        }
-
-        let index = arc4random_uniform(UInt32(mediaFiles.count))
-        let file = mediaFiles.removeAtIndex(Int(index))
-
-        recentFiles.append(file)
-        while recentFiles.count > 1000 {
-            recentFiles.removeAtIndex(0)
-        }
-
-        if var overrideDurationSeconds = delegate.show(file) {
-            if overrideDurationSeconds == 0 {
-                overrideDurationSeconds = 1 // slideshowData.slideSeconds
+        // If we're looking at previous files, go to the next one in that list. Until we catch up to the
+        // last file we displayed
+        var file: MediaData?
+        if previousIndex != nil {
+            ++(previousIndex!)
+            if previousIndex < previousFiles.count {
+                file = previousFiles[previousIndex!]
+            } else {
+                previousIndex = nil
             }
-            setupTimer(overrideDurationSeconds)
         }
-        else {
-            // Delegate doesn't want to show file - get the next one
-            Logger.log("Skipping file - \(file.url!.path)")
-            nextSlide()
+
+        if file == nil {
+            if mediaFiles.count == 0 {
+                beginEnumerate()
+                return
+            }
+
+            let index = arc4random_uniform(UInt32(mediaFiles.count))
+            file = mediaFiles.removeAtIndex(Int(index))
+
+            previousFiles.append(file!)
+            while previousFiles.count > 1000 {
+                previousFiles.removeAtIndex(0)
+            }
         }
+
+        showFile(file!)
     }
 
     func previous()
     {
         Logger.log("SlideshowDriver.previous \(driverState)")
+
+        var index = 0
+        if previousIndex == nil {
+            // The last item (-1) is currently being displayed. -2 is the previous item
+            index = previousFiles.count - 2
+        } else {
+            index = previousIndex! - 1
+        }
+
+        if index < 0 {
+            setupTimer(slideshowData.slideSeconds)
+            return
+        }
+
+        previousIndex = index
+        showFile(previousFiles[previousIndex!])
+    }
+
+    func showFile(mediaData: MediaData)
+    {
+        if var overrideDurationSeconds = delegate.show(mediaData) {
+            if overrideDurationSeconds == 0 {
+                overrideDurationSeconds = 2 // slideshowData.slideSeconds
+            }
+            setupTimer(overrideDurationSeconds)
+        }
+        else {
+            // Delegate doesn't want to show file - get the next one
+            Logger.log("Skipping file - \(mediaData.url!.path)")
+            nextSlide()
+        }
     }
 
     // MARK: Timer management
@@ -137,6 +185,7 @@ class SlideshowDriver : NSObject
     private func beginEnumerate()
     {
         Async.background {
+            self.totalCount = 0
             for folder in self.slideshowData.folderList {
                 self.addFolder(folder)
             }
@@ -160,6 +209,7 @@ class SlideshowDriver : NSObject
                     let mediaType = SupportedMediaTypes.getTypeFromFileExtension(((f.path!) as NSString).pathExtension)
                     if mediaType == SupportedMediaTypes.MediaType.Image || mediaType == SupportedMediaTypes.MediaType.Video {
                         mediaFiles.append(FileMediaData.create(f, mediaType: mediaType))
+                        ++totalCount
                     }
 
                     var isFolder: ObjCBool = false

@@ -13,6 +13,7 @@ class SlideshowWindowController : NSWindowController, NSWindowDelegate, Slidesho
     @IBOutlet weak var previousButton: NSButton!
     @IBOutlet weak var pauseButton: NSButton!
     @IBOutlet weak var infoText: NSTextField!
+    @IBOutlet weak var indexText: NSTextField!
     @IBOutlet weak var controlsView: NSView!
     @IBOutlet weak var closeButton: NSButton!
     @IBOutlet weak var exitFullScreenButton: NSButton!
@@ -44,6 +45,7 @@ class SlideshowWindowController : NSWindowController, NSWindowDelegate, Slidesho
         videoView?.hidden = true
 
         infoText.stringValue = ""
+        indexText.stringValue = ""
         updateUiState()
 
         lastMouseMovedTime = NSDate().timeIntervalSinceReferenceDate
@@ -169,13 +171,17 @@ class SlideshowWindowController : NSWindowController, NSWindowDelegate, Slidesho
         let displayInfo = "\(parentPath)"
         displayInfoString(displayInfo)
 
+        indexText.stringValue = "\(driver!.currentIndex) of \(driver!.totalCount)"
 
         if let location = mediaData.location {
             Async.background {
-                let updatedDisplayInfo = "\(parentPath)   \(location.placenameAsString())"
+                var placename = location.placenameAsString()
+                if placename.characters.count == 0 {
+                    placename = location.toDms()
+                }
 
                 Async.main {
-                    self.displayInfoString(updatedDisplayInfo)
+                    self.displayInfoString("\(parentPath)      \(placename)")
                 }
             }
         }
@@ -187,6 +193,14 @@ class SlideshowWindowController : NSWindowController, NSWindowDelegate, Slidesho
         let attributeString = NSMutableAttributedString(string: displayInfo)
         attributeString.addAttribute(NSBackgroundColorAttributeName, value: NSColor(deviceRed: 0, green: 0, blue: 0, alpha: 0.75), range: fullRange)
         infoText.attributedStringValue = attributeString
+    }
+
+    func displayIndexString(index: String)
+    {
+        let fullRange = NSRange(location: 0, length: index.characters.count)
+        let attributeString = NSMutableAttributedString(string: index)
+        attributeString.addAttribute(NSBackgroundColorAttributeName, value: NSColor(deviceRed: 0, green: 0, blue: 0, alpha: 0.75), range: fullRange)
+        indexText.attributedStringValue = attributeString
     }
 
     func showImage(mediaData: MediaData) -> Double?
