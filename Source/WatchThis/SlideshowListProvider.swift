@@ -6,10 +6,18 @@ import Foundation
 
 import RangicCore
 
+
+protocol SlideshowListProviderDelegate
+{
+    func wantToSaveEditedSlideshow() -> WtButtonId
+    func saveSlideshow(slideshow: SlideshowData) -> Bool
+}
+
 class SlideshowListProvider
 {
     var savedSlideshows = [SlideshowData]()
     var editedSlideshow = SlideshowData()
+    var delegate: SlideshowListProviderDelegate? = nil
 
     init()
     {
@@ -60,10 +68,35 @@ class SlideshowListProvider
             editedSlideshow.filename = nil
             return true
         }
-        else {
-            Logger.log("Save edited if changed (save with a real name, change it - end up here)")
-        }
+        
+        return saveIfChanged()
+    }
 
+    // If the editedSlideshow has changes, ask the user if they want to save changes. Returns true
+    // if the caller can continue, false otherwise.
+    // True is returned if
+    // 	1) There are no changes to editedSlideshow - or there aren't 'worthwhile' changes
+    // 	2) The user does NOT want to save
+    // 	3) The user wants to save and the save succeeds
+    // False is returned if there are worthwhile changes and:
+    // 	1) The user canceled the 'want to save' question
+    // 	2) The user canceled the request for the save name
+    // 	3) The save failed
+    private func saveIfChanged() -> Bool
+    {
+        if editedSlideshow.hasChanged && editedSlideshow.folderList.count > 0 {
+            let response = delegate?.wantToSaveEditedSlideshow()
+            switch response! {
+            case .Cancel:
+                return false
+            case .No:
+                return true
+            case .Yes:
+                return (delegate?.saveSlideshow(editedSlideshow))!
+            default:
+                return false
+            }
+        }
         return true
     }
 

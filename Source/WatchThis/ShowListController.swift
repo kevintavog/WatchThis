@@ -8,9 +8,9 @@ import RangicCore
 
 import Async
 
-class ShowListController : NSWindowController, NSWindowDelegate
+class ShowListController : NSWindowController, NSWindowDelegate, SlideshowListProviderDelegate
 {
-    let slideshowListProvider = SlideshowListProvider()
+    var slideshowListProvider = SlideshowListProvider()
     var slideshowControllers = [SlideshowWindowController]()
 
     @IBOutlet weak var tabView: NSTabView!
@@ -27,6 +27,8 @@ class ShowListController : NSWindowController, NSWindowDelegate
     override func awakeFromNib()
     {
         super.awakeFromNib()
+
+        slideshowListProvider.delegate = self
         window!.registerForDraggedTypes([NSFilenamesPboardType])
         updateEditData()
 
@@ -48,83 +50,7 @@ class ShowListController : NSWindowController, NSWindowDelegate
     // MARK: menu handling
     @IBAction func saveEditFields(sender: AnyObject)
     {
-        if slideshowListProvider.editedSlideshow.folderList.count < 1 {
-            let alert = NSAlert()
-            alert.messageText = "Add a folder before saving."
-            alert.alertStyle = NSAlertStyle.WarningAlertStyle
-            alert.addButtonWithTitle("Close")
-            alert.runModal()
-            return
-        }
-
-        let name = getUniqueNameFromUser()
-        if name == nil {
-            return
-        }
-
-        // Come up with a reasonable filename (unique name minus file system characters)
-        slideshowListProvider.editedSlideshow.name = name
-        slideshowListProvider.editedSlideshow.filename = SlideshowData.getFilenameForName(name!)
-        do {
-            try slideshowListProvider.editedSlideshow.save()
-        } catch let error as SlideshowData.FileError {
-            let alert = NSAlert()
-            alert.messageText = "There was an error saving the slideshow: \(error)."
-            alert.alertStyle = NSAlertStyle.WarningAlertStyle
-            alert.addButtonWithTitle("Close")
-            alert.runModal()
-        } catch {
-            let alert = NSAlert()
-            alert.messageText = "There was an error saving the slideshow."
-            alert.alertStyle = NSAlertStyle.WarningAlertStyle
-            alert.addButtonWithTitle("Close")
-            alert.runModal()
-        }
-
-    }
-
-    func getUniqueNameFromUser() -> String?
-    {
-        let question = NSAlert()
-        question.messageText = "Enter a name for this slideshow"
-        question.alertStyle = NSAlertStyle.InformationalAlertStyle
-        question.addButtonWithTitle("OK")
-        question.addButtonWithTitle("Cancel")
-
-        let textField = NSTextField(frame: NSRect(x: 0, y: 0, width: 200, height: 24))
-        question.accessoryView = textField
-        question.window.initialFirstResponder = textField
-
-        repeat {
-            let response = question.runModal()
-            if response != NSAlertFirstButtonReturn {
-                return nil
-            }
-
-            if textField.stringValue.characters.count == 0 {
-                continue
-            }
-
-            let name = textField.stringValue.stringByTrimmingCharactersInSet(NSCharacterSet.whitespaceCharacterSet())
-
-            // TODO: Case-insensitive search
-            let matchingNames = slideshowListProvider.savedSlideshows.filter(
-                { s in !(s.filename == slideshowListProvider.editedSlideshow.filename)
-                    && !(s.name == name)
-            } )
-
-            if matchingNames.count > 0 {
-                let alert = NSAlert()
-                alert.messageText = "The name '\(name)' is already used - choose a unique name."
-                alert.alertStyle = NSAlertStyle.WarningAlertStyle
-                alert.addButtonWithTitle("Close")
-                alert.runModal()
-                continue
-            }
-
-            return name
-
-        } while true
+        saveSlideshow(slideshowListProvider.editedSlideshow)
     }
 
     @IBAction func clearEditFields(sender: AnyObject)
@@ -265,5 +191,101 @@ class ShowListController : NSWindowController, NSWindowDelegate
     func windowShouldClose(sender: AnyObject) -> Bool
     {
         return slideshowListProvider.canClose()
+    }
+
+    // MARK: SlideshowListProviderDelegate
+    func saveSlideshow(slideshow: SlideshowData) -> Bool
+    {
+        if slideshow.folderList.count < 1 {
+            let alert = NSAlert()
+            alert.messageText = "Add a folder before saving."
+            alert.alertStyle = NSAlertStyle.WarningAlertStyle
+            alert.addButtonWithTitle("Close")
+            alert.runModal()
+            return false
+        }
+
+        let name = getUniqueNameFromUser()
+        if name == nil {
+            return false
+        }
+
+        // Come up with a reasonable filename (unique name minus file system characters)
+        slideshow.name = name
+        slideshow.filename = SlideshowData.getFilenameForName(name!)
+        do {
+            try slideshow.save()
+            return true
+        } catch let error {
+            let alert = NSAlert()
+            alert.messageText = "There was an error saving the slideshow: \(error)."
+            alert.alertStyle = NSAlertStyle.WarningAlertStyle
+            alert.addButtonWithTitle("Close")
+            alert.runModal()
+        }
+
+        return false
+    }
+    
+    func wantToSaveEditedSlideshow() -> WtButtonId
+    {
+        let alert = NSAlert()
+        alert.messageText = "Do you want to save changes to the Edited slideshow?"
+        alert.alertStyle = NSAlertStyle.WarningAlertStyle
+        alert.addButtonWithTitle("Yes")
+        alert.addButtonWithTitle("No")
+        alert.addButtonWithTitle("Cancel")
+
+        let response = alert.runModal()
+        switch response {
+        case NSAlertFirstButtonReturn:
+            return WtButtonId.No
+        default:
+            return WtButtonId.Cancel
+        }
+    }
+
+    func getUniqueNameFromUser() -> String?
+    {
+        let question = NSAlert()
+        question.messageText = "Enter a name for this slideshow"
+        question.alertStyle = NSAlertStyle.InformationalAlertStyle
+        question.addButtonWithTitle("OK")
+        question.addButtonWithTitle("Cancel")
+
+        let textField = NSTextField(frame: NSRect(x: 0, y: 0, width: 200, height: 24))
+        question.accessoryView = textField
+        question.window.initialFirstResponder = textField
+
+        repeat {
+            let response = question.runModal()
+            if response != NSAlertFirstButtonReturn {
+                return nil
+            }
+
+            if textField.stringValue.characters.count == 0 {
+                continue
+            }
+
+            let name = textField.stringValue.stringByTrimmingCharactersInSet(NSCharacterSet.whitespaceCharacterSet())
+
+            // TODO: Case-insensitive search
+            let matchingNames = slideshowListProvider.savedSlideshows.filter(
+                { s in !(s.filename == slideshowListProvider.editedSlideshow.filename)
+                    && !(s.name == name)
+            } )
+
+            if matchingNames.count > 0 {
+                let alert = NSAlert()
+                alert.messageText = "The name '\(name)' is already used - choose a unique name."
+                alert.alertStyle = NSAlertStyle.WarningAlertStyle
+                alert.addButtonWithTitle("Close")
+                alert.runModal()
+                continue
+            }
+            
+            return name
+            
+        } while true
     }
 }

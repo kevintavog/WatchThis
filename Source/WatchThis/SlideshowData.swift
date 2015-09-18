@@ -17,9 +17,10 @@ class SlideshowData
 
 
     var filename:String?
-    var name:String?
-    var slideSeconds:Double = 10.0
-    var folderList = [String]()
+    var name:String? { didSet { hasChanged = true } }
+    var slideSeconds:Double = 10.0 { didSet { hasChanged = true } }
+    var folderList = [String]() { didSet { hasChanged = true } }
+    private(set) var hasChanged = false
 
 
     init()
@@ -43,6 +44,7 @@ class SlideshowData
                 slideshowData.folderList.append(folderJson["path"].stringValue)
             }
 
+            slideshowData.hasChanged = false
             return slideshowData
         } catch let f as FileError {
             throw f
@@ -81,6 +83,9 @@ class SlideshowData
             }
 
             try json.rawString()!.writeToFile(filename!, atomically: false, encoding: NSUTF8StringEncoding)
+
+            hasChanged = false
+
         } catch let e as NSError {
             Logger.log("Save failed: \(e.code): \(e.localizedDescription)")
             throw FileError.SaveFailed(e.code, e.localizedDescription)
@@ -93,6 +98,7 @@ class SlideshowData
         name = nil
         slideSeconds = 10.0
         folderList = []
+        hasChanged = false
     }
 
     static func getFilenameForName(name: String) -> String

@@ -14,6 +14,7 @@
 		44CB6D7C1BA7960200233A18 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44CB6D7B1BA7960200233A18 /* AppDelegate.swift */; };
 		44CB6D7E1BA7960200233A18 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 44CB6D7D1BA7960200233A18 /* Assets.xcassets */; };
 		44CB6D811BA7960200233A18 /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 44CB6D7F1BA7960200233A18 /* MainMenu.xib */; };
+		44D749C51BAC5E2200DE90B1 /* CocoaTypes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44D749C41BAC5E2200DE90B1 /* CocoaTypes.swift */; settings = {ASSET_TAGS = (); }; };
 		44F77D511BA7A68C000B6072 /* Alamofire.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 44F77D4F1BA7A68C000B6072 /* Alamofire.framework */; };
 		44F77D521BA7A68C000B6072 /* Alamofire.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 44F77D4F1BA7A68C000B6072 /* Alamofire.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		44F77D531BA7A68C000B6072 /* Async.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 44F77D501BA7A68C000B6072 /* Async.framework */; };
@@ -65,6 +66,7 @@
 		44CB6D7D1BA7960200233A18 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		44CB6D801BA7960200233A18 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/MainMenu.xib; sourceTree = "<group>"; };
 		44CB6D821BA7960200233A18 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		44D749C41BAC5E2200DE90B1 /* CocoaTypes.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CocoaTypes.swift; sourceTree = "<group>"; };
 		44F77D4F1BA7A68C000B6072 /* Alamofire.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Alamofire.framework; path = Carthage/Build/Mac/Alamofire.framework; sourceTree = "<group>"; };
 		44F77D501BA7A68C000B6072 /* Async.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Async.framework; path = Carthage/Build/Mac/Async.framework; sourceTree = "<group>"; };
 		44F77D561BA7A7FA000B6072 /* ShowListController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ShowListController.swift; sourceTree = "<group>"; };
@@ -144,6 +146,7 @@
 				440FD7D51BA9239E007FDB56 /* SlideshowDriver.swift */,
 				44F77D5A1BA7D66B000B6072 /* SlideshowListProvider.swift */,
 				440FD7D31BA91079007FDB56 /* SlideshowWindowController.swift */,
+				44D749C41BAC5E2200DE90B1 /* CocoaTypes.swift */,
 			);
 			path = WatchThis;
 			sourceTree = "<group>";
@@ -240,6 +243,7 @@
 				440FD7D61BA9239E007FDB56 /* SlideshowDriver.swift in Sources */,
 				44F77D5D1BA7D793000B6072 /* Notifications.swift in Sources */,
 				44F77D571BA7A7FA000B6072 /* ShowListController.swift in Sources */,
+				44D749C51BAC5E2200DE90B1 /* CocoaTypes.swift in Sources */,
 				44CB6D7C1BA7960200233A18 /* AppDelegate.swift in Sources */,
 				44F77D591BA7CF33000B6072 /* ShowListWindow.swift in Sources */,
 				44F77D5B1BA7D66B000B6072 /* SlideshowListProvider.swift in Sources */,
