@@ -57,6 +57,7 @@ class SlideshowWindowController : NSWindowController, NSWindowDelegate, Slidesho
     func setDataModel(data: SlideshowData)
     {
         driver = SlideshowDriver(data: data, delegate: self)
+        window?.title = "Slideshow - \(data.name!)"
     }
 
     // MARK: Actions
@@ -171,7 +172,7 @@ class SlideshowWindowController : NSWindowController, NSWindowDelegate, Slidesho
         let displayInfo = "\(parentPath)"
         displayInfoString(displayInfo)
 
-        indexText.stringValue = "\(driver!.currentIndex) of \(driver!.totalCount)"
+        displayIndexString("\(driver!.currentIndex) of \(driver!.totalCount)")
 
         if let location = mediaData.location {
             Async.background {
