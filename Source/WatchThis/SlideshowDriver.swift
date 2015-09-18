@@ -6,7 +6,7 @@ import RangicCore
 
 protocol SlideshowDriverDelegate
 {
-    func show(mediaData: MediaData)
+    func show(mediaData: MediaData) -> Double?
     func stateChanged(currentState: SlideshowDriver.DriverState)
 }
 
@@ -46,7 +46,7 @@ class SlideshowDriver : NSObject
             return
         }
         driverState = .Playing
-        setupTimer()
+        setupTimer(slideshowData.slideSeconds)
         next()
     }
 
@@ -90,7 +90,17 @@ class SlideshowDriver : NSObject
             recentFiles.removeAtIndex(0)
         }
 
-        delegate.show(file)
+        if var overrideDurationSeconds = delegate.show(file) {
+            if overrideDurationSeconds == 0 {
+                overrideDurationSeconds = 1 // slideshowData.slideSeconds
+            }
+            setupTimer(overrideDurationSeconds)
+        }
+        else {
+            // Delegate doesn't want to show file - get the next one
+            Logger.log("Skipping file - \(file.url!.path)")
+            nextSlide()
+        }
     }
 
     func previous()
@@ -99,13 +109,13 @@ class SlideshowDriver : NSObject
     }
 
     // MARK: Timer management
-    private func setupTimer()
+    private func setupTimer(durationSeconds: Double)
     {
         if timer != nil {
             timer?.invalidate()
         }
 
-        timer = NSTimer.scheduledTimerWithTimeInterval(1.0 /* timerValue() */, target: self, selector: "timerFired:", userInfo: nil, repeats: true)
+        timer = NSTimer.scheduledTimerWithTimeInterval(durationSeconds, target: self, selector: "timerFired:", userInfo: nil, repeats: true)
     }
 
     private func destroyTimer()
@@ -121,15 +131,6 @@ class SlideshowDriver : NSObject
         Async.main {
             self.nextSlide()
         }
-    }
-
-    private func timerValue() -> Double
-    {
-        let time = slideshowData.slideSeconds * 1000
-        if time < 100 {
-            return 100
-        }
-        return time
     }
 
     // MARK: Enumerate folders/files

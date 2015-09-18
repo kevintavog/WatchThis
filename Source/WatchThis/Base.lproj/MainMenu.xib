@@ -335,16 +335,28 @@ DQ
                             <menuItem isSeparatorItem="YES" id="ZSe-TP-Y6Z"/>
                             <menuItem title="Next" keyEquivalent="" id="zqO-sZ-l84">
                                 <modifierMask key="keyEquivalentModifierMask"/>
+                                <connections>
+                                    <action selector="nextImage:" target="-1" id="Vrc-tf-c9V"/>
+                                </connections>
                             </menuItem>
                             <menuItem title="Previous" keyEquivalent="" id="SMr-aO-5f2">
                                 <modifierMask key="keyEquivalentModifierMask"/>
+                                <connections>
+                                    <action selector="previousImage:" target="-1" id="pGo-DR-hmQ"/>
+                                </connections>
                             </menuItem>
                             <menuItem title="Pause / Resume" keyEquivalent=" " id="bv8-Sr-a3J">
                                 <modifierMask key="keyEquivalentModifierMask"/>
+                                <connections>
+                                    <action selector="pause:" target="-1" id="gu8-AH-1ai"/>
+                                </connections>
                             </menuItem>
                             <menuItem isSeparatorItem="YES" id="I0f-fq-iBM"/>
                             <menuItem title="Enter Full Screen" keyEquivalent="f" id="Rmu-zv-n5o">
                                 <modifierMask key="keyEquivalentModifierMask" control="YES" command="YES"/>
+                                <connections>
+                                    <action selector="toggleFullScreen:" target="-1" id="adt-bb-W7N"/>
+                                </connections>
                             </menuItem>
                         </items>
                     </menu>
@@ -626,7 +638,7 @@ DQ
                                                 <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                                             </textFieldCell>
                                         </textField>
-                                        <textField verticalHuggingPriority="750" setsMaxLayoutWidthAtFirstLayout="YES" id="Rfo-Wk-UrM">
+                                        <textField verticalHuggingPriority="750" id="Rfo-Wk-UrM">
                                             <rect key="frame" x="17" y="65" width="566" height="158"/>
                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                             <textFieldCell key="cell" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" state="on" borderStyle="bezel" drawsBackground="YES" id="g5Z-eg-Bln">

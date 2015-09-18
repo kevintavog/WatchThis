@@ -2,7 +2,11 @@
 //
 
 import AppKit
+import AVFoundation
+import AVKit
 import RangicCore
+
+import Async
 
 class SlideshowWindowController : NSWindowController, NSWindowDelegate, SlideshowDriverDelegate
 {
@@ -17,16 +21,35 @@ class SlideshowWindowController : NSWindowController, NSWindowDelegate, Slidesho
     @IBOutlet weak var playButton: NSButton!
 
     var driver: SlideshowDriver?
+    var imageView: NSImageView?
+    var videoView: AVPlayerView!
+
+    let secondsToHideControl = 2.0
+    var lastMouseMovedTime = 0.0
+    var hideControlsTimer:NSTimer? = nil
 
 
     // MARK: initialization
     override func awakeFromNib()
     {
         super.awakeFromNib()
-        window!.backgroundColor = NSColor.blackColor()
+        window?.backgroundColor = NSColor.blackColor()
+
+        imageView = createImageView()
+        window?.contentView?.addSubview(imageView!, positioned: NSWindowOrderingMode.Below, relativeTo: window?.contentView?.subviews[0])
+        videoView = createVideoView()
+        window?.contentView?.addSubview(videoView!, positioned: NSWindowOrderingMode.Below, relativeTo: window?.contentView?.subviews[0])
+
+        imageView?.hidden = true
+        videoView?.hidden = true
 
         infoText.stringValue = ""
         updateUiState()
+
+        lastMouseMovedTime = NSDate().timeIntervalSinceReferenceDate
+        window?.acceptsMouseMovedEvents = true
+
+        showControls()
     }
 
     func setDataModel(data: SlideshowData)
@@ -50,6 +73,11 @@ class SlideshowWindowController : NSWindowController, NSWindowDelegate, Slidesho
         driver?.next()
     }
 
+    @IBAction func previousImage(sender: AnyObject)
+    {
+        driver?.previous()
+    }
+
     @IBAction func closeSlideshow(sender: AnyObject)
     {
         driver?.stop()
@@ -60,15 +88,44 @@ class SlideshowWindowController : NSWindowController, NSWindowDelegate, Slidesho
         window?.toggleFullScreen(sender);
     }
 
-    // MARK: SlideshowDriverDelegate
-    func show(mediaData: MediaData)
+
+    // MARK: Control view management
+    override func mouseMoved(theEvent: NSEvent)
     {
-        Logger.log("Show \(mediaData.url.path!)")
+        super.mouseMoved(theEvent)
+        showControls()
     }
 
-    func stateChanged(currentState: SlideshowDriver.DriverState)
+    override func keyDown(theEvent: NSEvent)
     {
-        updateUiState()
+        showControls()
+        super.keyDown(theEvent)
+    }
+
+    func showControls()
+    {
+        if hideControlsTimer != nil {
+            hideControlsTimer?.invalidate()
+        }
+
+        hideControlsTimer = NSTimer.scheduledTimerWithTimeInterval(
+            secondsToHideControl, target: self, selector: "hideControlsTimerFired:", userInfo: nil, repeats: true)
+        controlsView.hidden = false
+    }
+
+    func hideControls()
+    {
+        if hideControlsTimer != nil {
+            hideControlsTimer?.invalidate()
+            hideControlsTimer = nil
+        }
+
+        controlsView.hidden = true
+    }
+
+    func hideControlsTimerFired(someTimer: NSTimer)
+    {
+        hideControls()
     }
 
     func updateUiState()
@@ -80,6 +137,100 @@ class SlideshowWindowController : NSWindowController, NSWindowDelegate, Slidesho
         enterFullScreenButton?.hidden = isFullScreen
         exitFullScreenButton?.hidden = !isFullScreen
     }
+
+
+    // MARK: SlideshowDriverDelegate
+    func show(mediaData: MediaData) -> Double?
+    {
+        Logger.log("Show \(mediaData.url.path!)")
+        switch mediaData.type! {
+        case .Image:
+            displayInfo(mediaData)
+            return showImage(mediaData)
+        case .Video:
+            displayInfo(mediaData)
+            return showVideo(mediaData)
+        default:
+            Logger.log("Unhandled media type: \(mediaData.type)")
+            return nil
+        }
+    }
+
+    func stateChanged(currentState: SlideshowDriver.DriverState)
+    {
+        updateUiState()
+    }
+
+
+    //  MARK: show image/video
+    func displayInfo(mediaData: MediaData)
+    {
+        let parentPath = ((mediaData.url!.path as NSString!).stringByDeletingLastPathComponent as NSString).lastPathComponent
+        let displayInfo = "\(parentPath)"
+        displayInfoString(displayInfo)
+
+
+        if let location = mediaData.location {
+            Async.background {
+                let updatedDisplayInfo = "\(parentPath)   \(location.placenameAsString())"
+
+                Async.main {
+                    self.displayInfoString(updatedDisplayInfo)
+                }
+            }
+        }
+    }
+
+    func displayInfoString(displayInfo: String)
+    {
+        let fullRange = NSRange(location: 0, length: displayInfo.characters.count)
+        let attributeString = NSMutableAttributedString(string: displayInfo)
+        attributeString.addAttribute(NSBackgroundColorAttributeName, value: NSColor(deviceRed: 0, green: 0, blue: 0, alpha: 0.75), range: fullRange)
+        infoText.attributedStringValue = attributeString
+    }
+
+    func showImage(mediaData: MediaData) -> Double?
+    {
+        stopVideoPlayer()
+        imageView?.image = nil
+        imageView?.hidden = false
+        videoView?.hidden = true
+
+        Async.background {
+            let imageSource = CGImageSourceCreateWithURL(mediaData.url, nil)
+            let image = CGImageSourceCreateImageAtIndex(imageSource!, 0, nil)
+            let nsImage = NSImage(CGImage: image!, size: NSSize(width: CGImageGetWidth(image), height: CGImageGetHeight(image)))
+
+            Async.main {
+                self.imageView?.image = nsImage;
+            }
+        }
+        return 0
+    }
+
+    func showVideo(mediaData: MediaData) -> Double?
+    {
+        stopVideoPlayer()
+        imageView?.hidden = true
+        imageView?.image = nil
+        videoView?.hidden = false
+
+        videoView.player = AVPlayer(URL: mediaData.url)
+videoView.player?.volume = 0.1
+
+        videoView.player?.play()
+        return Double(CMTimeGetSeconds((videoView.player?.currentItem?.asset.duration)!))
+    }
+
+    func stopVideoPlayer()
+    {
+        if let player = videoView?.player {
+//            player.removeObserver(self, forKeyPath: "volume", context: nil)
+            player.pause()
+            videoView?.player = nil
+        }
+    }
+
 
     // MARK: NSWindowDelegate
     func windowWillClose(notification: NSNotification)
@@ -95,5 +246,24 @@ class SlideshowWindowController : NSWindowController, NSWindowDelegate, Slidesho
     func windowDidExitFullScreen(notification: NSNotification)
     {
         updateUiState()
+    }
+
+
+    // MARK: view creation
+    func createImageView() -> NSImageView
+    {
+        let imageView = NSImageView(frame: (window?.contentView?.frame)!)
+        imageView.imageScaling = NSImageScaling.ScaleProportionallyDown
+        imageView.autoresizingMask = NSAutoresizingMaskOptions(rawValue: NSAutoresizingMaskOptions.ViewHeightSizable.rawValue
+            | NSAutoresizingMaskOptions.ViewWidthSizable.rawValue)
+        return imageView
+    }
+
+    func createVideoView() -> AVPlayerView
+    {
+        let videoView = AVPlayerView(frame: (window?.contentView?.frame)!)
+        videoView.autoresizingMask = NSAutoresizingMaskOptions(rawValue: NSAutoresizingMaskOptions.ViewHeightSizable.rawValue
+            | NSAutoresizingMaskOptions.ViewWidthSizable.rawValue)
+        return videoView
     }
 }
