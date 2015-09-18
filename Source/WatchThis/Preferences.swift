@@ -6,6 +6,7 @@ import RangicCore
 
 class Preferences : BasePreferences
 {
+    static let SlideshowFileExtension = "watchthisslideshow"
     static private let SlideshowFolderKey = "SlideshowFolder"
     static private let LastEditedFilenameKey = "LastEditedFilename"
 
@@ -13,6 +14,7 @@ class Preferences : BasePreferences
     {
         let appSupportFolder = NSFileManager.defaultManager().URLsForDirectory(.ApplicationSupportDirectory, inDomains: .UserDomainMask).first!
         lastEditedFilename = NSString.pathWithComponents([appSupportFolder.path!, "WatchThis", "LastEdited"])
+        lastEditedFilename = (lastEditedFilename as NSString).stringByAppendingPathExtension(SlideshowFileExtension)!
 
         let picturesFolder = NSFileManager.defaultManager().URLsForDirectory(.PicturesDirectory, inDomains: .UserDomainMask).first!
         slideshowFolder = NSString.pathWithComponents([picturesFolder.path!, "WatchThis Slideshows"])

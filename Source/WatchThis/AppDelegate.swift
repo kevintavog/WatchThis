@@ -9,6 +9,7 @@ import RangicCore
 class AppDelegate: NSObject, NSApplicationDelegate
 {
     @IBOutlet weak var window: NSWindow!
+    @IBOutlet weak var listController: ShowListController!
 
     // MARK: Application hooks
     func applicationDidFinishLaunching(aNotification: NSNotification)
@@ -23,8 +24,8 @@ class AppDelegate: NSObject, NSApplicationDelegate
 
     func applicationShouldTerminate(sender: NSApplication) -> NSApplicationTerminateReply
     {
-        Logger.log("TODO: Close depending on state of the show list controller")
-        return NSApplicationTerminateReply.TerminateNow
+        let close = listController != nil ? listController!.windowShouldClose(sender) : true
+        return close ? NSApplicationTerminateReply.TerminateNow : NSApplicationTerminateReply.TerminateCancel
     }
 }
 

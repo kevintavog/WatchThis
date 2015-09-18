@@ -15,7 +15,6 @@ class SlideshowData
                 InvalidSlideshowFile(filename: String, message: String)
     }
 
-    static let FileExtension = "watchthisslideshow"
 
     var filename:String?
     var name:String?
@@ -55,10 +54,10 @@ class SlideshowData
 
     func save() throws
     {
-        Logger.log("Saving to \(filename)")
         guard filename != nil else { throw FileError.FilenameNotSet }
         guard name != nil else { throw FileError.NameNotSet }
         guard folderList.count > 0 else { throw FileError.NoFolders }
+        Logger.log("Saving to \(filename!)")
 
         // Form up json
         var json = JSON([String: AnyObject]())
@@ -98,6 +97,6 @@ class SlideshowData
 
     static func getFilenameForName(name: String) -> String
     {
-        return ((Preferences.slideshowFolder as NSString).stringByAppendingPathComponent(name) as NSString).stringByAppendingPathExtension(FileExtension)!
+        return ((Preferences.slideshowFolder as NSString).stringByAppendingPathComponent(name) as NSString).stringByAppendingPathExtension(Preferences.SlideshowFileExtension)!
     }
 }

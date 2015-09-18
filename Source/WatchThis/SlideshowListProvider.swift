@@ -11,6 +11,16 @@ class SlideshowListProvider
     var savedSlideshows = [SlideshowData]()
     var editedSlideshow = SlideshowData()
 
+    init()
+    {
+        if NSFileManager.defaultManager().fileExistsAtPath(Preferences.lastEditedFilename) {
+            do {
+                editedSlideshow = try SlideshowData.load(Preferences.lastEditedFilename)
+            } catch let error {
+                Logger.log("Error loading last edited: \(error)")
+            }
+        }
+    }
 
     /// Starts enumerating saved slideshows - this is a blocking call. Fires the 
     /// SlideshowListProvider.EnumerationCompleted notification on completion
@@ -67,7 +77,7 @@ class SlideshowListProvider
 
             return urlList.filter( {
                 if let ext = $0.pathExtension {
-                    return ext == SlideshowData.FileExtension
+                    return ext == Preferences.SlideshowFileExtension
                 }
                 else {
                     return false

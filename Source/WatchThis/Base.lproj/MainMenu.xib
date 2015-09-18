@@ -23,7 +23,11 @@
                 <outlet property="window" destination="roa-AI-TJa" id="DOP-uf-1zN"/>
             </connections>
         </customObject>
-        <customObject id="Voe-Tx-rLC" userLabel="AppDelegate" customClass="AppDelegate" customModule="WatchThis" customModuleProvider="target"/>
+        <customObject id="Voe-Tx-rLC" userLabel="AppDelegate" customClass="AppDelegate" customModule="WatchThis" customModuleProvider="target">
+            <connections>
+                <outlet property="listController" destination="3DZ-5S-zdZ" id="uZM-Ai-EA7"/>
+            </connections>
+        </customObject>
         <customObject id="YLy-65-1bz" customClass="NSFontManager"/>
         <menu title="Main Menu" systemMenu="main" id="AYu-sK-qS6">
             <items>
