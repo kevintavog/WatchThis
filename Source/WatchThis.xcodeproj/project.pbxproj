@@ -11,6 +11,7 @@
 		440FD7D41BA91079007FDB56 /* SlideshowWindowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 440FD7D31BA91079007FDB56 /* SlideshowWindowController.swift */; settings = {ASSET_TAGS = (); }; };
 		440FD7D61BA9239E007FDB56 /* SlideshowDriver.swift in Sources */ = {isa = PBXBuildFile; fileRef = 440FD7D51BA9239E007FDB56 /* SlideshowDriver.swift */; settings = {ASSET_TAGS = (); }; };
 		4451CEE91BA79C0900D09540 /* Quartz.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4451CEE81BA79C0900D09540 /* Quartz.framework */; };
+		4499DE861BACE09A00BB8D36 /* RangicCore.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 4482AFF61BA79E320068E976 /* RangicCore.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		44CB6D7C1BA7960200233A18 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44CB6D7B1BA7960200233A18 /* AppDelegate.swift */; };
 		44CB6D7E1BA7960200233A18 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 44CB6D7D1BA7960200233A18 /* Assets.xcassets */; };
 		44CB6D811BA7960200233A18 /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 44CB6D7F1BA7960200233A18 /* MainMenu.xib */; };
@@ -44,6 +45,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
+				4499DE861BACE09A00BB8D36 /* RangicCore.framework in Embed Frameworks */,
 				44F77D521BA7A68C000B6072 /* Alamofire.framework in Embed Frameworks */,
 				44F77D541BA7A68C000B6072 /* Async.framework in Embed Frameworks */,
 			);
@@ -113,9 +115,9 @@
 		44CB6D6F1BA7960200233A18 = {
 			isa = PBXGroup;
 			children = (
+				44CB6D7A1BA7960200233A18 /* WatchThis */,
 				44F77D4F1BA7A68C000B6072 /* Alamofire.framework */,
 				44F77D501BA7A68C000B6072 /* Async.framework */,
-				44CB6D7A1BA7960200233A18 /* WatchThis */,
 				4451CEF21BA79D2E00D09540 /* Frameworks */,
 				44CB6D791BA7960200233A18 /* Products */,
 				4482AFF11BA79E320068E976 /* RangicCore.xcodeproj */,
