@@ -9,6 +9,8 @@ class Preferences : BasePreferences
     static let SlideshowFileExtension = "watchthisslideshow"
     static private let SlideshowFolderKey = "SlideshowFolder"
     static private let LastEditedFilenameKey = "LastEditedFilename"
+    static private let VideoPlayerVolumeKey = "VideoPlayerVolume"
+    static private let BaseLocationLookupKey = "BaseLocationLookup"
 
     static func setMissingDefaults()
     {
@@ -18,6 +20,14 @@ class Preferences : BasePreferences
 
         let picturesFolder = NSFileManager.defaultManager().URLsForDirectory(.PicturesDirectory, inDomains: .UserDomainMask).first!
         slideshowFolder = NSString.pathWithComponents([picturesFolder.path!, "WatchThis Slideshows"])
+
+        setDefaultValue("http://open.mapquestapi.com", key: BaseLocationLookupKey)
+    }
+
+    static var baseLocationLookup: String
+    {
+        get { return stringForKey(BaseLocationLookupKey) }
+        set { super.setValue(newValue, key: BaseLocationLookupKey) }
     }
 
     static var slideshowFolder: String
@@ -30,5 +40,11 @@ class Preferences : BasePreferences
     {
         get { return stringForKey(LastEditedFilenameKey) }
         set { super.setValue(newValue, key: LastEditedFilenameKey) }
+    }
+
+    static var videoPlayerVolume: Float
+    {
+        get { return floatForKey(VideoPlayerVolumeKey) }
+        set { setValue(newValue, key: VideoPlayerVolumeKey) }
     }
 }

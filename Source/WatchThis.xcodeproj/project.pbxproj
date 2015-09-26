@@ -10,6 +10,8 @@
 		440FD7CF1BA90FD6007FDB56 /* SlideshowWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 440FD7CE1BA90FD6007FDB56 /* SlideshowWindow.xib */; settings = {ASSET_TAGS = (); }; };
 		440FD7D41BA91079007FDB56 /* SlideshowWindowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 440FD7D31BA91079007FDB56 /* SlideshowWindowController.swift */; settings = {ASSET_TAGS = (); }; };
 		440FD7D61BA9239E007FDB56 /* SlideshowDriver.swift in Sources */ = {isa = PBXBuildFile; fileRef = 440FD7D51BA9239E007FDB56 /* SlideshowDriver.swift */; settings = {ASSET_TAGS = (); }; };
+		4422EC8E1BB6E4A3008761A7 /* Preferences.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4422EC8C1BB6E4A3008761A7 /* Preferences.xib */; settings = {ASSET_TAGS = (); }; };
+		4422EC911BB6E4E4008761A7 /* PreferencesWindowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4422EC901BB6E4E4008761A7 /* PreferencesWindowController.swift */; settings = {ASSET_TAGS = (); }; };
 		4451CEE91BA79C0900D09540 /* Quartz.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4451CEE81BA79C0900D09540 /* Quartz.framework */; };
 		4499DE861BACE09A00BB8D36 /* RangicCore.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 4482AFF61BA79E320068E976 /* RangicCore.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		44CB6D7C1BA7960200233A18 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44CB6D7B1BA7960200233A18 /* AppDelegate.swift */; };
@@ -58,6 +60,8 @@
 		440FD7CE1BA90FD6007FDB56 /* SlideshowWindow.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SlideshowWindow.xib; sourceTree = "<group>"; };
 		440FD7D31BA91079007FDB56 /* SlideshowWindowController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SlideshowWindowController.swift; sourceTree = "<group>"; };
 		440FD7D51BA9239E007FDB56 /* SlideshowDriver.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SlideshowDriver.swift; sourceTree = "<group>"; };
+		4422EC8D1BB6E4A3008761A7 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/Preferences.xib; sourceTree = "<group>"; };
+		4422EC901BB6E4E4008761A7 /* PreferencesWindowController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PreferencesWindowController.swift; sourceTree = "<group>"; };
 		4451CEDF1BA79BDF00D09540 /* Alamofire.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Alamofire.framework; path = Carthage/Build/Mac/Alamofire.framework; sourceTree = "<group>"; };
 		4451CEE01BA79BDF00D09540 /* Async.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Async.framework; path = Carthage/Build/Mac/Async.framework; sourceTree = "<group>"; };
 		4451CEE81BA79C0900D09540 /* Quartz.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Quartz.framework; path = System/Library/Frameworks/Quartz.framework; sourceTree = SDKROOT; };
@@ -135,6 +139,7 @@
 		44CB6D7A1BA7960200233A18 /* WatchThis */ = {
 			isa = PBXGroup;
 			children = (
+				4422EC8C1BB6E4A3008761A7 /* Preferences.xib */,
 				44CB6D7F1BA7960200233A18 /* MainMenu.xib */,
 				440FD7CE1BA90FD6007FDB56 /* SlideshowWindow.xib */,
 				44CB6D7D1BA7960200233A18 /* Assets.xcassets */,
@@ -142,6 +147,7 @@
 				44CB6D7B1BA7960200233A18 /* AppDelegate.swift */,
 				44F77D5C1BA7D793000B6072 /* Notifications.swift */,
 				44F77D601BA851B4000B6072 /* Preferences.swift */,
+				4422EC901BB6E4E4008761A7 /* PreferencesWindowController.swift */,
 				44F77D561BA7A7FA000B6072 /* ShowListController.swift */,
 				44F77D581BA7CF33000B6072 /* ShowListWindow.swift */,
 				44F77D5E1BA7D864000B6072 /* SlideshowData.swift */,
@@ -229,6 +235,7 @@
 			files = (
 				440FD7CF1BA90FD6007FDB56 /* SlideshowWindow.xib in Resources */,
 				44CB6D7E1BA7960200233A18 /* Assets.xcassets in Resources */,
+				4422EC8E1BB6E4A3008761A7 /* Preferences.xib in Resources */,
 				44CB6D811BA7960200233A18 /* MainMenu.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -241,6 +248,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				44F77D5F1BA7D864000B6072 /* SlideshowData.swift in Sources */,
+				4422EC911BB6E4E4008761A7 /* PreferencesWindowController.swift in Sources */,
 				44F77D611BA851B4000B6072 /* Preferences.swift in Sources */,
 				440FD7D61BA9239E007FDB56 /* SlideshowDriver.swift in Sources */,
 				44F77D5D1BA7D793000B6072 /* Notifications.swift in Sources */,
@@ -256,6 +264,14 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXVariantGroup section */
+		4422EC8C1BB6E4A3008761A7 /* Preferences.xib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				4422EC8D1BB6E4A3008761A7 /* Base */,
+			);
+			name = Preferences.xib;
+			sourceTree = "<group>";
+		};
 		44CB6D7F1BA7960200233A18 /* MainMenu.xib */ = {
 			isa = PBXVariantGroup;
 			children = (

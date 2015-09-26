@@ -19,6 +19,7 @@ class SlideshowListProvider
     var editedSlideshow = SlideshowData()
     var delegate: SlideshowListProviderDelegate? = nil
 
+
     init()
     {
         if NSFileManager.defaultManager().fileExistsAtPath(Preferences.lastEditedFilename) {

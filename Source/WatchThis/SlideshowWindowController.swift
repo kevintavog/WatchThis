@@ -147,6 +147,8 @@ class SlideshowWindowController : NSWindowController, NSWindowDelegate, Slidesho
     // MARK: SlideshowDriverDelegate
     func show(mediaData: MediaData) -> Double?
     {
+        NSCursor.setHiddenUntilMouseMoves(true)
+
         Logger.log("Show \(mediaData.url.path!)")
         switch mediaData.type! {
         case .Image:
@@ -233,7 +235,9 @@ class SlideshowWindowController : NSWindowController, NSWindowDelegate, Slidesho
         videoView?.hidden = false
 
         videoView.player = AVPlayer(URL: mediaData.url)
-videoView.player?.volume = 0.1
+        videoView.player?.volume = Preferences.videoPlayerVolume
+
+        videoView.player?.addObserver(self, forKeyPath: "volume", options: .New, context: nil)
 
         videoView.player?.play()
         return Double(CMTimeGetSeconds((videoView.player?.currentItem?.asset.duration)!))
@@ -242,12 +246,25 @@ videoView.player?.volume = 0.1
     func stopVideoPlayer()
     {
         if let player = videoView?.player {
-//            player.removeObserver(self, forKeyPath: "volume", context: nil)
+            player.removeObserver(self, forKeyPath: "volume", context: nil)
             player.pause()
             videoView?.player = nil
         }
     }
 
+    override func observeValueForKeyPath(keyPath: String?, ofObject object: AnyObject?, change: [String : AnyObject]?, context: UnsafeMutablePointer<Void>)
+    {
+        switch keyPath! {
+        case "volume":
+            if let volume = change![NSKeyValueChangeNewKey] as? Float {
+                Preferences.videoPlayerVolume = volume
+            }
+
+        default:
+            super.observeValueForKeyPath(keyPath, ofObject: object, change: change, context: context)
+        }
+    }
+    
 
     // MARK: NSWindowDelegate
     func windowWillClose(notification: NSNotification)
@@ -281,6 +298,8 @@ videoView.player?.volume = 0.1
         let videoView = AVPlayerView(frame: (window?.contentView?.frame)!)
         videoView.autoresizingMask = NSAutoresizingMaskOptions(rawValue: NSAutoresizingMaskOptions.ViewHeightSizable.rawValue
             | NSAutoresizingMaskOptions.ViewWidthSizable.rawValue)
+        videoView.controlsStyle = .Floating
+        videoView.showsFrameSteppingButtons = true
         return videoView
     }
 }

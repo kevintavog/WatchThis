@@ -15,6 +15,8 @@ class AppDelegate: NSObject, NSApplicationDelegate
     func applicationDidFinishLaunching(aNotification: NSNotification)
     {
         Preferences.setMissingDefaults()
+        OpenMapLookupProvider.BaseLocationLookup = Preferences.baseLocationLookup
+        Logger.log("Placename lookups via \(OpenMapLookupProvider.BaseLocationLookup)")
     }
 
     func applicationShouldTerminateAfterLastWindowClosed(sender: NSApplication) -> Bool
@@ -26,6 +28,12 @@ class AppDelegate: NSObject, NSApplicationDelegate
     {
         let close = listController != nil ? listController!.windowShouldClose(sender) : true
         return close ? NSApplicationTerminateReply.TerminateNow : NSApplicationTerminateReply.TerminateCancel
+    }
+    
+    @IBAction func preferences(sender: AnyObject)
+    {
+        let preferencesController = PreferencesWindowController(windowNibName: "Preferences")
+        NSApplication.sharedApplication().runModalForWindow(preferencesController.window!)
     }
 }
 

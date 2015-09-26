@@ -98,6 +98,7 @@ class SlideshowData
         name = nil
         slideSeconds = 10.0
         folderList = []
+
         hasChanged = false
     }
 

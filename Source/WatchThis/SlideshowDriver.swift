@@ -145,7 +145,7 @@ class SlideshowDriver : NSObject
     {
         if var overrideDurationSeconds = delegate.show(mediaData) {
             if overrideDurationSeconds == 0 {
-                overrideDurationSeconds = 2 // slideshowData.slideSeconds
+                overrideDurationSeconds = slideshowData.slideSeconds
             }
             setupTimer(overrideDurationSeconds)
         }
