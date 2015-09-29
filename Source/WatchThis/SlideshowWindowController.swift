@@ -65,7 +65,7 @@ class SlideshowWindowController : NSWindowController, NSWindowDelegate, Slidesho
     // MARK: Actions
     @IBAction func pause(sender: AnyObject)
     {
-        driver?.pauseOrResume()
+        driver?.pause()
     }
 
     @IBAction func play(sender: AnyObject)
@@ -145,7 +145,7 @@ class SlideshowWindowController : NSWindowController, NSWindowDelegate, Slidesho
 
 
     // MARK: SlideshowDriverDelegate
-    func show(mediaData: MediaData) -> Double?
+    func show(mediaData: MediaData)
     {
         NSCursor.setHiddenUntilMouseMoves(true)
 
@@ -153,13 +153,12 @@ class SlideshowWindowController : NSWindowController, NSWindowDelegate, Slidesho
         switch mediaData.type! {
         case .Image:
             displayInfo(mediaData)
-            return showImage(mediaData)
+            showImage(mediaData)
         case .Video:
             displayInfo(mediaData)
-            return showVideo(mediaData)
+            showVideo(mediaData)
         default:
             Logger.log("Unhandled media type: \(mediaData.type)")
-            return nil
         }
     }
 
@@ -168,7 +167,22 @@ class SlideshowWindowController : NSWindowController, NSWindowDelegate, Slidesho
         updateUiState()
     }
 
+    func pauseVideo()
+    {
+        Logger.log("controller.pauseVideo")
+        if let player = videoView!.player {
+            player.pause()
+        }
+    }
 
+    func resumeVideo()
+    {
+        Logger.log("controller.resumeVideo")
+        if let player = videoView!.player {
+            player.play()
+        }
+    }
+    
     //  MARK: show image/video
     func displayInfo(mediaData: MediaData)
     {
@@ -227,32 +241,45 @@ class SlideshowWindowController : NSWindowController, NSWindowDelegate, Slidesho
         return 0
     }
 
-    func showVideo(mediaData: MediaData) -> Double?
+    func showVideo(mediaData: MediaData)
     {
         stopVideoPlayer()
+
         imageView?.hidden = true
         imageView?.image = nil
         videoView?.hidden = false
 
         videoView.player = AVPlayer(URL: mediaData.url)
-        videoView.player?.volume = Preferences.videoPlayerVolume
+        let player = videoView.player!
+        player.volume = Preferences.videoPlayerVolume
+        player.actionAtItemEnd = .None
 
-        videoView.player?.addObserver(self, forKeyPath: "volume", options: .New, context: nil)
+        player.addObserver(self, forKeyPath: "volume", options: .New, context: nil)
+        player.addObserver(self, forKeyPath: "rate", options: .New, context: nil)
+        Notifications.addObserver(self, selector: "videoDidEnd:", name: AVPlayerItemDidPlayToEndTimeNotification, object: player.currentItem)
 
         videoView.player?.play()
-        return Double(CMTimeGetSeconds((videoView.player?.currentItem?.asset.duration)!))
     }
 
     func stopVideoPlayer()
     {
         if let player = videoView?.player {
-            player.removeObserver(self, forKeyPath: "volume", context: nil)
+            Notifications.removeObserver(self, object: player.currentItem)
+            player.removeObserver(self, forKeyPath: "rate")
+            player.removeObserver(self, forKeyPath: "volume")
             player.pause()
             videoView?.player = nil
         }
     }
 
-    override func observeValueForKeyPath(keyPath: String?, ofObject object: AnyObject?, change: [String : AnyObject]?, context: UnsafeMutablePointer<Void>)
+    func videoDidEnd(notification: NSNotification)
+    {
+        Async.main(after: 2.0) {
+            self.driver?.videoDidEnd()
+        }
+    }
+
+    override func observeValueForKeyPath(keyPath: String?, ofObject object: AnyObject?, change: [String:AnyObject]?, context: UnsafeMutablePointer<Void>)
     {
         switch keyPath! {
         case "volume":
@@ -260,8 +287,17 @@ class SlideshowWindowController : NSWindowController, NSWindowDelegate, Slidesho
                 Preferences.videoPlayerVolume = volume
             }
 
+        case "rate":
+            if let rate = change![NSKeyValueChangeNewKey] as? Float {
+                if rate == 0 {
+                    driver!.pause()
+                } else {
+                    driver!.resume()
+                }
+            }
+
         default:
-            super.observeValueForKeyPath(keyPath, ofObject: object, change: change, context: context)
+            Logger.log("Unhandled kv change: \(keyPath)")
         }
     }
     
@@ -269,6 +305,7 @@ class SlideshowWindowController : NSWindowController, NSWindowDelegate, Slidesho
     // MARK: NSWindowDelegate
     func windowWillClose(notification: NSNotification)
     {
+        stopVideoPlayer()
         driver?.stop()
     }
 

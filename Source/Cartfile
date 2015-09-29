@@ -1,2 +1,6 @@
 github "Alamofire/Alamofire" "master"
 github "duemunk/Async" "feature/Swift_2.0"
+
+# Not ready with a Swift compatible build yet
+#github "CocoaLumberjack/CocoaLumberjack" "master"
+

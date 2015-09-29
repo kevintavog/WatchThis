@@ -6,8 +6,10 @@ import RangicCore
 
 protocol SlideshowDriverDelegate
 {
-    func show(mediaData: MediaData) -> Double?
+    func show(mediaData: MediaData)
     func stateChanged(currentState: SlideshowDriver.DriverState)
+    func pauseVideo()
+    func resumeVideo()
 }
 
 class SlideshowDriver : NSObject
@@ -39,7 +41,9 @@ class SlideshowDriver : NSObject
 
         super.init()
 
-        beginEnumerate()
+        beginEnumerate() {
+            self.play()
+        }
     }
 
     var currentIndex: Int {
@@ -58,26 +62,53 @@ class SlideshowDriver : NSObject
         if driverState == .Playing {
             return
         }
+
+        if driverState == .Paused && previousFiles.last?.type == SupportedMediaTypes.MediaType.Video {
+            driverState = .Playing
+            delegate.resumeVideo()
+            return
+        }
+
         driverState = .Playing
         setupTimer(slideshowData.slideSeconds)
         next()
+    }
+
+    func pause()
+    {
+        Logger.log("SlideshowDriver.pause \(driverState)")
+        if driverState != .Paused {
+            driverState = .Paused
+            destroyTimer()
+
+            if previousFiles.last?.type == SupportedMediaTypes.MediaType.Video {
+                delegate.pauseVideo()
+            }
+        }
+    }
+
+    func resume()
+    {
+        Logger.log("SlideshowDriver.resume \(driverState)")
+        if driverState == .Paused {
+            play()
+        }
     }
 
     func pauseOrResume()
     {
         Logger.log("SlideshowDriver.pauseOrResume \(driverState)")
         if driverState == .Paused {
-            play()
+            resume()
         }
         else if driverState == .Playing {
-            driverState = .Paused
-            destroyTimer()
+            pause()
         }
     }
 
     func stop()
     {
-        Logger.log("stop \(driverState)")
+        Logger.log("SlideshowDriver.stop \(driverState)")
         driverState = .Stopped
         destroyTimer()
     }
@@ -104,7 +135,9 @@ class SlideshowDriver : NSObject
 
         if file == nil {
             if mediaFiles.count == 0 {
-                beginEnumerate()
+                beginEnumerate() {
+                    self.nextSlide()
+                }
                 return
             }
 
@@ -143,17 +176,19 @@ class SlideshowDriver : NSObject
 
     func showFile(mediaData: MediaData)
     {
-        if var overrideDurationSeconds = delegate.show(mediaData) {
-            if overrideDurationSeconds == 0 {
-                overrideDurationSeconds = slideshowData.slideSeconds
-            }
-            setupTimer(overrideDurationSeconds)
+        delegate.show(mediaData)
+        if mediaData.type != SupportedMediaTypes.MediaType.Video {
+            setupTimer(slideshowData.slideSeconds)
+        } else {
+            destroyTimer()
         }
-        else {
-            // Delegate doesn't want to show file - get the next one
-            Logger.log("Skipping file - \(mediaData.url!.path)")
-            nextSlide()
-        }
+    }
+
+    // MARK: Updates from client
+    func videoDidEnd()
+    {
+        Logger.log("SlideshowDriver.videoDidEnd")
+        nextSlide()
     }
 
     // MARK: Timer management
@@ -182,7 +217,7 @@ class SlideshowDriver : NSObject
     }
 
     // MARK: Enumerate folders/files
-    private func beginEnumerate()
+    private func beginEnumerate(onAvailable: () -> ())
     {
         Async.background {
             self.totalCount = 0
@@ -190,11 +225,11 @@ class SlideshowDriver : NSObject
                 self.addFolder(folder)
             }
 
-            Logger.log("Found \(self.mediaFiles.count) files")
+            Logger.log("SlideshowDriver: Found \(self.mediaFiles.count) files")
             CoreNotifications.postNotification(Notifications.SlideshowMedia.AllFilesAvailable, object: self)
 
             Async.main {
-                self.play()
+                onAvailable()
             }
         }
     }
