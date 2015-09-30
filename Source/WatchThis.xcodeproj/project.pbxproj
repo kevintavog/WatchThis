@@ -13,6 +13,8 @@
 		4422EC8E1BB6E4A3008761A7 /* Preferences.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4422EC8C1BB6E4A3008761A7 /* Preferences.xib */; settings = {ASSET_TAGS = (); }; };
 		4422EC911BB6E4E4008761A7 /* PreferencesWindowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4422EC901BB6E4E4008761A7 /* PreferencesWindowController.swift */; settings = {ASSET_TAGS = (); }; };
 		4451CEE91BA79C0900D09540 /* Quartz.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4451CEE81BA79C0900D09540 /* Quartz.framework */; };
+		4489EB341BBB5AA300CA6462 /* MediaList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4489EB331BBB5AA300CA6462 /* MediaList.swift */; settings = {ASSET_TAGS = (); }; };
+		4489EB371BBB6F9A00CA6462 /* PreviousFiles.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4489EB361BBB6F9A00CA6462 /* PreviousFiles.swift */; settings = {ASSET_TAGS = (); }; };
 		4499DE861BACE09A00BB8D36 /* RangicCore.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 4482AFF61BA79E320068E976 /* RangicCore.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		44CB6D7C1BA7960200233A18 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44CB6D7B1BA7960200233A18 /* AppDelegate.swift */; };
 		44CB6D7E1BA7960200233A18 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 44CB6D7D1BA7960200233A18 /* Assets.xcassets */; };
@@ -67,6 +69,8 @@
 		4451CEE81BA79C0900D09540 /* Quartz.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Quartz.framework; path = System/Library/Frameworks/Quartz.framework; sourceTree = SDKROOT; };
 		4451CEEE1BA79CDA00D09540 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
 		4482AFF11BA79E320068E976 /* RangicCore.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RangicCore.xcodeproj; path = ../../RangicCore/source/RangicCore.xcodeproj; sourceTree = "<group>"; };
+		4489EB331BBB5AA300CA6462 /* MediaList.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MediaList.swift; sourceTree = "<group>"; };
+		4489EB361BBB6F9A00CA6462 /* PreviousFiles.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PreviousFiles.swift; sourceTree = "<group>"; };
 		44CB6D781BA7960200233A18 /* WatchThis.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = WatchThis.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		44CB6D7B1BA7960200233A18 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		44CB6D7D1BA7960200233A18 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -145,16 +149,18 @@
 				44CB6D7D1BA7960200233A18 /* Assets.xcassets */,
 				44CB6D821BA7960200233A18 /* Info.plist */,
 				44CB6D7B1BA7960200233A18 /* AppDelegate.swift */,
+				44D749C41BAC5E2200DE90B1 /* CocoaTypes.swift */,
+				4489EB331BBB5AA300CA6462 /* MediaList.swift */,
 				44F77D5C1BA7D793000B6072 /* Notifications.swift */,
 				44F77D601BA851B4000B6072 /* Preferences.swift */,
 				4422EC901BB6E4E4008761A7 /* PreferencesWindowController.swift */,
+				4489EB361BBB6F9A00CA6462 /* PreviousFiles.swift */,
 				44F77D561BA7A7FA000B6072 /* ShowListController.swift */,
 				44F77D581BA7CF33000B6072 /* ShowListWindow.swift */,
 				44F77D5E1BA7D864000B6072 /* SlideshowData.swift */,
 				440FD7D51BA9239E007FDB56 /* SlideshowDriver.swift */,
 				44F77D5A1BA7D66B000B6072 /* SlideshowListProvider.swift */,
 				440FD7D31BA91079007FDB56 /* SlideshowWindowController.swift */,
-				44D749C41BAC5E2200DE90B1 /* CocoaTypes.swift */,
 			);
 			path = WatchThis;
 			sourceTree = "<group>";
@@ -249,6 +255,7 @@
 			files = (
 				44F77D5F1BA7D864000B6072 /* SlideshowData.swift in Sources */,
 				4422EC911BB6E4E4008761A7 /* PreferencesWindowController.swift in Sources */,
+				4489EB371BBB6F9A00CA6462 /* PreviousFiles.swift in Sources */,
 				44F77D611BA851B4000B6072 /* Preferences.swift in Sources */,
 				440FD7D61BA9239E007FDB56 /* SlideshowDriver.swift in Sources */,
 				44F77D5D1BA7D793000B6072 /* Notifications.swift in Sources */,
@@ -256,6 +263,7 @@
 				44D749C51BAC5E2200DE90B1 /* CocoaTypes.swift in Sources */,
 				44CB6D7C1BA7960200233A18 /* AppDelegate.swift in Sources */,
 				44F77D591BA7CF33000B6072 /* ShowListWindow.swift in Sources */,
+				4489EB341BBB5AA300CA6462 /* MediaList.swift in Sources */,
 				44F77D5B1BA7D66B000B6072 /* SlideshowListProvider.swift in Sources */,
 				440FD7D41BA91079007FDB56 /* SlideshowWindowController.swift in Sources */,
 			);

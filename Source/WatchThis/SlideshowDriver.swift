@@ -24,35 +24,23 @@ class SlideshowDriver : NSObject
 
     var delegate: SlideshowDriverDelegate
     let slideshowData: SlideshowData
-    var mediaFiles:[MediaData] = []
-    var totalCount = 0
+    let mediaList: MediaList
 
-    var previousFiles = [MediaData]()
-    var previousIndex: Int? = nil
     var timer:NSTimer? = nil
 
     var driverState = DriverState.Created { didSet { delegate.stateChanged(driverState) } }
 
 
-    init(data: SlideshowData, delegate: SlideshowDriverDelegate)
+    init(list: MediaList, data: SlideshowData, delegate: SlideshowDriverDelegate)
     {
         self.delegate = delegate
         slideshowData = data
+        mediaList = list
 
         super.init()
 
-        beginEnumerate() {
+        mediaList.beginEnumerate() {
             self.play()
-        }
-    }
-
-    var currentIndex: Int {
-        get {
-            var index = totalCount - mediaFiles.count
-            if previousIndex != nil {
-                index -= previousFiles.count - previousIndex! - 1
-            }
-            return index
         }
     }
 
@@ -63,7 +51,7 @@ class SlideshowDriver : NSObject
             return
         }
 
-        if driverState == .Paused && previousFiles.last?.type == SupportedMediaTypes.MediaType.Video {
+        if driverState == .Paused && mediaList.mostRecent(self)?.type == SupportedMediaTypes.MediaType.Video {
             driverState = .Playing
             delegate.resumeVideo()
             return
@@ -81,7 +69,7 @@ class SlideshowDriver : NSObject
             driverState = .Paused
             destroyTimer()
 
-            if previousFiles.last?.type == SupportedMediaTypes.MediaType.Video {
+            if mediaList.mostRecent(self)?.type == SupportedMediaTypes.MediaType.Video {
                 delegate.pauseVideo()
             }
         }
@@ -121,57 +109,25 @@ class SlideshowDriver : NSObject
 
     func nextSlide()
     {
-        // If we're looking at previous files, go to the next one in that list. Until we catch up to the
-        // last file we displayed
-        var file: MediaData?
-        if previousIndex != nil {
-            ++(previousIndex!)
-            if previousIndex < previousFiles.count {
-                file = previousFiles[previousIndex!]
-            } else {
-                previousIndex = nil
+        if let file = mediaList.next(self) {
+            showFile(file)
+        } else {
+            Logger.log("SlideshowDriver, hit end of list")
+            mediaList.beginEnumerate() {
+                self.nextSlide()
             }
         }
-
-        if file == nil {
-            if mediaFiles.count == 0 {
-                beginEnumerate() {
-                    self.nextSlide()
-                }
-                return
-            }
-
-            let index = arc4random_uniform(UInt32(mediaFiles.count))
-            file = mediaFiles.removeAtIndex(Int(index))
-
-            previousFiles.append(file!)
-            while previousFiles.count > 1000 {
-                previousFiles.removeAtIndex(0)
-            }
-        }
-
-        showFile(file!)
     }
 
     func previous()
     {
         Logger.log("SlideshowDriver.previous \(driverState)")
 
-        var index = 0
-        if previousIndex == nil {
-            // The last item (-1) is currently being displayed. -2 is the previous item
-            index = previousFiles.count - 2
+        if let file = mediaList.previous(self) {
+            showFile(file)
         } else {
-            index = previousIndex! - 1
-        }
-
-        if index < 0 {
             setupTimer(slideshowData.slideSeconds)
-            return
         }
-
-        previousIndex = index
-        showFile(previousFiles[previousIndex!])
     }
 
     func showFile(mediaData: MediaData)
@@ -215,67 +171,4 @@ class SlideshowDriver : NSObject
             self.nextSlide()
         }
     }
-
-    // MARK: Enumerate folders/files
-    private func beginEnumerate(onAvailable: () -> ())
-    {
-        Async.background {
-            self.totalCount = 0
-            for folder in self.slideshowData.folderList {
-                self.addFolder(folder)
-            }
-
-            Logger.log("SlideshowDriver: Found \(self.mediaFiles.count) files")
-            CoreNotifications.postNotification(Notifications.SlideshowMedia.AllFilesAvailable, object: self)
-
-            Async.main {
-                onAvailable()
-            }
-        }
-    }
-
-    private func addFolder(folderName:String)
-    {
-        let startedEmpty = mediaFiles.count == 0
-        var folders = [String]()
-        if NSFileManager.defaultManager().fileExistsAtPath(folderName) {
-            if let files = getFiles(folderName) {
-                for f in files {
-                    let mediaType = SupportedMediaTypes.getTypeFromFileExtension(((f.path!) as NSString).pathExtension)
-                    if mediaType == SupportedMediaTypes.MediaType.Image || mediaType == SupportedMediaTypes.MediaType.Video {
-                        mediaFiles.append(FileMediaData.create(f, mediaType: mediaType))
-                        ++totalCount
-                    }
-
-                    var isFolder: ObjCBool = false
-                    if NSFileManager.defaultManager().fileExistsAtPath(f.path!, isDirectory:&isFolder) && isFolder {
-                        folders.append(f.path!)
-                    }
-                }
-            }
-        }
-
-        if startedEmpty && mediaFiles.count > 0 {
-            // first files available
-            CoreNotifications.postNotification(Notifications.SlideshowMedia.FirstFilesAvailable, object: self)
-        }
-
-        for folder in folders {
-            addFolder(folder)
-        }
-    }
-
-    private func getFiles(folderName:String) -> [NSURL]?
-    {
-        do {
-            return try NSFileManager.defaultManager().contentsOfDirectoryAtURL(
-                NSURL(fileURLWithPath: folderName),
-                includingPropertiesForKeys: nil,
-                options:NSDirectoryEnumerationOptions.SkipsHiddenFiles)
-        }
-        catch {
-            return nil
-        }
-    }
-
 }

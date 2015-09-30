@@ -21,6 +21,7 @@ class SlideshowWindowController : NSWindowController, NSWindowDelegate, Slidesho
     @IBOutlet weak var nextButton: NSButton!
     @IBOutlet weak var playButton: NSButton!
 
+    var mediaList: MediaList?
     var driver: SlideshowDriver?
     var imageView: NSImageView?
     var videoView: AVPlayerView!
@@ -54,9 +55,10 @@ class SlideshowWindowController : NSWindowController, NSWindowDelegate, Slidesho
         showControls()
     }
 
-    func setDataModel(data: SlideshowData)
+    func setDataModel(data: SlideshowData, mediaList: MediaList)
     {
-        driver = SlideshowDriver(data: data, delegate: self)
+        self.mediaList = mediaList
+        driver = SlideshowDriver(list: mediaList, data: data, delegate: self)
         if let name = data.name {
             window?.title = "Slideshow - \(name)"
         }
@@ -190,7 +192,7 @@ class SlideshowWindowController : NSWindowController, NSWindowDelegate, Slidesho
         let displayInfo = "\(parentPath)"
         displayInfoString(displayInfo)
 
-        displayIndexString("\(driver!.currentIndex) of \(driver!.totalCount)")
+        displayIndexString("\((mediaList?.currentIndex(driver!))!) of \((mediaList?.totalCount)!)")
 
         if let location = mediaData.location {
             Async.background {

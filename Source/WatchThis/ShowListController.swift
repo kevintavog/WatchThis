@@ -79,7 +79,7 @@ class ShowListController : NSWindowController, NSWindowDelegate, SlideshowListPr
 
             let slideshowController = SlideshowWindowController(windowNibName: "SlideshowWindow")
             slideshowController.window?.makeKeyAndOrderFront(self)
-            slideshowController.setDataModel(selectedSlideshow)
+            slideshowController.setDataModel(selectedSlideshow, mediaList: MediaList(data: selectedSlideshow))
 
             slideshowControllers.append(slideshowController)
         }
