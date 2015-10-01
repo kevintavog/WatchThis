@@ -51,7 +51,6 @@ class PreviousList
 
     func add(mediaData: MediaData, index: Int)
     {
-        Logger.log("Adding at index \(index)")
         previousFiles.append(PreviousEntry(mediaData: mediaData, index: index))
         while previousFiles.count > 1000 {
             previousFiles.removeAtIndex(0)

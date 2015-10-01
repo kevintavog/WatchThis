@@ -71,6 +71,7 @@
 		4482AFF11BA79E320068E976 /* RangicCore.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RangicCore.xcodeproj; path = ../../RangicCore/source/RangicCore.xcodeproj; sourceTree = "<group>"; };
 		4489EB331BBB5AA300CA6462 /* MediaList.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MediaList.swift; sourceTree = "<group>"; };
 		4489EB361BBB6F9A00CA6462 /* PreviousFiles.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PreviousFiles.swift; sourceTree = "<group>"; };
+		4489EB381BBCCE6B00CA6462 /* WatchThis-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "WatchThis-Bridging-Header.h"; sourceTree = "<group>"; };
 		44CB6D781BA7960200233A18 /* WatchThis.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = WatchThis.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		44CB6D7B1BA7960200233A18 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		44CB6D7D1BA7960200233A18 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -161,6 +162,7 @@
 				440FD7D51BA9239E007FDB56 /* SlideshowDriver.swift */,
 				44F77D5A1BA7D66B000B6072 /* SlideshowListProvider.swift */,
 				440FD7D31BA91079007FDB56 /* SlideshowWindowController.swift */,
+				4489EB381BBCCE6B00CA6462 /* WatchThis-Bridging-Header.h */,
 			);
 			path = WatchThis;
 			sourceTree = "<group>";
@@ -387,6 +389,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = rangic.WatchThis;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = "WatchThis/WatchThis-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 			};
 			name = Debug;
@@ -405,6 +408,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = rangic.WatchThis;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = "WatchThis/WatchThis-Bridging-Header.h";
 			};
 			name = Release;
 		};
