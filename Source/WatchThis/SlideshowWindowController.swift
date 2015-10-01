@@ -196,7 +196,7 @@ class SlideshowWindowController : NSWindowController, NSWindowDelegate, Slidesho
 
         if let location = mediaData.location {
             Async.background {
-                var placename = location.placenameAsString()
+                var placename = location.placenameAsString(PlaceNameFilter.Standard)
                 if placename.characters.count == 0 {
                     placename = location.toDms()
                 }
