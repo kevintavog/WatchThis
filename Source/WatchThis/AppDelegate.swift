@@ -17,6 +17,8 @@ class AppDelegate: NSObject, NSApplicationDelegate
         Preferences.setMissingDefaults()
         OpenMapLookupProvider.BaseLocationLookup = Preferences.baseLocationLookup
         Logger.log("Placename lookups via \(OpenMapLookupProvider.BaseLocationLookup)")
+
+        listController.addKeyboardShorcutToMenu()
     }
 
     func applicationShouldTerminateAfterLastWindowClosed(sender: NSApplication) -> Bool

@@ -39,6 +39,28 @@ class ShowListController : NSWindowController, NSWindowDelegate, SlideshowListPr
         }
     }
 
+    func addKeyboardShorcutToMenu()
+    {
+        if let windowMenu = NSApp.windowsMenu {
+            if let listItem = windowMenu.itemWithTitle("Watch This") {
+                listItem.keyEquivalent = "0"
+                listItem.keyEquivalentModifierMask = Int(NSEventModifierFlags.CommandKeyMask.rawValue)
+            }
+
+            var shortcut = 1
+            for item in windowMenu.itemArray {
+                if shortcut < 10 {
+                    if item.title.rangeOfString("Slideshow") != nil  {
+                        item.keyEquivalent = String(shortcut)
+                        item.keyEquivalentModifierMask = Int(NSEventModifierFlags.CommandKeyMask.rawValue)
+
+                        shortcut += 1
+                    }
+                }
+            }
+        }
+    }
+
     // MARK: notifications
     func slideshowEnumerationCompleted(notification: NSNotification)
     {
@@ -82,6 +104,8 @@ class ShowListController : NSWindowController, NSWindowDelegate, SlideshowListPr
             slideshowController.setDataModel(selectedSlideshow, mediaList: MediaList(data: selectedSlideshow))
 
             slideshowControllers.append(slideshowController)
+
+            addKeyboardShorcutToMenu()
         }
         else {
             let alert = NSAlert()
