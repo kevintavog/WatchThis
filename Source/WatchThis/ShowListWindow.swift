@@ -10,7 +10,7 @@ class ShowListWindow : NSWindow, NSDraggingDestination
 {
     func draggingEntered(sender: NSDraggingInfo) -> NSDragOperation
     {
-        Logger.log("Dragging entered")
+        Logger.info("Dragging entered")
         return folderPaths(sender).count > 0 ? .Copy : .None
     }
 
@@ -22,7 +22,7 @@ class ShowListWindow : NSWindow, NSDraggingDestination
     func performDragOperation(sender: NSDraggingInfo) -> Bool
     {
         let folderList = folderPaths(sender)
-        Logger.log("Perform drag operation: \(folderList)")
+        Logger.info("Perform drag operation: \(folderList)")
         return true
     }
 

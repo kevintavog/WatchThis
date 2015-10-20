@@ -94,7 +94,7 @@ class MediaList
                 self.addFolder(folder, onAvailable: onAvailable)
             }
 
-            Logger.log("SlideshowDriver: Found \(self.mediaList.count) files")
+            Logger.info("SlideshowDriver: Found \(self.mediaList.count) files")
         }
     }
 
@@ -109,14 +109,14 @@ class MediaList
                     if mediaType == SupportedMediaTypes.MediaType.Image || mediaType == SupportedMediaTypes.MediaType.Video {
                         if let signature = getSignature(f.path!) {
                             if visitedFiles.keys.contains(signature) {
-                                Logger.log("Ignoring duplicate: \(visitedFiles[signature]!) == \(f.path!)")
+                                Logger.info("Ignoring duplicate: \(visitedFiles[signature]!) == \(f.path!)")
                             } else {
                                 visitedFiles[signature] = f.path!
                                 mediaList.append(FileMediaData.create(f, mediaType: mediaType))
                                 ++totalCount
                             }
                         } else {
-                            Logger.log("Unable to create signature for '\(f.path!)'")
+                            Logger.warn("Unable to create signature for '\(f.path!)'")
                         }
                     }
 
@@ -129,7 +129,7 @@ class MediaList
         }
 
         if startedEmpty && mediaList.count > 0 {
-            Logger.log("First files available: \(mediaList.count)")
+            Logger.info("First files available: \(mediaList.count)")
             Async.main {
                 onAvailable()
             }

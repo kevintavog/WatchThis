@@ -36,7 +36,7 @@ class PreferencesWindowController : NSWindowController
         testOsmResultImage.image = nil
         testOsmErrorMessage.stringValue = ""
 
-        Logger.log("Test host: \(Preferences.baseLocationLookup)")
+        Logger.info("Test host: \(Preferences.baseLocationLookup)")
 
         Async.background {
             let response = OpenMapLookupProvider().lookup(51.484509, longitude: 0.002570)
@@ -50,7 +50,7 @@ class PreferencesWindowController : NSWindowController
                 self.testOsmResultImage.image = NSImage(named: imageName)
 
                 if !succeeded {
-                    Logger.log("Response: \(response)")
+                    Logger.info("Response: \(response)")
                     let code = response["apiStatusCode"]
                     let message = response["apiMessage"]
                     var error = ""
@@ -84,6 +84,6 @@ class PreferencesWindowController : NSWindowController
     {
         Preferences.baseLocationLookup = openStreetMapHost!.stringValue
         OpenMapLookupProvider.BaseLocationLookup = Preferences.baseLocationLookup
-        Logger.log("Placename lookups are now via \(OpenMapLookupProvider.BaseLocationLookup)")
+        Logger.info("Placename lookups are now via \(OpenMapLookupProvider.BaseLocationLookup)")
     }
 }

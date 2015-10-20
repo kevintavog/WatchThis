@@ -176,11 +176,11 @@ class ShowListController : NSWindowController, NSWindowDelegate, SlideshowListPr
             return slideshowListProvider.editedSlideshow
 
         case "EditSearch":
-            Logger.log("Not implemented yet...: search tab")
+            Logger.error("Not implemented yet...: search tab")
             return nil
 
         default:
-            Logger.log("Unexpected tab identifier: \(tabView.selectedTabViewItem?.identifier)")
+            Logger.error("Unexpected tab identifier: \(tabView.selectedTabViewItem?.identifier)")
             return nil
         }
     }
@@ -194,7 +194,7 @@ class ShowListController : NSWindowController, NSWindowDelegate, SlideshowListPr
         case 1:
             return slideshowListProvider.savedSlideshows.count
         default:
-            Logger.log("Unknown tag: \(tv.tag)")
+            Logger.error("Unknown tag: \(tv.tag)")
             return 0
         }
     }

@@ -46,7 +46,7 @@ class SlideshowDriver : NSObject
 
     func play()
     {
-        Logger.log("SlideshowDriver.play \(driverState)")
+        Logger.info("SlideshowDriver.play \(driverState)")
         if driverState == .Playing {
             return
         }
@@ -64,7 +64,7 @@ class SlideshowDriver : NSObject
 
     func pause()
     {
-        Logger.log("SlideshowDriver.pause \(driverState)")
+        Logger.info("SlideshowDriver.pause \(driverState)")
         if driverState != .Paused {
             driverState = .Paused
             destroyTimer()
@@ -77,7 +77,7 @@ class SlideshowDriver : NSObject
 
     func resume()
     {
-        Logger.log("SlideshowDriver.resume \(driverState)")
+        Logger.info("SlideshowDriver.resume \(driverState)")
         if driverState == .Paused {
             play()
         }
@@ -85,7 +85,7 @@ class SlideshowDriver : NSObject
 
     func pauseOrResume()
     {
-        Logger.log("SlideshowDriver.pauseOrResume \(driverState)")
+        Logger.info("SlideshowDriver.pauseOrResume \(driverState)")
         if driverState == .Paused {
             resume()
         }
@@ -96,14 +96,14 @@ class SlideshowDriver : NSObject
 
     func stop()
     {
-        Logger.log("SlideshowDriver.stop \(driverState)")
+        Logger.info("SlideshowDriver.stop \(driverState)")
         driverState = .Stopped
         destroyTimer()
     }
 
     func next()
     {
-        Logger.log("SlideshowDriver.next \(driverState)")
+        Logger.info("SlideshowDriver.next \(driverState)")
         nextSlide()
     }
 
@@ -112,7 +112,7 @@ class SlideshowDriver : NSObject
         if let file = mediaList.next(self) {
             showFile(file)
         } else {
-            Logger.log("SlideshowDriver, hit end of list")
+            Logger.info("SlideshowDriver, hit end of list")
             mediaList.beginEnumerate() {
                 self.nextSlide()
             }
@@ -121,7 +121,7 @@ class SlideshowDriver : NSObject
 
     func previous()
     {
-        Logger.log("SlideshowDriver.previous \(driverState)")
+        Logger.info("SlideshowDriver.previous \(driverState)")
 
         if let file = mediaList.previous(self) {
             showFile(file)
@@ -143,7 +143,7 @@ class SlideshowDriver : NSObject
     // MARK: Updates from client
     func videoDidEnd()
     {
-        Logger.log("SlideshowDriver.videoDidEnd")
+        Logger.info("SlideshowDriver.videoDidEnd")
         nextSlide()
     }
 

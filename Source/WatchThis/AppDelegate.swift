@@ -14,9 +14,10 @@ class AppDelegate: NSObject, NSApplicationDelegate
     // MARK: Application hooks
     func applicationDidFinishLaunching(aNotification: NSNotification)
     {
+        Logger.configure()
         Preferences.setMissingDefaults()
         OpenMapLookupProvider.BaseLocationLookup = Preferences.baseLocationLookup
-        Logger.log("Placename lookups via \(OpenMapLookupProvider.BaseLocationLookup)")
+        Logger.info("Placename lookups via \(OpenMapLookupProvider.BaseLocationLookup)")
 
         listController.addKeyboardShorcutToMenu()
     }

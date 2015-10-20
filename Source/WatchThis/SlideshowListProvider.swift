@@ -26,7 +26,7 @@ class SlideshowListProvider
             do {
                 editedSlideshow = try SlideshowData.load(Preferences.lastEditedFilename)
             } catch let error {
-                Logger.log("Error loading last edited: \(error)")
+                Logger.error("Error loading last edited: \(error)")
             }
         }
     }
@@ -44,7 +44,7 @@ class SlideshowListProvider
                         foundSlideshows.append(slideshowData)
                     }
                     catch let error {
-                        Logger.log("Failed loading \(error)")
+                        Logger.error("Failed loading \(error)")
                     }
                 }
             }
@@ -64,7 +64,7 @@ class SlideshowListProvider
             do {
                 try editedSlideshow.save()
             } catch let error as NSError {
-                Logger.log("Error saving last edited: \(error)")
+                Logger.error("Error saving last edited: \(error)")
             }
             editedSlideshow.filename = nil
             return true

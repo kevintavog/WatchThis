@@ -13,6 +13,10 @@
 		4422EC8E1BB6E4A3008761A7 /* Preferences.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4422EC8C1BB6E4A3008761A7 /* Preferences.xib */; settings = {ASSET_TAGS = (); }; };
 		4422EC911BB6E4E4008761A7 /* PreferencesWindowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4422EC901BB6E4E4008761A7 /* PreferencesWindowController.swift */; settings = {ASSET_TAGS = (); }; };
 		4451CEE91BA79C0900D09540 /* Quartz.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4451CEE81BA79C0900D09540 /* Quartz.framework */; };
+		447CA6851BD5D76000CA174C /* CocoaLumberjack.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 447CA6831BD5D76000CA174C /* CocoaLumberjack.framework */; };
+		447CA6861BD5D76000CA174C /* CocoaLumberjack.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 447CA6831BD5D76000CA174C /* CocoaLumberjack.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		447CA6871BD5D76000CA174C /* CocoaLumberjackSwift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 447CA6841BD5D76000CA174C /* CocoaLumberjackSwift.framework */; };
+		447CA6881BD5D76000CA174C /* CocoaLumberjackSwift.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 447CA6841BD5D76000CA174C /* CocoaLumberjackSwift.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		4489EB341BBB5AA300CA6462 /* MediaList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4489EB331BBB5AA300CA6462 /* MediaList.swift */; settings = {ASSET_TAGS = (); }; };
 		4489EB371BBB6F9A00CA6462 /* PreviousFiles.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4489EB361BBB6F9A00CA6462 /* PreviousFiles.swift */; settings = {ASSET_TAGS = (); }; };
 		4499DE861BACE09A00BB8D36 /* RangicCore.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 4482AFF61BA79E320068E976 /* RangicCore.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
@@ -51,7 +55,9 @@
 			files = (
 				4499DE861BACE09A00BB8D36 /* RangicCore.framework in Embed Frameworks */,
 				44F77D521BA7A68C000B6072 /* Alamofire.framework in Embed Frameworks */,
+				447CA6861BD5D76000CA174C /* CocoaLumberjack.framework in Embed Frameworks */,
 				44F77D541BA7A68C000B6072 /* Async.framework in Embed Frameworks */,
+				447CA6881BD5D76000CA174C /* CocoaLumberjackSwift.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -68,6 +74,8 @@
 		4451CEE01BA79BDF00D09540 /* Async.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Async.framework; path = Carthage/Build/Mac/Async.framework; sourceTree = "<group>"; };
 		4451CEE81BA79C0900D09540 /* Quartz.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Quartz.framework; path = System/Library/Frameworks/Quartz.framework; sourceTree = SDKROOT; };
 		4451CEEE1BA79CDA00D09540 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
+		447CA6831BD5D76000CA174C /* CocoaLumberjack.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CocoaLumberjack.framework; path = Carthage/Build/Mac/CocoaLumberjack.framework; sourceTree = "<group>"; };
+		447CA6841BD5D76000CA174C /* CocoaLumberjackSwift.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CocoaLumberjackSwift.framework; path = Carthage/Build/Mac/CocoaLumberjackSwift.framework; sourceTree = "<group>"; };
 		4482AFF11BA79E320068E976 /* RangicCore.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RangicCore.xcodeproj; path = ../../RangicCore/source/RangicCore.xcodeproj; sourceTree = "<group>"; };
 		4489EB331BBB5AA300CA6462 /* MediaList.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MediaList.swift; sourceTree = "<group>"; };
 		4489EB361BBB6F9A00CA6462 /* PreviousFiles.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PreviousFiles.swift; sourceTree = "<group>"; };
@@ -95,7 +103,9 @@
 			files = (
 				4451CEE91BA79C0900D09540 /* Quartz.framework in Frameworks */,
 				44F77D511BA7A68C000B6072 /* Alamofire.framework in Frameworks */,
+				447CA6851BD5D76000CA174C /* CocoaLumberjack.framework in Frameworks */,
 				44F77D531BA7A68C000B6072 /* Async.framework in Frameworks */,
+				447CA6871BD5D76000CA174C /* CocoaLumberjackSwift.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -124,6 +134,8 @@
 		44CB6D6F1BA7960200233A18 = {
 			isa = PBXGroup;
 			children = (
+				447CA6831BD5D76000CA174C /* CocoaLumberjack.framework */,
+				447CA6841BD5D76000CA174C /* CocoaLumberjackSwift.framework */,
 				44CB6D7A1BA7960200233A18 /* WatchThis */,
 				44F77D4F1BA7A68C000B6072 /* Alamofire.framework */,
 				44F77D501BA7A68C000B6072 /* Async.framework */,

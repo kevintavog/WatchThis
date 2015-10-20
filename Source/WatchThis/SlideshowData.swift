@@ -49,7 +49,7 @@ class SlideshowData
         } catch let f as FileError {
             throw f
         } catch let e as NSError {
-            Logger.log("Load failed: \(e.code): \(e.localizedDescription)")
+            Logger.error("Load failed: \(e.code): \(e.localizedDescription)")
             throw FileError.LoadFailed(e.code, e.localizedDescription)
         }
     }
@@ -59,7 +59,7 @@ class SlideshowData
         guard filename != nil else { throw FileError.FilenameNotSet }
         guard name != nil else { throw FileError.NameNotSet }
         guard folderList.count > 0 else { throw FileError.NoFolders }
-        Logger.log("Saving to \(filename!)")
+        Logger.info("Saving to \(filename!)")
 
         // Form up json
         var json = JSON([String: AnyObject]())
@@ -78,7 +78,7 @@ class SlideshowData
         do {
 
             if !NSFileManager.defaultManager().fileExistsAtPath(Preferences.slideshowFolder) {
-                Logger.log("Creating slideshow folder: \(Preferences.slideshowFolder)")
+                Logger.info("Creating slideshow folder: \(Preferences.slideshowFolder)")
                 try NSFileManager.defaultManager().createDirectoryAtPath(Preferences.slideshowFolder, withIntermediateDirectories: false, attributes: nil)
             }
 
@@ -87,7 +87,7 @@ class SlideshowData
             hasChanged = false
 
         } catch let e as NSError {
-            Logger.log("Save failed: \(e.code): \(e.localizedDescription)")
+            Logger.error("Save failed: \(e.code): \(e.localizedDescription)")
             throw FileError.SaveFailed(e.code, e.localizedDescription)
         }
     }

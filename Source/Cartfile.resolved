@@ -1,2 +1,3 @@
-github "Alamofire/Alamofire" "8c9aa22943db4b8f764b8b4ce689412f6ae2ee05"
+github "Alamofire/Alamofire" "63fce12f7a1d4ced8673005693e480dc655d8d2d"
 github "duemunk/Async" "abe23c18d8d3a708a325b5db10231388e1ca5b88"
+github "CocoaLumberjack/CocoaLumberjack" "7707947dd98a9cb235881643aaf71fab99c4b972"

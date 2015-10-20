@@ -151,7 +151,7 @@ class SlideshowWindowController : NSWindowController, NSWindowDelegate, Slidesho
     {
         NSCursor.setHiddenUntilMouseMoves(true)
 
-        Logger.log("Show \(mediaData.url.path!)")
+        Logger.info("Show \(mediaData.url.path!)")
         switch mediaData.type! {
         case .Image:
             displayInfo(mediaData)
@@ -160,7 +160,7 @@ class SlideshowWindowController : NSWindowController, NSWindowDelegate, Slidesho
             displayInfo(mediaData)
             showVideo(mediaData)
         default:
-            Logger.log("Unhandled media type: \(mediaData.type)")
+            Logger.error("Unhandled media type: \(mediaData.type)")
         }
     }
 
@@ -171,7 +171,7 @@ class SlideshowWindowController : NSWindowController, NSWindowDelegate, Slidesho
 
     func pauseVideo()
     {
-        Logger.log("controller.pauseVideo")
+        Logger.info("controller.pauseVideo")
         if let player = videoView!.player {
             player.pause()
         }
@@ -179,7 +179,7 @@ class SlideshowWindowController : NSWindowController, NSWindowDelegate, Slidesho
 
     func resumeVideo()
     {
-        Logger.log("controller.resumeVideo")
+        Logger.info("controller.resumeVideo")
         if let player = videoView!.player {
             player.play()
         }
@@ -299,7 +299,7 @@ class SlideshowWindowController : NSWindowController, NSWindowDelegate, Slidesho
             }
 
         default:
-            Logger.log("Unhandled kv change: \(keyPath)")
+            Logger.error("Unhandled kv change: \(keyPath)")
         }
     }
     
