@@ -38,4 +38,11 @@ class AppDelegate: NSObject, NSApplicationDelegate
         let preferencesController = PreferencesWindowController(windowNibName: "Preferences")
         NSApplication.sharedApplication().runModalForWindow(preferencesController.window!)
     }
+
+    func application(application: NSApplication, willPresentError error: NSError) -> NSError
+    {
+        Logger.error("willPresentError: \(error)")
+        return error
+    }
+
 }

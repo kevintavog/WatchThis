@@ -132,6 +132,13 @@ class SlideshowDriver : NSObject
 
     func showFile(mediaData: MediaData)
     {
+        if !mediaData.doesExist() {
+            Logger.warn("File no longer exists: \(mediaData.url.path!)")
+            Async.main {
+                self.nextSlide()
+            }
+            return
+        }
         delegate.show(mediaData)
         if mediaData.type != SupportedMediaTypes.MediaType.Video {
             setupTimer(slideshowData.slideSeconds)
