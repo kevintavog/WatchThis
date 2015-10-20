@@ -8,7 +8,7 @@ import Async
 /// Responsible for enumerating folders to collect files, as well as providing the files for displaying
 class MediaList
 {
-    private let BytesForSignature = 8 * 1024
+    private let BytesForSignature = 2 * 1024
 
     private let slideshowData: SlideshowData
     private var mediaList:[MediaData] = []
@@ -148,7 +148,8 @@ class MediaList
                 includingPropertiesForKeys: nil,
                 options:NSDirectoryEnumerationOptions.SkipsHiddenFiles)
         }
-        catch {
+        catch let error {
+            Logger.error("Failed getting files in \(folderName): \(error)")
             return nil
         }
     }
@@ -159,7 +160,13 @@ class MediaList
             let attrs: NSDictionary? = try NSFileManager.defaultManager().attributesOfItemAtPath(filename)
             let length = attrs!.fileSize()
             if let fileHandle = NSFileHandle(forReadingAtPath: filename) {
-                let data = fileHandle.readDataOfLength(BytesForSignature)
+                let startOfFile = fileHandle.readDataOfLength(BytesForSignature)
+                fileHandle.seekToFileOffset(length - UInt64(BytesForSignature))
+                let endOfFile = fileHandle.readDataOfLength(BytesForSignature)
+
+                let data = NSMutableData(data: startOfFile)
+                data.appendData(endOfFile)
+
                 var digest = [UInt8](count:Int(CC_SHA1_DIGEST_LENGTH), repeatedValue: 0)
                 CC_SHA1(data.bytes, CC_LONG(data.length), &digest)
 
@@ -169,7 +176,8 @@ class MediaList
                     output.appendFormat("%02x", byte)
                 }
                 return output as String            }
-        } catch {
+        } catch let error {
+            Logger.error("Failed getting signature for \(filename): \(error)")
             return nil
         }
 
