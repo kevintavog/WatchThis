@@ -141,7 +141,9 @@ class SlideshowDriver : NSObject
         }
         delegate.show(mediaData)
         if mediaData.type != SupportedMediaTypes.MediaType.Video {
-            setupTimer(slideshowData.slideSeconds)
+            if driverState == .Playing {
+                setupTimer(slideshowData.slideSeconds)
+            }
         } else {
             destroyTimer()
         }

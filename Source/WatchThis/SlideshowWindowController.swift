@@ -137,8 +137,25 @@ class SlideshowWindowController : NSWindowController, NSWindowDelegate, Slidesho
 
     func updateUiState()
     {
-        playButton?.hidden = driver?.driverState == .Playing
-        pauseButton?.hidden = driver?.driverState == .Paused
+        if driver != nil {
+            switch driver!.driverState {
+            case .Created:
+                playButton?.hidden = false
+                pauseButton?.hidden = true
+            case .Playing:
+                playButton?.hidden = true
+                pauseButton?.hidden = false
+            case .Paused:
+                playButton?.hidden = false
+                pauseButton?.hidden = true
+            case .Stopped:
+                playButton?.hidden = true
+                pauseButton?.hidden = true
+            }
+        } else {
+            playButton?.hidden = true
+            pauseButton?.hidden = true
+        }
 
         let isFullScreen = ((window?.styleMask)! & NSFullScreenWindowMask) == NSFullScreenWindowMask
         enterFullScreenButton?.hidden = isFullScreen
@@ -257,7 +274,7 @@ class SlideshowWindowController : NSWindowController, NSWindowDelegate, Slidesho
         player.actionAtItemEnd = .None
 
         player.addObserver(self, forKeyPath: "volume", options: .New, context: nil)
-        player.addObserver(self, forKeyPath: "rate", options: .New, context: nil)
+//        player.addObserver(self, forKeyPath: "rate", options: .New, context: nil)
         Notifications.addObserver(self, selector: "videoDidEnd:", name: AVPlayerItemDidPlayToEndTimeNotification, object: player.currentItem)
 
         videoView.player?.play()
@@ -267,7 +284,7 @@ class SlideshowWindowController : NSWindowController, NSWindowDelegate, Slidesho
     {
         if let player = videoView?.player {
             Notifications.removeObserver(self, object: player.currentItem)
-            player.removeObserver(self, forKeyPath: "rate")
+//            player.removeObserver(self, forKeyPath: "rate")
             player.removeObserver(self, forKeyPath: "volume")
             player.pause()
             videoView?.player = nil
