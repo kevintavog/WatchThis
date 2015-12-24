@@ -1,3 +1,3 @@
-github "Alamofire/Alamofire" "63fce12f7a1d4ced8673005693e480dc655d8d2d"
-github "duemunk/Async" "abe23c18d8d3a708a325b5db10231388e1ca5b88"
-github "CocoaLumberjack/CocoaLumberjack" "7707947dd98a9cb235881643aaf71fab99c4b972"
+github "Alamofire/Alamofire" "baaecbf3ac41832d8f44e14f982cf8d66b93380e"
+github "duemunk/Async" "3c324366ceb02e69d3ff66401ea6fb6e665ec663"
+github "CocoaLumberjack/CocoaLumberjack" "c3c7d7c8c9bff275e90a967b29e4a17bfef915c3"
