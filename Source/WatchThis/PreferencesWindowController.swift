@@ -24,15 +24,15 @@ class PreferencesWindowController : NSWindowController
 
         openStreetMapHost.stringValue = Preferences.baseLocationLookup
 
-        testOsmWorkingIndicator!.hidden = true
+        testOsmWorkingIndicator!.isHidden = true
         testOsmErrorMessage.stringValue = ""
     }
 
-    @IBAction func testOpenStreetMapHost(sender: AnyObject)
+    @IBAction func testOpenStreetMapHost(_ sender: AnyObject)
     {
         updateBaseLocationLookup()
         testOsmWorkingIndicator.startAnimation(sender)
-        testOsmWorkingIndicator.hidden = false
+        testOsmWorkingIndicator.isHidden = false
         testOsmResultImage.image = nil
         testOsmErrorMessage.stringValue = ""
 
@@ -42,7 +42,7 @@ class PreferencesWindowController : NSWindowController
             let response = OpenMapLookupProvider().lookup(51.484509, longitude: 0.002570)
 
             Async.main {
-                self.testOsmWorkingIndicator.hidden = true
+                self.testOsmWorkingIndicator.isHidden = true
                 self.testOsmWorkingIndicator.stopAnimation(sender)
 
                 let succeeded = response.keys.contains("DisplayName")
@@ -68,16 +68,16 @@ class PreferencesWindowController : NSWindowController
         }
     }
 
-    @IBAction func movieVolumeUpdated(sender: AnyObject)
+    @IBAction func movieVolumeUpdated(_ sender: AnyObject)
     {
         movieVolumeLabel!.floatValue = movieVolume!.floatValue
         Preferences.videoPlayerVolume = movieVolume!.floatValue
     }
 
-    func windowWillClose(notification: NSNotification)
+    func windowWillClose(_ notification: Notification)
     {
         updateBaseLocationLookup()
-        NSApplication.sharedApplication().stopModal()
+        NSApplication.shared().stopModal()
     }
 
     func updateBaseLocationLookup()

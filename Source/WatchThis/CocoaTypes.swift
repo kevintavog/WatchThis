@@ -3,5 +3,5 @@
 
 public enum WtButtonId
 {
-    case Cancel, Ok, Yes, No
+    case cancel, ok, yes, no
 }

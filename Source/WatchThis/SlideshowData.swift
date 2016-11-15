@@ -2,17 +2,18 @@
 //
 
 import RangicCore
+import SwiftyJSON
 
 class SlideshowData
 {
-    enum FileError : ErrorType
+    enum FileError : Error
     {
-        case FilenameNotSet,
-                NameNotSet,
-                NoFolders,
-                SaveFailed(Int, String),
-                LoadFailed(Int, String),
-                InvalidSlideshowFile(filename: String, message: String)
+        case filenameNotSet,
+                nameNotSet,
+                noFolders,
+                saveFailed(Int, String),
+                loadFailed(Int, String),
+                invalidSlideshowFile(filename: String, message: String)
     }
 
 
@@ -20,7 +21,7 @@ class SlideshowData
     var name:String? { didSet { hasChanged = true } }
     var slideSeconds:Double = 10.0 { didSet { hasChanged = true } }
     var folderList = [String]() { didSet { hasChanged = true } }
-    private(set) var hasChanged = false
+    fileprivate(set) var hasChanged = false
 
 
     init()
@@ -28,13 +29,13 @@ class SlideshowData
         reset()
     }
 
-    static func load(fromFile: String) throws -> SlideshowData
+    static func load(_ fromFile: String) throws -> SlideshowData
     {
         do {
-            let fileText = try String(contentsOfFile: fromFile, encoding: NSUTF8StringEncoding)
+            let fileText = try String(contentsOfFile: fromFile, encoding: String.Encoding.utf8)
 
-            let json = JSON(data: fileText.dataUsingEncoding(NSUTF8StringEncoding, allowLossyConversion: false)!)
-            guard json["name"].string != nil else { throw FileError.InvalidSlideshowFile(filename: fromFile, message: "Missing name") }
+            let json = JSON(data: fileText.data(using: String.Encoding.utf8, allowLossyConversion: false)!)
+            guard json["name"].string != nil else { throw FileError.invalidSlideshowFile(filename: fromFile, message: "Missing name") }
 
             let slideshowData = SlideshowData()
             slideshowData.name = json["name"].stringValue
@@ -50,15 +51,15 @@ class SlideshowData
             throw f
         } catch let e as NSError {
             Logger.error("Load failed: \(e.code): \(e.localizedDescription)")
-            throw FileError.LoadFailed(e.code, e.localizedDescription)
+            throw FileError.loadFailed(e.code, e.localizedDescription)
         }
     }
 
     func save() throws
     {
-        guard filename != nil else { throw FileError.FilenameNotSet }
-        guard name != nil else { throw FileError.NameNotSet }
-        guard folderList.count > 0 else { throw FileError.NoFolders }
+        guard filename != nil else { throw FileError.filenameNotSet }
+        guard name != nil else { throw FileError.nameNotSet }
+        guard folderList.count > 0 else { throw FileError.noFolders }
         Logger.info("Saving to \(filename!)")
 
         // Form up json
@@ -70,25 +71,25 @@ class SlideshowData
 
         for folder in folderList {
             var jsonFolder = [String: AnyObject]()
-            jsonFolder["path"] = folder
-            jsonFolderList.append(jsonFolder)
+            jsonFolder["path"] = folder as AnyObject?
+            jsonFolderList.append(jsonFolder as AnyObject)
         }
         json["folders"].object = jsonFolderList
 
         do {
 
-            if !NSFileManager.defaultManager().fileExistsAtPath(Preferences.slideshowFolder) {
+            if !FileManager.default.fileExists(atPath: Preferences.slideshowFolder) {
                 Logger.info("Creating slideshow folder: \(Preferences.slideshowFolder)")
-                try NSFileManager.defaultManager().createDirectoryAtPath(Preferences.slideshowFolder, withIntermediateDirectories: false, attributes: nil)
+                try FileManager.default.createDirectory(atPath: Preferences.slideshowFolder, withIntermediateDirectories: false, attributes: nil)
             }
 
-            try json.rawString()!.writeToFile(filename!, atomically: false, encoding: NSUTF8StringEncoding)
+            try json.rawString()!.write(toFile: filename!, atomically: false, encoding: String.Encoding.utf8)
 
             hasChanged = false
 
         } catch let e as NSError {
             Logger.error("Save failed: \(e.code): \(e.localizedDescription)")
-            throw FileError.SaveFailed(e.code, e.localizedDescription)
+            throw FileError.saveFailed(e.code, e.localizedDescription)
         }
     }
 
@@ -102,8 +103,8 @@ class SlideshowData
         hasChanged = false
     }
 
-    static func getFilenameForName(name: String) -> String
+    static func getFilenameForName(_ name: String) -> String
     {
-        return ((Preferences.slideshowFolder as NSString).stringByAppendingPathComponent(name) as NSString).stringByAppendingPathExtension(Preferences.SlideshowFileExtension)!
+        return ((Preferences.slideshowFolder as NSString).appendingPathComponent(name) as NSString).appendingPathExtension(Preferences.SlideshowFileExtension)!
     }
 }

@@ -10,7 +10,7 @@ import RangicCore
 protocol SlideshowListProviderDelegate
 {
     func wantToSaveEditedSlideshow() -> WtButtonId
-    func saveSlideshow(slideshow: SlideshowData) -> Bool
+    func saveSlideshow(_ slideshow: SlideshowData) -> Bool
 }
 
 class SlideshowListProvider
@@ -22,7 +22,7 @@ class SlideshowListProvider
 
     init()
     {
-        if NSFileManager.defaultManager().fileExistsAtPath(Preferences.lastEditedFilename) {
+        if FileManager.default.fileExists(atPath: Preferences.lastEditedFilename) {
             do {
                 editedSlideshow = try SlideshowData.load(Preferences.lastEditedFilename)
             } catch let error {
@@ -36,11 +36,11 @@ class SlideshowListProvider
     func findSavedSlideshows()
     {
         var foundSlideshows = [SlideshowData]()
-        if NSFileManager.defaultManager().fileExistsAtPath(Preferences.slideshowFolder) {
+        if FileManager.default.fileExists(atPath: Preferences.slideshowFolder) {
             if let urlList = getFiles(Preferences.slideshowFolder) {
                 for url in urlList {
                     do {
-                        let slideshowData = try SlideshowData.load(url.path!)
+                        let slideshowData = try SlideshowData.load(url.path)
                         foundSlideshows.append(slideshowData)
                     }
                     catch let error {
@@ -83,16 +83,16 @@ class SlideshowListProvider
     // 	1) The user canceled the 'want to save' question
     // 	2) The user canceled the request for the save name
     // 	3) The save failed
-    private func saveIfChanged() -> Bool
+    fileprivate func saveIfChanged() -> Bool
     {
         if editedSlideshow.hasChanged && editedSlideshow.folderList.count > 0 {
             let response = delegate?.wantToSaveEditedSlideshow()
             switch response! {
-            case .Cancel:
+            case .cancel:
                 return false
-            case .No:
+            case .no:
                 return true
-            case .Yes:
+            case .yes:
                 return (delegate?.saveSlideshow(editedSlideshow))!
             default:
                 return false
@@ -101,21 +101,16 @@ class SlideshowListProvider
         return true
     }
 
-    private func getFiles(folderName:String) -> [NSURL]?
+    fileprivate func getFiles(_ folderName:String) -> [URL]?
     {
         do {
-            let urlList = try NSFileManager.defaultManager().contentsOfDirectoryAtURL(
-                NSURL(fileURLWithPath: folderName),
+            let urlList = try FileManager.default.contentsOfDirectory(
+                at: URL(fileURLWithPath: folderName),
                 includingPropertiesForKeys: nil,
-                options:NSDirectoryEnumerationOptions.SkipsHiddenFiles)
+                options:FileManager.DirectoryEnumerationOptions.skipsHiddenFiles)
 
             return urlList.filter( {
-                if let ext = $0.pathExtension {
-                    return ext == Preferences.SlideshowFileExtension
-                }
-                else {
-                    return false
-                }
+                return $0.pathExtension == Preferences.SlideshowFileExtension
             })
         }
         catch {

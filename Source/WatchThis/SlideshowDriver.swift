@@ -6,8 +6,8 @@ import RangicCore
 
 protocol SlideshowDriverDelegate
 {
-    func show(mediaData: MediaData)
-    func stateChanged(currentState: SlideshowDriver.DriverState)
+    func show(_ mediaData: MediaData)
+    func stateChanged(_ currentState: SlideshowDriver.DriverState)
     func pauseVideo()
     func resumeVideo()
 }
@@ -16,19 +16,19 @@ class SlideshowDriver : NSObject
 {
     enum DriverState:Int
     {
-        case Created,
-                Playing,
-                Paused,
-                Stopped
+        case created,
+                playing,
+                paused,
+                stopped
     }
 
     var delegate: SlideshowDriverDelegate
     let slideshowData: SlideshowData
     let mediaList: MediaList
 
-    var timer:NSTimer? = nil
+    var timer:Timer? = nil
 
-    var driverState = DriverState.Created { didSet { delegate.stateChanged(driverState) } }
+    var driverState = DriverState.created { didSet { delegate.stateChanged(driverState) } }
 
 
     init(list: MediaList, data: SlideshowData, delegate: SlideshowDriverDelegate)
@@ -47,17 +47,17 @@ class SlideshowDriver : NSObject
     func play()
     {
         Logger.info("SlideshowDriver.play \(driverState)")
-        if driverState == .Playing {
+        if driverState == .playing {
             return
         }
 
-        if driverState == .Paused && mediaList.mostRecent(self)?.type == SupportedMediaTypes.MediaType.Video {
-            driverState = .Playing
+        if driverState == .paused && mediaList.mostRecent(self)?.type == SupportedMediaTypes.MediaType.video {
+            driverState = .playing
             delegate.resumeVideo()
             return
         }
 
-        driverState = .Playing
+        driverState = .playing
         setupTimer(slideshowData.slideSeconds)
         next()
     }
@@ -65,11 +65,11 @@ class SlideshowDriver : NSObject
     func pause()
     {
         Logger.info("SlideshowDriver.pause \(driverState)")
-        if driverState != .Paused {
-            driverState = .Paused
+        if driverState != .paused {
+            driverState = .paused
             destroyTimer()
 
-            if mediaList.mostRecent(self)?.type == SupportedMediaTypes.MediaType.Video {
+            if mediaList.mostRecent(self)?.type == SupportedMediaTypes.MediaType.video {
                 delegate.pauseVideo()
             }
         }
@@ -78,7 +78,7 @@ class SlideshowDriver : NSObject
     func resume()
     {
         Logger.info("SlideshowDriver.resume \(driverState)")
-        if driverState == .Paused {
+        if driverState == .paused {
             play()
         }
     }
@@ -86,10 +86,10 @@ class SlideshowDriver : NSObject
     func pauseOrResume()
     {
         Logger.info("SlideshowDriver.pauseOrResume \(driverState)")
-        if driverState == .Paused {
+        if driverState == .paused {
             resume()
         }
-        else if driverState == .Playing {
+        else if driverState == .playing {
             pause()
         }
     }
@@ -97,7 +97,7 @@ class SlideshowDriver : NSObject
     func stop()
     {
         Logger.info("SlideshowDriver.stop \(driverState)")
-        driverState = .Stopped
+        driverState = .stopped
         destroyTimer()
     }
 
@@ -130,18 +130,18 @@ class SlideshowDriver : NSObject
         }
     }
 
-    func showFile(mediaData: MediaData)
+    func showFile(_ mediaData: MediaData)
     {
         if !mediaData.doesExist() {
-            Logger.warn("File no longer exists: \(mediaData.url.path!)")
+            Logger.warn("File no longer exists: \(mediaData.url.path)")
             Async.main {
                 self.nextSlide()
             }
             return
         }
         delegate.show(mediaData)
-        if mediaData.type != SupportedMediaTypes.MediaType.Video {
-            if driverState == .Playing {
+        if mediaData.type != SupportedMediaTypes.MediaType.video {
+            if driverState == .playing {
                 setupTimer(slideshowData.slideSeconds)
             }
         } else {
@@ -157,16 +157,16 @@ class SlideshowDriver : NSObject
     }
 
     // MARK: Timer management
-    private func setupTimer(durationSeconds: Double)
+    fileprivate func setupTimer(_ durationSeconds: Double)
     {
         if timer != nil {
             timer?.invalidate()
         }
 
-        timer = NSTimer.scheduledTimerWithTimeInterval(durationSeconds, target: self, selector: "timerFired:", userInfo: nil, repeats: true)
+        timer = Timer.scheduledTimer(timeInterval: durationSeconds, target: self, selector: #selector(SlideshowDriver.timerFired(_:)), userInfo: nil, repeats: true)
     }
 
-    private func destroyTimer()
+    fileprivate func destroyTimer()
     {
         if timer != nil {
             timer?.invalidate()
@@ -174,7 +174,7 @@ class SlideshowDriver : NSObject
         }
     }
 
-    func timerFired(someTimer: NSTimer)
+    func timerFired(_ someTimer: Timer)
     {
         Async.main {
             self.nextSlide()

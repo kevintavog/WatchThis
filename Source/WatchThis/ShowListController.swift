@@ -32,7 +32,7 @@ class ShowListController : NSWindowController, NSWindowDelegate, SlideshowListPr
         window!.registerForDraggedTypes([NSFilenamesPboardType])
         updateEditData()
 
-        Notifications.addObserver(self, selector: "slideshowEnumerationCompleted:", name: Notifications.SlideshowListProvider.EnumerationCompleted, object: nil)
+        Notifications.addObserver(self, selector: #selector(ShowListController.slideshowEnumerationCompleted(_:)), name: Notifications.SlideshowListProvider.EnumerationCompleted, object: nil)
 
         Async.background {
             self.slideshowListProvider.findSavedSlideshows()
@@ -42,17 +42,17 @@ class ShowListController : NSWindowController, NSWindowDelegate, SlideshowListPr
     func addKeyboardShorcutToMenu()
     {
         if let windowMenu = NSApp.windowsMenu {
-            if let listItem = windowMenu.itemWithTitle("Watch This") {
+            if let listItem = windowMenu.item(withTitle: "Watch This") {
                 listItem.keyEquivalent = "0"
-                listItem.keyEquivalentModifierMask = Int(NSEventModifierFlags.CommandKeyMask.rawValue)
+                listItem.keyEquivalentModifierMask = NSEventModifierFlags(rawValue: UInt(Int(NSEventModifierFlags.command.rawValue)))
             }
 
             var shortcut = 1
-            for item in windowMenu.itemArray {
+            for item in windowMenu.items {
                 if shortcut < 10 {
-                    if item.title.rangeOfString("Slideshow") != nil  {
+                    if item.title.range(of: "Slideshow") != nil  {
                         item.keyEquivalent = String(shortcut)
-                        item.keyEquivalentModifierMask = Int(NSEventModifierFlags.CommandKeyMask.rawValue)
+                        item.keyEquivalentModifierMask = NSEventModifierFlags(rawValue: UInt(Int(NSEventModifierFlags.command.rawValue)))
 
                         shortcut += 1
                     }
@@ -62,7 +62,7 @@ class ShowListController : NSWindowController, NSWindowDelegate, SlideshowListPr
     }
 
     // MARK: notifications
-    func slideshowEnumerationCompleted(notification: NSNotification)
+    func slideshowEnumerationCompleted(_ notification: Notification)
     {
         Async.main {
             self.savedTableView.reloadData()
@@ -70,22 +70,22 @@ class ShowListController : NSWindowController, NSWindowDelegate, SlideshowListPr
     }
 
     // MARK: menu handling
-    @IBAction func saveEditFields(sender: AnyObject)
+    @IBAction func saveEditFields(_ sender: AnyObject)
     {
-        saveSlideshow(slideshowListProvider.editedSlideshow)
+        let _ = saveSlideshow(slideshowListProvider.editedSlideshow)
     }
 
-    @IBAction func clearEditFields(sender: AnyObject)
+    @IBAction func clearEditFields(_ sender: AnyObject)
     {
         slideshowListProvider.editedSlideshow.reset()
         updateEditData()
     }
 
-    @IBAction func deleteSavedSlideshow(sender: AnyObject)
+    @IBAction func deleteSavedSlideshow(_ sender: AnyObject)
     {
     }
 
-    @IBAction func run(sender: AnyObject)
+    @IBAction func run(_ sender: AnyObject)
     {
         if let selectedSlideshow = getActiveSlideshow() {
 
@@ -93,8 +93,8 @@ class ShowListController : NSWindowController, NSWindowDelegate, SlideshowListPr
             if selectedSlideshow.folderList.count < 1 {
                 let alert = NSAlert()
                 alert.messageText = "There are no images to show because there are no folders and no search terms in this slideshow."
-                alert.alertStyle = NSAlertStyle.WarningAlertStyle
-                alert.addButtonWithTitle("Close")
+                alert.alertStyle = NSAlertStyle.warning
+                alert.addButton(withTitle: "Close")
                 alert.runModal()
                 return
             }
@@ -110,37 +110,37 @@ class ShowListController : NSWindowController, NSWindowDelegate, SlideshowListPr
         else {
             let alert = NSAlert()
             alert.messageText = "Select a slideshow to run."
-            alert.alertStyle = NSAlertStyle.WarningAlertStyle
-            alert.addButtonWithTitle("Close")
+            alert.alertStyle = NSAlertStyle.warning
+            alert.addButton(withTitle: "Close")
             alert.runModal()
             return
         }
     }
 
-    @IBAction func addFolder(sender: AnyObject)
+    @IBAction func addFolder(_ sender: AnyObject)
     {
         let dialog = NSOpenPanel()
 
         dialog.canChooseFiles = false
         dialog.canChooseDirectories = true
         dialog.allowsMultipleSelection = true
-        if 1 != dialog.runModal() || dialog.URLs.count < 1 {
+        if 1 != dialog.runModal() || dialog.urls.count < 1 {
             return
         }
 
-        for folderUrl in dialog.URLs {
-            slideshowListProvider.editedSlideshow.folderList.append(folderUrl.path!)
+        for folderUrl in dialog.urls {
+            slideshowListProvider.editedSlideshow.folderList.append(folderUrl.path)
         }
 
         editFolderTableView.reloadData()
     }
 
-    @IBAction func removeFolder(sender: AnyObject)
+    @IBAction func removeFolder(_ sender: AnyObject)
     {
         if editFolderTableView.selectedRow >= 0 {
 
             var itemsToRemove = Set<String>()
-            for (_, index) in editFolderTableView.selectedRowIndexes.enumerate() {
+            for (_, index) in editFolderTableView.selectedRowIndexes.enumerated() {
                 itemsToRemove.insert(slideshowListProvider.editedSlideshow.folderList[index])
             }
 
@@ -151,7 +151,7 @@ class ShowListController : NSWindowController, NSWindowDelegate, SlideshowListPr
         }
     }
 
-    @IBAction func slideDurationChanged(sender: AnyObject)
+    @IBAction func slideDurationChanged(_ sender: AnyObject)
     {
         slideshowListProvider.editedSlideshow.slideSeconds = slideDurationStepper.doubleValue
         updateEditData()
@@ -186,7 +186,7 @@ class ShowListController : NSWindowController, NSWindowDelegate, SlideshowListPr
     }
 
     // MARK: table view data
-    func numberOfRowsInTableView(tv: NSTableView) -> Int
+    func numberOfRowsInTableView(_ tv: NSTableView) -> Int
     {
         switch tv.tag {
         case 0:
@@ -199,7 +199,7 @@ class ShowListController : NSWindowController, NSWindowDelegate, SlideshowListPr
         }
     }
 
-    func tableView(tv: NSTableView, objectValueForTableColumn: NSTableColumn?, row: Int) -> String
+    func tableView(_ tv: NSTableView, objectValueForTableColumn: NSTableColumn?, row: Int) -> String
     {
         switch tv.tag {
         case 0:
@@ -212,19 +212,19 @@ class ShowListController : NSWindowController, NSWindowDelegate, SlideshowListPr
     }
 
     // MARK: NSWindowDelegate
-    func windowShouldClose(sender: AnyObject) -> Bool
+    func windowShouldClose(_ sender: Any) -> Bool
     {
         return slideshowListProvider.canClose()
     }
 
     // MARK: SlideshowListProviderDelegate
-    func saveSlideshow(slideshow: SlideshowData) -> Bool
+    func saveSlideshow(_ slideshow: SlideshowData) -> Bool
     {
         if slideshow.folderList.count < 1 {
             let alert = NSAlert()
             alert.messageText = "Add a folder before saving."
-            alert.alertStyle = NSAlertStyle.WarningAlertStyle
-            alert.addButtonWithTitle("Close")
+            alert.alertStyle = NSAlertStyle.warning
+            alert.addButton(withTitle: "Close")
             alert.runModal()
             return false
         }
@@ -243,8 +243,8 @@ class ShowListController : NSWindowController, NSWindowDelegate, SlideshowListPr
         } catch let error {
             let alert = NSAlert()
             alert.messageText = "There was an error saving the slideshow: \(error)."
-            alert.alertStyle = NSAlertStyle.WarningAlertStyle
-            alert.addButtonWithTitle("Close")
+            alert.alertStyle = NSAlertStyle.warning
+            alert.addButton(withTitle: "Close")
             alert.runModal()
         }
 
@@ -255,17 +255,17 @@ class ShowListController : NSWindowController, NSWindowDelegate, SlideshowListPr
     {
         let alert = NSAlert()
         alert.messageText = "Do you want to save changes to the Edited slideshow?"
-        alert.alertStyle = NSAlertStyle.WarningAlertStyle
-        alert.addButtonWithTitle("Yes")
-        alert.addButtonWithTitle("No")
-        alert.addButtonWithTitle("Cancel")
+        alert.alertStyle = NSAlertStyle.warning
+        alert.addButton(withTitle: "Yes")
+        alert.addButton(withTitle: "No")
+        alert.addButton(withTitle: "Cancel")
 
         let response = alert.runModal()
         switch response {
         case NSAlertFirstButtonReturn:
-            return WtButtonId.No
+            return WtButtonId.no
         default:
-            return WtButtonId.Cancel
+            return WtButtonId.cancel
         }
     }
 
@@ -273,9 +273,9 @@ class ShowListController : NSWindowController, NSWindowDelegate, SlideshowListPr
     {
         let question = NSAlert()
         question.messageText = "Enter a name for this slideshow"
-        question.alertStyle = NSAlertStyle.InformationalAlertStyle
-        question.addButtonWithTitle("OK")
-        question.addButtonWithTitle("Cancel")
+        question.alertStyle = NSAlertStyle.informational
+        question.addButton(withTitle: "OK")
+        question.addButton(withTitle: "Cancel")
 
         let textField = NSTextField(frame: NSRect(x: 0, y: 0, width: 200, height: 24))
         question.accessoryView = textField
@@ -291,7 +291,7 @@ class ShowListController : NSWindowController, NSWindowDelegate, SlideshowListPr
                 continue
             }
 
-            let name = textField.stringValue.stringByTrimmingCharactersInSet(NSCharacterSet.whitespaceCharacterSet())
+            let name = textField.stringValue.trimmingCharacters(in: CharacterSet.whitespaces)
 
             // TODO: Case-insensitive search
             let matchingNames = slideshowListProvider.savedSlideshows.filter(
@@ -302,8 +302,8 @@ class ShowListController : NSWindowController, NSWindowDelegate, SlideshowListPr
             if matchingNames.count > 0 {
                 let alert = NSAlert()
                 alert.messageText = "The name '\(name)' is already used - choose a unique name."
-                alert.alertStyle = NSAlertStyle.WarningAlertStyle
-                alert.addButtonWithTitle("Close")
+                alert.alertStyle = NSAlertStyle.warning
+                alert.addButton(withTitle: "Close")
                 alert.runModal()
                 continue
             }

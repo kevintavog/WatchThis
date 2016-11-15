@@ -8,13 +8,13 @@ import Async
 /// Responsible for enumerating folders to collect files, as well as providing the files for displaying
 class MediaList
 {
-    private let BytesForSignature = 2 * 1024
+    fileprivate let BytesForSignature = 2 * 1024
 
-    private let slideshowData: SlideshowData
-    private var mediaList:[MediaData] = []
-    internal private(set) var totalCount = 0
-    private let mutex = Mutex()
-    private var visitedFiles = [String:String]()
+    fileprivate let slideshowData: SlideshowData
+    fileprivate var mediaList:[MediaData] = []
+    internal fileprivate(set) var totalCount = 0
+    fileprivate let mutex = Mutex()
+    fileprivate var visitedFiles = [String:String]()
 
     var previousList = [SlideshowDriver:PreviousList]()
 
@@ -24,7 +24,7 @@ class MediaList
         slideshowData = data
     }
 
-    func next(driver: SlideshowDriver) -> MediaData?
+    func next(_ driver: SlideshowDriver) -> MediaData?
     {
         let list = getDriverList(driver)
 
@@ -40,7 +40,7 @@ class MediaList
             defer { objc_sync_exit(self) }
 
             let index = arc4random_uniform(UInt32(mediaList.count))
-            file = mediaList.removeAtIndex(Int(index))
+            file = mediaList.remove(at: Int(index))
 
             list.add(file!, index: totalCount - mediaList.count)
         }
@@ -48,7 +48,7 @@ class MediaList
         return file
     }
 
-    func currentIndex(driver: SlideshowDriver) -> Int
+    func currentIndex(_ driver: SlideshowDriver) -> Int
     {
         let list = getDriverList(driver)
         if list.hasIndex() {
@@ -59,17 +59,17 @@ class MediaList
     }
 
 
-    func previous(driver: SlideshowDriver) -> MediaData?
+    func previous(_ driver: SlideshowDriver) -> MediaData?
     {
         return getDriverList(driver).previous()
     }
 
-    func mostRecent(driver: SlideshowDriver) -> MediaData?
+    func mostRecent(_ driver: SlideshowDriver) -> MediaData?
     {
         return getDriverList(driver).mostRecent()
     }
 
-    private func getDriverList(driver: SlideshowDriver) -> PreviousList
+    fileprivate func getDriverList(_ driver: SlideshowDriver) -> PreviousList
     {
         var list: PreviousList
         if previousList[driver] == nil {
@@ -85,7 +85,7 @@ class MediaList
 
 
     // MARK: Enumerate folders/files
-    internal func beginEnumerate(onAvailable: () -> ())
+    internal func beginEnumerate(_ onAvailable: @escaping () -> ())
     {
         Async.background {
             self.visitedFiles = [String:String]()
@@ -98,22 +98,22 @@ class MediaList
         }
     }
 
-    private func addFolder(folderName: String, onAvailable: () -> ())
+    fileprivate func addFolder(_ folderName: String, onAvailable: @escaping () -> ())
     {
         let startedEmpty = mediaList.count == 0
         var folders = [String]()
-        if NSFileManager.defaultManager().fileExistsAtPath(folderName) {
+        if FileManager.default.fileExists(atPath: folderName) {
             if let files = getFiles(folderName) {
                 for f in files {
                     let mediaType = SupportedMediaTypes.getTypeFromFileExtension(((f.path!) as NSString).pathExtension)
-                    if mediaType == SupportedMediaTypes.MediaType.Image || mediaType == SupportedMediaTypes.MediaType.Video {
+                    if mediaType == SupportedMediaTypes.MediaType.image || mediaType == SupportedMediaTypes.MediaType.video {
                         if let signature = getSignature(f.path!) {
                             if visitedFiles.keys.contains(signature) {
                                 Logger.info("Ignoring duplicate: \(visitedFiles[signature]!) == \(f.path!)")
                             } else {
                                 visitedFiles[signature] = f.path!
-                                mediaList.append(FileMediaData.create(f, mediaType: mediaType))
-                                ++totalCount
+                                mediaList.append(FileMediaData.create(f as URL, mediaType: mediaType))
+                                totalCount += 1
                             }
                         } else {
                             Logger.warn("Unable to create signature for '\(f.path!)'")
@@ -121,7 +121,7 @@ class MediaList
                     }
 
                     var isFolder: ObjCBool = false
-                    if NSFileManager.defaultManager().fileExistsAtPath(f.path!, isDirectory:&isFolder) && isFolder {
+                    if FileManager.default.fileExists(atPath: f.path!, isDirectory:&isFolder) && isFolder.boolValue {
                         folders.append(f.path!)
                     }
                 }
@@ -140,13 +140,13 @@ class MediaList
         }
     }
 
-    private func getFiles(folderName: String) -> [NSURL]?
+    fileprivate func getFiles(_ folderName: String) -> [NSURL]?
     {
         do {
-            return try NSFileManager.defaultManager().contentsOfDirectoryAtURL(
-                NSURL(fileURLWithPath: folderName),
+            return try FileManager.default.contentsOfDirectory(
+                at: NSURL(fileURLWithPath: folderName) as URL,
                 includingPropertiesForKeys: nil,
-                options:NSDirectoryEnumerationOptions.SkipsHiddenFiles)
+                options:FileManager.DirectoryEnumerationOptions.skipsHiddenFiles) as [NSURL]?
         }
         catch let error {
             Logger.error("Failed getting files in \(folderName): \(error)")
@@ -154,20 +154,20 @@ class MediaList
         }
     }
 
-    private func getSignature(filename: String) -> String?
+    fileprivate func getSignature(_ filename: String) -> String?
     {
         do {
-            let attrs: NSDictionary? = try NSFileManager.defaultManager().attributesOfItemAtPath(filename)
+            let attrs: NSDictionary? = try FileManager.default.attributesOfItem(atPath: filename) as NSDictionary?
             let length = attrs!.fileSize()
-            if let fileHandle = NSFileHandle(forReadingAtPath: filename) {
-                let startOfFile = fileHandle.readDataOfLength(BytesForSignature)
-                fileHandle.seekToFileOffset(length - UInt64(BytesForSignature))
-                let endOfFile = fileHandle.readDataOfLength(BytesForSignature)
+            if let fileHandle = FileHandle(forReadingAtPath: filename) {
+                let startOfFile = fileHandle.readData(ofLength: BytesForSignature)
+                fileHandle.seek(toFileOffset: length - UInt64(BytesForSignature))
+                let endOfFile = fileHandle.readData(ofLength: BytesForSignature)
 
                 let data = NSMutableData(data: startOfFile)
-                data.appendData(endOfFile)
+                data.append(endOfFile)
 
-                var digest = [UInt8](count:Int(CC_SHA1_DIGEST_LENGTH), repeatedValue: 0)
+                var digest = [UInt8](repeating: 0, count: Int(CC_SHA1_DIGEST_LENGTH))
                 CC_SHA1(data.bytes, CC_LONG(data.length), &digest)
 
                 let output = NSMutableString(capacity: Int(9 + CC_SHA1_DIGEST_LENGTH))

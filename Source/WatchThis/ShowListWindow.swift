@@ -8,33 +8,33 @@ import RangicCore
 
 class ShowListWindow : NSWindow, NSDraggingDestination
 {
-    func draggingEntered(sender: NSDraggingInfo) -> NSDragOperation
+    func draggingEntered(_ sender: NSDraggingInfo) -> NSDragOperation
     {
         Logger.info("Dragging entered")
-        return folderPaths(sender).count > 0 ? .Copy : .None
+        return folderPaths(sender).count > 0 ? .copy : NSDragOperation()
     }
 
-    func draggingUpdated(sender: NSDraggingInfo) -> NSDragOperation
+    func draggingUpdated(_ sender: NSDraggingInfo) -> NSDragOperation
     {
-        return folderPaths(sender).count > 0 ? .Copy : .None
+        return folderPaths(sender).count > 0 ? .copy : NSDragOperation()
     }
 
-    func performDragOperation(sender: NSDraggingInfo) -> Bool
+    func performDragOperation(_ sender: NSDraggingInfo) -> Bool
     {
         let folderList = folderPaths(sender)
         Logger.info("Perform drag operation: \(folderList)")
         return true
     }
 
-    func folderPaths(dragInfo: NSDraggingInfo) -> [String]
+    func folderPaths(_ dragInfo: NSDraggingInfo) -> [String]
     {
         var list = [String]()
 
         if (dragInfo.draggingPasteboard().types?.contains(NSFilenamesPboardType) != nil) {
-            if let fileArray = dragInfo.draggingPasteboard().propertyListForType(NSFilenamesPboardType) as? [String] {
+            if let fileArray = dragInfo.draggingPasteboard().propertyList(forType: NSFilenamesPboardType) as? [String] {
                 for file in fileArray {
                     var isDirectory:ObjCBool = false
-                    if NSFileManager.defaultManager().fileExistsAtPath(file, isDirectory: &isDirectory) && isDirectory {
+                    if FileManager.default.fileExists(atPath: file, isDirectory: &isDirectory) && isDirectory.boolValue {
                         list.append(file)
                     }
                 }

@@ -7,19 +7,19 @@ import RangicCore
 class Preferences : BasePreferences
 {
     static let SlideshowFileExtension = "watchthisslideshow"
-    static private let SlideshowFolderKey = "SlideshowFolder"
-    static private let LastEditedFilenameKey = "LastEditedFilename"
-    static private let VideoPlayerVolumeKey = "VideoPlayerVolume"
-    static private let BaseLocationLookupKey = "BaseLocationLookup"
+    static fileprivate let SlideshowFolderKey = "SlideshowFolder"
+    static fileprivate let LastEditedFilenameKey = "LastEditedFilename"
+    static fileprivate let VideoPlayerVolumeKey = "VideoPlayerVolume"
+    static fileprivate let BaseLocationLookupKey = "BaseLocationLookup"
 
     static func setMissingDefaults()
     {
-        let appSupportFolder = NSFileManager.defaultManager().URLsForDirectory(.ApplicationSupportDirectory, inDomains: .UserDomainMask).first!
-        lastEditedFilename = NSString.pathWithComponents([appSupportFolder.path!, "WatchThis", "LastEdited"])
-        lastEditedFilename = (lastEditedFilename as NSString).stringByAppendingPathExtension(SlideshowFileExtension)!
+        let appSupportFolder = FileManager.default.urls(for: .applicationSupportDirectory, in: .userDomainMask).first!
+        lastEditedFilename = NSString.path(withComponents: [appSupportFolder.path, "WatchThis", "LastEdited"])
+        lastEditedFilename = (lastEditedFilename as NSString).appendingPathExtension(SlideshowFileExtension)!
 
-        let picturesFolder = NSFileManager.defaultManager().URLsForDirectory(.PicturesDirectory, inDomains: .UserDomainMask).first!
-        slideshowFolder = NSString.pathWithComponents([picturesFolder.path!, "WatchThis Slideshows"])
+        let picturesFolder = FileManager.default.urls(for: .picturesDirectory, in: .userDomainMask).first!
+        slideshowFolder = NSString.path(withComponents: [picturesFolder.path, "WatchThis Slideshows"])
 
         setDefaultValue("http://open.mapquestapi.com", key: BaseLocationLookupKey)
     }

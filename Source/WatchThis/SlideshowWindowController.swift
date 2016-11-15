@@ -28,34 +28,34 @@ class SlideshowWindowController : NSWindowController, NSWindowDelegate, Slidesho
 
     let secondsToHideControl = 2.0
     var lastMouseMovedTime = 0.0
-    var hideControlsTimer:NSTimer? = nil
+    var hideControlsTimer:Timer? = nil
 
 
     // MARK: initialization
     override func awakeFromNib()
     {
         super.awakeFromNib()
-        window?.backgroundColor = NSColor.blackColor()
+        window?.backgroundColor = NSColor.black
 
         imageView = createImageView()
-        window?.contentView?.addSubview(imageView!, positioned: NSWindowOrderingMode.Below, relativeTo: window?.contentView?.subviews[0])
+        window?.contentView?.addSubview(imageView!, positioned: NSWindowOrderingMode.below, relativeTo: window?.contentView?.subviews[0])
         videoView = createVideoView()
-        window?.contentView?.addSubview(videoView!, positioned: NSWindowOrderingMode.Below, relativeTo: window?.contentView?.subviews[0])
+        window?.contentView?.addSubview(videoView!, positioned: NSWindowOrderingMode.below, relativeTo: window?.contentView?.subviews[0])
 
-        imageView?.hidden = true
-        videoView?.hidden = true
+        imageView?.isHidden = true
+        videoView?.isHidden = true
 
         infoText.stringValue = ""
         indexText.stringValue = ""
         updateUiState()
 
-        lastMouseMovedTime = NSDate().timeIntervalSinceReferenceDate
+        lastMouseMovedTime = Date().timeIntervalSinceReferenceDate
         window?.acceptsMouseMovedEvents = true
 
         showControls()
     }
 
-    func setDataModel(data: SlideshowData, mediaList: MediaList)
+    func setDataModel(_ data: SlideshowData, mediaList: MediaList)
     {
         self.mediaList = mediaList
         driver = SlideshowDriver(list: mediaList, data: data, delegate: self)
@@ -65,48 +65,48 @@ class SlideshowWindowController : NSWindowController, NSWindowDelegate, Slidesho
     }
 
     // MARK: Actions
-    @IBAction func pause(sender: AnyObject)
+    @IBAction func pause(_ sender: AnyObject)
     {
         driver?.pause()
     }
 
-    @IBAction func play(sender: AnyObject)
+    @IBAction func play(_ sender: AnyObject)
     {
         driver?.play()
     }
 
-    @IBAction func nextImage(sender: AnyObject)
+    @IBAction func nextImage(_ sender: AnyObject)
     {
         driver?.next()
     }
 
-    @IBAction func previousImage(sender: AnyObject)
+    @IBAction func previousImage(_ sender: AnyObject)
     {
         driver?.previous()
     }
 
-    @IBAction func closeSlideshow(sender: AnyObject)
+    @IBAction func closeSlideshow(_ sender: AnyObject)
     {
         driver?.stop()
     }
 
-    @IBAction func toggleFullScreen(sender: AnyObject)
+    @IBAction func toggleFullScreen(_ sender: AnyObject)
     {
         window?.toggleFullScreen(sender);
     }
 
 
     // MARK: Control view management
-    override func mouseMoved(theEvent: NSEvent)
+    override func mouseMoved(with theEvent: NSEvent)
     {
-        super.mouseMoved(theEvent)
+        super.mouseMoved(with: theEvent)
         showControls()
     }
 
-    override func keyDown(theEvent: NSEvent)
+    override func keyDown(with theEvent: NSEvent)
     {
         showControls()
-        super.keyDown(theEvent)
+        super.keyDown(with: theEvent)
     }
 
     func showControls()
@@ -115,9 +115,9 @@ class SlideshowWindowController : NSWindowController, NSWindowDelegate, Slidesho
             hideControlsTimer?.invalidate()
         }
 
-        hideControlsTimer = NSTimer.scheduledTimerWithTimeInterval(
-            secondsToHideControl, target: self, selector: "hideControlsTimerFired:", userInfo: nil, repeats: true)
-        controlsView.hidden = false
+        hideControlsTimer = Timer.scheduledTimer(
+            timeInterval: secondsToHideControl, target: self, selector: #selector(SlideshowWindowController.hideControlsTimerFired(_:)), userInfo: nil, repeats: true)
+        controlsView.isHidden = false
     }
 
     func hideControls()
@@ -127,10 +127,10 @@ class SlideshowWindowController : NSWindowController, NSWindowDelegate, Slidesho
             hideControlsTimer = nil
         }
 
-        controlsView.hidden = true
+        controlsView.isHidden = true
     }
 
-    func hideControlsTimerFired(someTimer: NSTimer)
+    func hideControlsTimerFired(_ someTimer: Timer)
     {
         hideControls()
     }
@@ -139,41 +139,41 @@ class SlideshowWindowController : NSWindowController, NSWindowDelegate, Slidesho
     {
         if driver != nil {
             switch driver!.driverState {
-            case .Created:
-                playButton?.hidden = false
-                pauseButton?.hidden = true
-            case .Playing:
-                playButton?.hidden = true
-                pauseButton?.hidden = false
-            case .Paused:
-                playButton?.hidden = false
-                pauseButton?.hidden = true
-            case .Stopped:
-                playButton?.hidden = true
-                pauseButton?.hidden = true
+            case .created:
+                playButton?.isHidden = false
+                pauseButton?.isHidden = true
+            case .playing:
+                playButton?.isHidden = true
+                pauseButton?.isHidden = false
+            case .paused:
+                playButton?.isHidden = false
+                pauseButton?.isHidden = true
+            case .stopped:
+                playButton?.isHidden = true
+                pauseButton?.isHidden = true
             }
         } else {
-            playButton?.hidden = true
-            pauseButton?.hidden = true
+            playButton?.isHidden = true
+            pauseButton?.isHidden = true
         }
 
-        let isFullScreen = ((window?.styleMask)! & NSFullScreenWindowMask) == NSFullScreenWindowMask
-        enterFullScreenButton?.hidden = isFullScreen
-        exitFullScreenButton?.hidden = !isFullScreen
+        let isFullScreen = window!.styleMask.contains(NSWindowStyleMask.fullScreen)
+        enterFullScreenButton?.isHidden = isFullScreen
+        exitFullScreenButton?.isHidden = !isFullScreen
     }
 
 
     // MARK: SlideshowDriverDelegate
-    func show(mediaData: MediaData)
+    func show(_ mediaData: MediaData)
     {
         NSCursor.setHiddenUntilMouseMoves(true)
 
-        Logger.info("Show \(mediaData.url.path!)")
+        Logger.info("Show \(mediaData.url.path)")
         switch mediaData.type! {
-        case .Image:
+        case .image:
             displayInfo(mediaData)
-            showImage(mediaData)
-        case .Video:
+            let _ = showImage(mediaData)
+        case .video:
             displayInfo(mediaData)
             showVideo(mediaData)
         default:
@@ -181,7 +181,7 @@ class SlideshowWindowController : NSWindowController, NSWindowDelegate, Slidesho
         }
     }
 
-    func stateChanged(currentState: SlideshowDriver.DriverState)
+    func stateChanged(_ currentState: SlideshowDriver.DriverState)
     {
         updateUiState()
     }
@@ -203,9 +203,9 @@ class SlideshowWindowController : NSWindowController, NSWindowDelegate, Slidesho
     }
     
     //  MARK: show image/video
-    func displayInfo(mediaData: MediaData)
+    func displayInfo(_ mediaData: MediaData)
     {
-        let parentPath = ((mediaData.url!.path as NSString!).stringByDeletingLastPathComponent as NSString).lastPathComponent
+        let parentPath = ((mediaData.url!.path as NSString!).deletingLastPathComponent as NSString).lastPathComponent
         let displayInfo = "\(parentPath)"
         displayInfoString(displayInfo)
 
@@ -213,7 +213,7 @@ class SlideshowWindowController : NSWindowController, NSWindowDelegate, Slidesho
 
         if let location = mediaData.location {
             Async.background {
-                var placename = location.placenameAsString(PlaceNameFilter.Standard)
+                var placename = location.placenameAsString(PlaceNameFilter.standard)
                 if placename.characters.count == 0 {
                     placename = location.toDms()
                 }
@@ -225,7 +225,7 @@ class SlideshowWindowController : NSWindowController, NSWindowDelegate, Slidesho
         }
     }
 
-    func displayInfoString(displayInfo: String)
+    func displayInfoString(_ displayInfo: String)
     {
         let fullRange = NSRange(location: 0, length: displayInfo.characters.count)
         let attributeString = NSMutableAttributedString(string: displayInfo)
@@ -233,7 +233,7 @@ class SlideshowWindowController : NSWindowController, NSWindowDelegate, Slidesho
         infoText.attributedStringValue = attributeString
     }
 
-    func displayIndexString(index: String)
+    func displayIndexString(_ index: String)
     {
         let fullRange = NSRange(location: 0, length: index.characters.count)
         let attributeString = NSMutableAttributedString(string: index)
@@ -241,17 +241,17 @@ class SlideshowWindowController : NSWindowController, NSWindowDelegate, Slidesho
         indexText.attributedStringValue = attributeString
     }
 
-    func showImage(mediaData: MediaData) -> Double?
+    func showImage(_ mediaData: MediaData) -> Double?
     {
         stopVideoPlayer()
         imageView?.image = nil
-        imageView?.hidden = false
-        videoView?.hidden = true
+        imageView?.isHidden = false
+        videoView?.isHidden = true
 
         Async.background {
-            let imageSource = CGImageSourceCreateWithURL(mediaData.url, nil)
+            let imageSource = CGImageSourceCreateWithURL(mediaData.url as CFURL, nil)
             let image = CGImageSourceCreateImageAtIndex(imageSource!, 0, nil)
-            let nsImage = NSImage(CGImage: image!, size: NSSize(width: CGImageGetWidth(image), height: CGImageGetHeight(image)))
+            let nsImage = NSImage(cgImage: image!, size: NSSize(width: (image?.width)!, height: (image?.height)!))
 
             Async.main {
                 self.imageView?.image = nsImage;
@@ -260,22 +260,22 @@ class SlideshowWindowController : NSWindowController, NSWindowDelegate, Slidesho
         return 0
     }
 
-    func showVideo(mediaData: MediaData)
+    func showVideo(_ mediaData: MediaData)
     {
         stopVideoPlayer()
 
-        imageView?.hidden = true
+        imageView?.isHidden = true
         imageView?.image = nil
-        videoView?.hidden = false
+        videoView?.isHidden = false
 
-        videoView.player = AVPlayer(URL: mediaData.url)
+        videoView.player = AVPlayer(url: mediaData.url)
         let player = videoView.player!
         player.volume = Preferences.videoPlayerVolume
-        player.actionAtItemEnd = .None
+        player.actionAtItemEnd = .none
 
-        player.addObserver(self, forKeyPath: "volume", options: .New, context: nil)
+        player.addObserver(self, forKeyPath: "volume", options: .new, context: nil)
 //        player.addObserver(self, forKeyPath: "rate", options: .New, context: nil)
-        Notifications.addObserver(self, selector: "videoDidEnd:", name: AVPlayerItemDidPlayToEndTimeNotification, object: player.currentItem)
+        Notifications.addObserver(self, selector: #selector(SlideshowWindowController.videoDidEnd(_:)), name: NSNotification.Name.AVPlayerItemDidPlayToEndTime.rawValue, object: player.currentItem)
 
         videoView.player?.play()
     }
@@ -291,23 +291,23 @@ class SlideshowWindowController : NSWindowController, NSWindowDelegate, Slidesho
         }
     }
 
-    func videoDidEnd(notification: NSNotification)
+    func videoDidEnd(_ notification: Notification)
     {
         Async.main(after: 2.0) {
             self.driver?.videoDidEnd()
         }
     }
 
-    override func observeValueForKeyPath(keyPath: String?, ofObject object: AnyObject?, change: [String:AnyObject]?, context: UnsafeMutablePointer<Void>)
+    override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey:Any]?, context: UnsafeMutableRawPointer?)
     {
         switch keyPath! {
         case "volume":
-            if let volume = change![NSKeyValueChangeNewKey] as? Float {
+            if let volume = change![NSKeyValueChangeKey.newKey] as? Float {
                 Preferences.videoPlayerVolume = volume
             }
 
         case "rate":
-            if let rate = change![NSKeyValueChangeNewKey] as? Float {
+            if let rate = change![NSKeyValueChangeKey.newKey] as? Float {
                 if rate == 0 {
                     driver!.pause()
                 } else {
@@ -322,18 +322,18 @@ class SlideshowWindowController : NSWindowController, NSWindowDelegate, Slidesho
     
 
     // MARK: NSWindowDelegate
-    func windowWillClose(notification: NSNotification)
+    func windowWillClose(_ notification: Notification)
     {
         stopVideoPlayer()
         driver?.stop()
     }
 
-    func windowDidEnterFullScreen(notification: NSNotification)
+    func windowDidEnterFullScreen(_ notification: Notification)
     {
         updateUiState()
     }
 
-    func windowDidExitFullScreen(notification: NSNotification)
+    func windowDidExitFullScreen(_ notification: Notification)
     {
         updateUiState()
     }
@@ -343,18 +343,18 @@ class SlideshowWindowController : NSWindowController, NSWindowDelegate, Slidesho
     func createImageView() -> NSImageView
     {
         let imageView = NSImageView(frame: (window?.contentView?.frame)!)
-        imageView.imageScaling = NSImageScaling.ScaleProportionallyDown
-        imageView.autoresizingMask = NSAutoresizingMaskOptions(rawValue: NSAutoresizingMaskOptions.ViewHeightSizable.rawValue
-            | NSAutoresizingMaskOptions.ViewWidthSizable.rawValue)
+        imageView.imageScaling = NSImageScaling.scaleProportionallyDown
+        imageView.autoresizingMask = NSAutoresizingMaskOptions(rawValue: NSAutoresizingMaskOptions.viewHeightSizable.rawValue
+            | NSAutoresizingMaskOptions.viewWidthSizable.rawValue)
         return imageView
     }
 
     func createVideoView() -> AVPlayerView
     {
         let videoView = AVPlayerView(frame: (window?.contentView?.frame)!)
-        videoView.autoresizingMask = NSAutoresizingMaskOptions(rawValue: NSAutoresizingMaskOptions.ViewHeightSizable.rawValue
-            | NSAutoresizingMaskOptions.ViewWidthSizable.rawValue)
-        videoView.controlsStyle = .Floating
+        videoView.autoresizingMask = NSAutoresizingMaskOptions(rawValue: NSAutoresizingMaskOptions.viewHeightSizable.rawValue
+            | NSAutoresizingMaskOptions.viewWidthSizable.rawValue)
+        videoView.controlsStyle = .floating
         videoView.showsFrameSteppingButtons = true
         return videoView
     }

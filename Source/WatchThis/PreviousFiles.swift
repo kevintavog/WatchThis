@@ -6,8 +6,8 @@ import RangicCore
 
 class PreviousList
 {
-    private var previousFiles = [PreviousEntry]()
-    private var previousIndex: Int? = nil
+    fileprivate var previousFiles = [PreviousEntry]()
+    fileprivate var previousIndex: Int? = nil
 
     func mostRecent() -> MediaData?
     {
@@ -20,7 +20,7 @@ class PreviousList
     func next() -> MediaData?
     {
         if previousIndex != nil {
-            ++(previousIndex!)
+            (previousIndex!) += 1
             let index = previousIndex!
             if index < previousFiles.count {
                 return previousFiles[index].mediaData
@@ -49,11 +49,11 @@ class PreviousList
         return previousFiles[index].mediaData
     }
 
-    func add(mediaData: MediaData, index: Int)
+    func add(_ mediaData: MediaData, index: Int)
     {
         previousFiles.append(PreviousEntry(mediaData: mediaData, index: index))
         while previousFiles.count > 1000 {
-            previousFiles.removeAtIndex(0)
+            previousFiles.remove(at: 0)
         }
     }
 
