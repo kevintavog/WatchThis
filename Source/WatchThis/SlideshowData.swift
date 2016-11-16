@@ -21,6 +21,7 @@ class SlideshowData
     var name:String? { didSet { hasChanged = true } }
     var slideSeconds:Double = 10.0 { didSet { hasChanged = true } }
     var folderList = [String]() { didSet { hasChanged = true } }
+    var searchQuery:String? { didSet { hasChanged = true } }
     fileprivate(set) var hasChanged = false
 
 
@@ -45,6 +46,8 @@ class SlideshowData
                 slideshowData.folderList.append(folderJson["path"].stringValue)
             }
 
+            slideshowData.searchQuery = json["searchQuery"].string
+            
             slideshowData.hasChanged = false
             return slideshowData
         } catch let f as FileError {

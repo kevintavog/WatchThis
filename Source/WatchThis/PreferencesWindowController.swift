@@ -16,6 +16,12 @@ class PreferencesWindowController : NSWindowController
     @IBOutlet weak var testOsmResultImage: NSImageView!
     @IBOutlet weak var testOsmErrorMessage: NSTextField!
 
+    
+    @IBOutlet weak var findAPhotoHost: NSTextField!
+    @IBOutlet weak var testFindAPhotoIndicator: NSProgressIndicator!
+    @IBOutlet weak var testFindAPhotoResultImage: NSImageView!
+    @IBOutlet weak var testFindAPhotoErrorMessage: NSTextField!
+
 
     override func awakeFromNib()
     {
@@ -23,9 +29,12 @@ class PreferencesWindowController : NSWindowController
         movieVolumeLabel!.floatValue = movieVolume!.floatValue
 
         openStreetMapHost.stringValue = Preferences.baseLocationLookup
-
         testOsmWorkingIndicator!.isHidden = true
         testOsmErrorMessage.stringValue = ""
+
+        findAPhotoHost.stringValue = Preferences.findAPhotoHost
+        testFindAPhotoIndicator!.isHidden = true
+        testFindAPhotoErrorMessage.stringValue = ""
     }
 
     @IBAction func testOpenStreetMapHost(_ sender: AnyObject)
@@ -36,7 +45,7 @@ class PreferencesWindowController : NSWindowController
         testOsmResultImage.image = nil
         testOsmErrorMessage.stringValue = ""
 
-        Logger.info("Test host: \(Preferences.baseLocationLookup)")
+        Logger.info("Test location lookup host: \(Preferences.baseLocationLookup)")
 
         Async.background {
             let response = OpenMapLookupProvider().lookup(51.484509, longitude: 0.002570)
@@ -74,9 +83,44 @@ class PreferencesWindowController : NSWindowController
         Preferences.videoPlayerVolume = movieVolume!.floatValue
     }
 
+    @IBAction func testFindAPhotoHost(_ sender: AnyObject)
+    {
+        let host = findAPhotoHost!.stringValue
+
+        testFindAPhotoIndicator.startAnimation(sender)
+        testFindAPhotoIndicator.isHidden = false
+        testFindAPhotoResultImage.image = nil
+        testFindAPhotoErrorMessage.stringValue = ""
+
+        Logger.info("Test FindAPhoto host: \(host)")
+
+        Async.background {
+            FindAPhotoResults.search(
+                host,
+                text: "",
+                first: 1,
+                count: 1,
+                completion: { (result: FindAPhotoResults) -> () in
+                    Async.main {
+                        self.testFindAPhotoIndicator.isHidden = true
+                        self.testFindAPhotoIndicator.stopAnimation(sender)
+                        
+                        let succeeded = !result.hasError
+                        self.testFindAPhotoResultImage.image = NSImage(named: succeeded ? "SucceededCheck" : "FailedCheck")
+                        if !succeeded {
+                            self.testFindAPhotoErrorMessage.stringValue = result.errorMessage!
+                        } else {
+                            self.testFindAPhotoErrorMessage.stringValue = "Succeeded with a total of \(result.totalMatches!) matches"
+                        }
+                    }
+            })            
+        }
+    }
+
     func windowWillClose(_ notification: Notification)
     {
         updateBaseLocationLookup()
+        updateFindAPhotoHost()
         NSApplication.shared().stopModal()
     }
 
@@ -85,5 +129,11 @@ class PreferencesWindowController : NSWindowController
         Preferences.baseLocationLookup = openStreetMapHost!.stringValue
         OpenMapLookupProvider.BaseLocationLookup = Preferences.baseLocationLookup
         Logger.info("Placename lookups are now via \(OpenMapLookupProvider.BaseLocationLookup)")
+    }
+    
+    func updateFindAPhotoHost()
+    {
+        Preferences.findAPhotoHost = findAPhotoHost!.stringValue
+        Logger.info("FindAPhoto host is now \(Preferences.findAPhotoHost)")
     }
 }

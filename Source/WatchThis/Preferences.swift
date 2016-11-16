@@ -11,7 +11,9 @@ class Preferences : BasePreferences
     static fileprivate let LastEditedFilenameKey = "LastEditedFilename"
     static fileprivate let VideoPlayerVolumeKey = "VideoPlayerVolume"
     static fileprivate let BaseLocationLookupKey = "BaseLocationLookup"
+    static fileprivate let FindAPhotoHost = "FindAPhotoHost"
 
+    
     static func setMissingDefaults()
     {
         let appSupportFolder = FileManager.default.urls(for: .applicationSupportDirectory, in: .userDomainMask).first!
@@ -22,6 +24,7 @@ class Preferences : BasePreferences
         slideshowFolder = NSString.path(withComponents: [picturesFolder.path, "WatchThis Slideshows"])
 
         setDefaultValue("http://open.mapquestapi.com", key: BaseLocationLookupKey)
+        setDefaultValue("http://web.local:5000", key: FindAPhotoHost)
     }
 
     static var baseLocationLookup: String
@@ -47,4 +50,11 @@ class Preferences : BasePreferences
         get { return floatForKey(VideoPlayerVolumeKey) }
         set { setValue(newValue, key: VideoPlayerVolumeKey) }
     }
+
+    static var findAPhotoHost: String
+    {
+        get { return stringForKey(FindAPhotoHost) }
+        set { super.setValue(newValue, key: FindAPhotoHost) }
+    }
+    
 }

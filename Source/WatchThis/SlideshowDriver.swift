@@ -109,14 +109,13 @@ class SlideshowDriver : NSObject
 
     func nextSlide()
     {
-        if let file = mediaList.next(self) {
-            showFile(file)
-        } else {
-            Logger.info("SlideshowDriver, hit end of list")
-            mediaList.beginEnumerate() {
-                self.nextSlide()
+        mediaList.next(self, completion: { (mediaData: MediaData?) -> () in
+            if mediaData == nil {
+                Logger.error("mediaList.next returned a nil MediaData")
+            } else {
+                self.showFile(mediaData!)
             }
-        }
+        })        
     }
 
     func previous()

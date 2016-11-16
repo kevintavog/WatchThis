@@ -205,7 +205,7 @@ class SlideshowWindowController : NSWindowController, NSWindowDelegate, Slidesho
     //  MARK: show image/video
     func displayInfo(_ mediaData: MediaData)
     {
-        let parentPath = ((mediaData.url!.path as NSString!).deletingLastPathComponent as NSString).lastPathComponent
+        let parentPath = mediaData.parentPath
         let displayInfo = "\(parentPath)"
         displayInfoString(displayInfo)
 
@@ -249,9 +249,14 @@ class SlideshowWindowController : NSWindowController, NSWindowDelegate, Slidesho
         videoView?.isHidden = true
 
         Async.background {
-            let imageSource = CGImageSourceCreateWithURL(mediaData.url as CFURL, nil)
-            let image = CGImageSourceCreateImageAtIndex(imageSource!, 0, nil)
-            let nsImage = NSImage(cgImage: image!, size: NSSize(width: (image?.width)!, height: (image?.height)!))
+            var nsImage: NSImage
+            let imageSource = CGImageSourceCreateWithURL(mediaData.url! as CFURL, nil)
+            if imageSource == nil {
+                nsImage = NSImage(byReferencing: mediaData.url!)
+            } else {
+                let image = CGImageSourceCreateImageAtIndex(imageSource!, 0, nil)
+                nsImage = NSImage(cgImage: image!, size: NSSize(width: (image?.width)!, height: (image?.height)!))
+            }
 
             Async.main {
                 self.imageView?.image = nsImage;

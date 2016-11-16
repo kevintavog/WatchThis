@@ -5,18 +5,19 @@
 import RangicCore
 import Async
 
-/// Responsible for enumerating folders to collect files, as well as providing the files for displaying
+/// Responsible for enumerating folders to collect files, as well as providing the media for displaying
 class MediaList
 {
-    fileprivate let BytesForSignature = 2 * 1024
-
     fileprivate let slideshowData: SlideshowData
     fileprivate var mediaList:[MediaData] = []
     internal fileprivate(set) var totalCount = 0
     fileprivate let mutex = Mutex()
     fileprivate var visitedFiles = [String:String]()
 
-    var previousList = [SlideshowDriver:PreviousList]()
+    fileprivate var searchResults: FindAPhotoResults?
+    fileprivate var searchIndices: [Int] = []           // The valid search indices - items are removed randomly
+
+    fileprivate var previousList = [SlideshowDriver:PreviousList]()
 
 
     init(data: SlideshowData)
@@ -24,28 +25,56 @@ class MediaList
         slideshowData = data
     }
 
-    func next(_ driver: SlideshowDriver) -> MediaData?
+    func next(_ driver: SlideshowDriver, completion: @escaping (_ mediaData: MediaData?) -> ())
     {
         let list = getDriverList(driver)
-
-        // If we're looking at previous files, go to the next one in that list. Until we catch up to the
-        // last file we displayed
-        var file = list.next()
-        if file == nil {
-            if mediaList.count == 0 {
-                return nil
-            }
-
-            objc_sync_enter(self)
-            defer { objc_sync_exit(self) }
-
-            let index = arc4random_uniform(UInt32(mediaList.count))
-            file = mediaList.remove(at: Int(index))
-
-            list.add(file!, index: totalCount - mediaList.count)
+        
+        // If we're looking at previous items, go to the next one in that list. Until we catch up to the
+        // last item we displayed
+        if let item = list.next() {
+            completion(item)
+            return
         }
 
-        return file
+        if (isFolderBased() && mediaList.count == 0) || (isSearchBased() && searchIndices.count == 0) {
+            beginEnumerate {
+                self.nextRandom(driver, completion: completion)
+                return
+            }
+        }
+        
+        nextRandom(driver, completion: completion)
+    }
+
+    fileprivate func nextRandom(_ driver: SlideshowDriver, completion: @escaping(_ mediaData: MediaData?) -> ())
+    {
+        objc_sync_enter(self)
+        defer { objc_sync_exit(self) }
+
+        let list = getDriverList(driver)
+
+        if isFolderBased() && mediaList.count > 0 {
+            let index = Int(arc4random_uniform(UInt32(mediaList.count)))
+            let item = mediaList.remove(at: index)
+            list.add(item, index: totalCount - mediaList.count)
+            completion(item)
+            return
+        } else if isSearchBased() && searchIndices.count > 0 {
+            let index = Int(arc4random_uniform(UInt32(searchIndices.count)))
+
+            searchResults?.itemAtIndex(index: searchIndices[index], completion: { (mediaData: MediaData?) -> () in
+                self.searchIndices.remove(at: index)
+                if mediaData != nil {
+                    list.add(mediaData!, index: self.totalCount - self.searchIndices.count)
+                }
+                completion(mediaData)
+            })
+            return
+        } else {
+            Logger.error("Unsupported slideshow (nextRandom)")
+        }
+
+        completion(nil)
     }
 
     func currentIndex(_ driver: SlideshowDriver) -> Int
@@ -54,7 +83,14 @@ class MediaList
         if list.hasIndex() {
             return list.currentIndex()
         } else {
-            return totalCount - mediaList.count
+            if isFolderBased() {
+                return totalCount - mediaList.count
+            } else if isSearchBased() {
+                return totalCount - searchIndices.count
+            } else {
+                Logger.error("Unsupported slideshow (currentIndex)")
+                return 0
+            }
         }
     }
 
@@ -83,21 +119,64 @@ class MediaList
     }
 
 
+    internal func isFolderBased() -> Bool
+    {
+        return self.slideshowData.folderList.count > 0
+    }
 
-    // MARK: Enumerate folders/files
+    internal func isSearchBased() -> Bool
+    {
+        return self.slideshowData.searchQuery != nil
+    }
+
     internal func beginEnumerate(_ onAvailable: @escaping () -> ())
     {
         Async.background {
             self.visitedFiles = [String:String]()
             self.totalCount = 0
-            for folder in self.slideshowData.folderList {
-                self.addFolder(folder, onAvailable: onAvailable)
-            }
 
-            Logger.info("SlideshowDriver: Found \(self.mediaList.count) files")
+            if self.isFolderBased() {
+                self.enumerateFolders(onAvailable)
+            } else if self.isSearchBased() {
+                self.getFirstSearchItem(onAvailable)
+            } else {
+                Logger.warn("Unsupported slideshow type (neither file nor search based)")
+            }
         }
     }
 
+    // MARK: Handle FindAPhoto search
+    fileprivate func getFirstSearchItem(_ onAvailable: @escaping () ->())
+    {
+        searchIndices = [Int]()
+        FindAPhotoResults.search(Preferences.findAPhotoHost, text: self.slideshowData.searchQuery!, first: 1, count: 1, completion: { (results: FindAPhotoResults) -> () in
+            self.searchResults = results
+            if results.hasError {
+// ???
+                Logger.error("MediaList.getFirstSearchItem failed: \(results.errorMessage!)")
+            } else {
+                self.totalCount = results.totalMatches!
+                self.searchIndices = Array(repeating: Int(0), count: self.totalCount)
+                for index in 1...self.totalCount {
+                    self.searchIndices[index - 1] = index
+                }
+            }
+
+            Async.main {
+                onAvailable()
+            }
+        })
+    }
+
+
+    // MARK: Enumerate folders/files
+    fileprivate func enumerateFolders(_ onAvailable: @escaping () ->())
+    {
+        for folder in self.slideshowData.folderList {
+            self.addFolder(folder, onAvailable: onAvailable)
+        }
+    }
+    
     fileprivate func addFolder(_ folderName: String, onAvailable: @escaping () -> ())
     {
         let startedEmpty = mediaList.count == 0
@@ -107,16 +186,13 @@ class MediaList
                 for f in files {
                     let mediaType = SupportedMediaTypes.getTypeFromFileExtension(((f.path!) as NSString).pathExtension)
                     if mediaType == SupportedMediaTypes.MediaType.image || mediaType == SupportedMediaTypes.MediaType.video {
-                        if let signature = getSignature(f.path!) {
-                            if visitedFiles.keys.contains(signature) {
-                                Logger.info("Ignoring duplicate: \(visitedFiles[signature]!) == \(f.path!)")
-                            } else {
-                                visitedFiles[signature] = f.path!
-                                mediaList.append(FileMediaData.create(f as URL, mediaType: mediaType))
-                                totalCount += 1
-                            }
+                        let mediaType = FileMediaData.create(f as URL, mediaType: mediaType)
+                        if visitedFiles.keys.contains(mediaType.mediaSignature) {
+                            Logger.info("Ignoring duplicate: \(visitedFiles[mediaType.mediaSignature]!) == \(f.path!)")
                         } else {
-                            Logger.warn("Unable to create signature for '\(f.path!)'")
+                            visitedFiles[mediaType.mediaSignature] = f.path!
+                            mediaList.append(mediaType)
+                            totalCount += 1
                         }
                     }
 
@@ -152,35 +228,5 @@ class MediaList
             Logger.error("Failed getting files in \(folderName): \(error)")
             return nil
         }
-    }
-
-    fileprivate func getSignature(_ filename: String) -> String?
-    {
-        do {
-            let attrs: NSDictionary? = try FileManager.default.attributesOfItem(atPath: filename) as NSDictionary?
-            let length = attrs!.fileSize()
-            if let fileHandle = FileHandle(forReadingAtPath: filename) {
-                let startOfFile = fileHandle.readData(ofLength: BytesForSignature)
-                fileHandle.seek(toFileOffset: length - UInt64(BytesForSignature))
-                let endOfFile = fileHandle.readData(ofLength: BytesForSignature)
-
-                let data = NSMutableData(data: startOfFile)
-                data.append(endOfFile)
-
-                var digest = [UInt8](repeating: 0, count: Int(CC_SHA1_DIGEST_LENGTH))
-                CC_SHA1(data.bytes, CC_LONG(data.length), &digest)
-
-                let output = NSMutableString(capacity: Int(9 + CC_SHA1_DIGEST_LENGTH))
-                output.appendFormat("%08X-", length)
-                for byte in digest {
-                    output.appendFormat("%02x", byte)
-                }
-                return output as String            }
-        } catch let error {
-            Logger.error("Failed getting signature for \(filename): \(error)")
-            return nil
-        }
-
-        return nil
     }
 }

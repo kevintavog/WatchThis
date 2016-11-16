@@ -6,6 +6,8 @@ import RangicCore
 
 class PreviousList
 {
+    static fileprivate let maxEntries = 100
+
     fileprivate var previousFiles = [PreviousEntry]()
     fileprivate var previousIndex: Int? = nil
 
@@ -52,7 +54,7 @@ class PreviousList
     func add(_ mediaData: MediaData, index: Int)
     {
         previousFiles.append(PreviousEntry(mediaData: mediaData, index: index))
-        while previousFiles.count > 1000 {
+        while previousFiles.count > PreviousList.maxEntries {
             previousFiles.remove(at: 0)
         }
     }

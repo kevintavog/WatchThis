@@ -139,12 +139,12 @@
 		44CB6D6F1BA7960200233A18 = {
 			isa = PBXGroup;
 			children = (
-				44936FCA1DDA92070011DAE1 /* SwiftyJSON.framework */,
 				44CB6D7A1BA7960200233A18 /* WatchThis */,
 				44F77D4F1BA7A68C000B6072 /* Alamofire.framework */,
 				44F77D501BA7A68C000B6072 /* Async.framework */,
 				447CA6831BD5D76000CA174C /* CocoaLumberjack.framework */,
 				447CA6841BD5D76000CA174C /* CocoaLumberjackSwift.framework */,
+				44936FCA1DDA92070011DAE1 /* SwiftyJSON.framework */,
 				4451CEF21BA79D2E00D09540 /* Frameworks */,
 				44CB6D791BA7960200233A18 /* Products */,
 				4482AFF11BA79E320068E976 /* RangicCore.xcodeproj */,
