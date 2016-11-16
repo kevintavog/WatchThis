@@ -250,12 +250,16 @@ class SlideshowWindowController : NSWindowController, NSWindowDelegate, Slidesho
 
         Async.background {
             var nsImage: NSImage
-            let imageSource = CGImageSourceCreateWithURL(mediaData.url! as CFURL, nil)
-            if imageSource == nil {
-                nsImage = NSImage(byReferencing: mediaData.url!)
+            if let rotation = mediaData.rotation, rotation == 1 {
+                nsImage = NSImage(byReferencing: mediaData.url)
             } else {
-                let image = CGImageSourceCreateImageAtIndex(imageSource!, 0, nil)
-                nsImage = NSImage(cgImage: image!, size: NSSize(width: (image?.width)!, height: (image?.height)!))
+                let imageSource = CGImageSourceCreateWithURL(mediaData.url! as CFURL, nil)
+                if imageSource == nil {
+                    nsImage = NSImage(byReferencing: mediaData.url!)
+                } else {
+                    let image = CGImageSourceCreateImageAtIndex(imageSource!, 0, nil)
+                    nsImage = NSImage(cgImage: image!, size: NSSize(width: (image?.width)!, height: (image?.height)!))
+                }
             }
 
             Async.main {
