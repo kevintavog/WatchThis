@@ -18,7 +18,7 @@ class AppDelegate: NSObject, NSApplicationDelegate
         #if DEBUG
             defaultDebugLevel = DDLogLevel.verbose
             #else
-            defaultDebugLevel = DDLogLevel.Info
+            defaultDebugLevel = DDLogLevel.info
         #endif
         Logger.configure()
         Preferences.setMissingDefaults()

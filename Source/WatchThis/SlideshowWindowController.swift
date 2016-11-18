@@ -250,8 +250,10 @@ class SlideshowWindowController : NSWindowController, NSWindowDelegate, Slidesho
 
         Async.background {
             var nsImage: NSImage
-            if let rotation = mediaData.rotation, rotation == 1 {
+            if let rotation = mediaData.rotation, rotation == ImageOrientation.topLeft.rawValue {
                 nsImage = NSImage(byReferencing: mediaData.url)
+                let imageRep = nsImage.representations[0]
+                nsImage.size = NSSize(width: imageRep.pixelsWide, height: imageRep.pixelsHigh)
             } else {
                 let imageSource = CGImageSourceCreateWithURL(mediaData.url! as CFURL, nil)
                 if imageSource == nil {
