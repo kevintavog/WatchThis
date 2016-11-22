@@ -67,7 +67,11 @@ class SlideshowWindowController : NSWindowController, NSWindowDelegate, Slidesho
     // MARK: Actions
     @IBAction func pause(_ sender: AnyObject)
     {
-        driver?.pause()
+        if driver?.driverState == SlideshowDriver.DriverState.paused {
+            driver?.play()
+        } else {
+            driver?.pause()
+        }
     }
 
     @IBAction func play(_ sender: AnyObject)
