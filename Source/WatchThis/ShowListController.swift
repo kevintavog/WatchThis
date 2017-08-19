@@ -180,7 +180,7 @@ class ShowListController : NSWindowController, NSWindowDelegate, SlideshowListPr
             return nil
 
         default:
-            Logger.error("Unexpected tab identifier: \(tabView.selectedTabViewItem?.identifier)")
+            Logger.error("Unexpected tab identifier: \(String(describing: tabView.selectedTabViewItem?.identifier))")
             return nil
         }
     }

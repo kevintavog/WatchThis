@@ -10,9 +10,10 @@ protocol SlideshowDriverDelegate
     func stateChanged(_ currentState: SlideshowDriver.DriverState)
     func pauseVideo()
     func resumeVideo()
+    func showAlert(_ message: String)
 }
 
-class SlideshowDriver : NSObject
+class SlideshowDriver : NSObject, MediaListDelegate
 {
     enum DriverState:Int
     {
@@ -39,6 +40,7 @@ class SlideshowDriver : NSObject
 
         super.init()
 
+        mediaList.setDelegate(delegate: self)
         mediaList.beginEnumerate() {
             self.play()
         }
@@ -179,4 +181,13 @@ class SlideshowDriver : NSObject
             self.nextSlide()
         }
     }
+
+    func mediaListError(_ message: String)
+    {
+        Async.main {
+            Logger.info("mediaListError: \(message)")
+            self.delegate.showAlert(message)
+        }
+    }
+
 }

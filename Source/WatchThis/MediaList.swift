@@ -5,9 +5,15 @@
 import RangicCore
 import Async
 
+protocol MediaListDelegate
+{
+    func mediaListError(_ message: String)
+}
+
 /// Responsible for enumerating folders to collect files, as well as providing the media for displaying
 class MediaList
 {
+    fileprivate var delegate: MediaListDelegate?
     fileprivate let slideshowData: SlideshowData
     fileprivate var mediaList:[MediaData] = []
     internal fileprivate(set) var totalCount = 0
@@ -25,6 +31,11 @@ class MediaList
         slideshowData = data
     }
 
+    func setDelegate(delegate: MediaListDelegate)
+    {
+        self.delegate = delegate
+    }
+    
     func next(_ driver: SlideshowDriver, completion: @escaping (_ mediaData: MediaData?) -> ())
     {
         let list = getDriverList(driver)
@@ -152,8 +163,8 @@ class MediaList
         FindAPhotoResults.search(Preferences.findAPhotoHost, text: self.slideshowData.searchQuery!, first: 1, count: 1, completion: { (results: FindAPhotoResults) -> () in
             self.searchResults = results
             if results.hasError {
-// ???
-                Logger.error("MediaList.getFirstSearchItem failed: \(results.errorMessage!)")
+                self.delegate?.mediaListError(results.errorMessage!)
+                return
             } else {
                 self.totalCount = results.totalMatches!
                 self.searchIndices = Array(repeating: Int(0), count: self.totalCount)

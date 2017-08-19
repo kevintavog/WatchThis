@@ -206,6 +206,17 @@ class SlideshowWindowController : NSWindowController, NSWindowDelegate, Slidesho
         }
     }
     
+    func showAlert(_ message: String)
+    {
+        Logger.info("showAlert: \(message)")
+
+        let alert = NSAlert()
+        alert.messageText = message
+        alert.alertStyle = NSAlertStyle.warning
+        alert.addButton(withTitle: "Close")
+        alert.runModal()
+    }
+
     //  MARK: show image/video
     func displayInfo(_ mediaData: MediaData)
     {
@@ -331,7 +342,7 @@ class SlideshowWindowController : NSWindowController, NSWindowDelegate, Slidesho
             }
 
         default:
-            Logger.error("Unhandled kv change: \(keyPath)")
+            Logger.error("Unhandled kv change: \(String(describing: keyPath))")
         }
     }
     
