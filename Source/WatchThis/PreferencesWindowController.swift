@@ -8,7 +8,7 @@ import Async
 
 class PreferencesWindowController : NSWindowController
 {
-    @IBOutlet weak var openStreetMapHost: NSTextField!
+    @IBOutlet weak var locationLookup: NSTextField!
     @IBOutlet weak var movieVolume: NSSlider!
     @IBOutlet weak var movieVolumeLabel: NSTextField!
 
@@ -28,7 +28,7 @@ class PreferencesWindowController : NSWindowController
         movieVolume!.floatValue = Preferences.videoPlayerVolume
         movieVolumeLabel!.floatValue = movieVolume!.floatValue
 
-        openStreetMapHost.stringValue = Preferences.baseLocationLookup
+        locationLookup.stringValue = Preferences.baseLocationLookup
         testOsmWorkingIndicator!.isHidden = true
         testOsmErrorMessage.stringValue = ""
 
@@ -48,29 +48,24 @@ class PreferencesWindowController : NSWindowController
         Logger.info("Test location lookup host: \(Preferences.baseLocationLookup)")
 
         Async.background {
-            let response = OpenMapLookupProvider().lookup(51.484509, longitude: 0.002570)
+            ReverseNameLookupProvider.set(host: Preferences.baseLocationLookup)
+            let response = ReverseNameLookupProvider().lookup(latitude: 51.484509, longitude: 0.002570)
 
             Async.main {
                 self.testOsmWorkingIndicator.isHidden = true
                 self.testOsmWorkingIndicator.stopAnimation(sender)
 
-                let succeeded = response.keys.contains("DisplayName")
+                let succeeded = response.description.count > 0
                 let imageName = succeeded ? "SucceededCheck" : "FailedCheck"
-                self.testOsmResultImage.image = NSImage(named: imageName)
+                self.testOsmResultImage.image = NSImage(named: NSImage.Name(rawValue: imageName))
 
                 if !succeeded {
                     Logger.info("Response: \(response)")
-                    let code = response["apiStatusCode"]
-                    let message = response["apiMessage"]
+                    let code = "You need to give back an error code..." // response["apiStatusCode"]
+                    let message = "You gotta provide a message" // response["apiMessage"]
                     var error = ""
-                    if code != nil {
-                        error = "code: \(code!); "
-                    }
-                    if message != nil {
-                        error += "\(message!)"
-                    } else {
-                        error += "unknown error"
-                    }
+                    error = "code: \(code); "
+                    error += "\(message)"
                     self.testOsmErrorMessage.stringValue = error
                 }
             }
@@ -106,7 +101,7 @@ class PreferencesWindowController : NSWindowController
                         self.testFindAPhotoIndicator.stopAnimation(sender)
                         
                         let succeeded = !result.hasError
-                        self.testFindAPhotoResultImage.image = NSImage(named: succeeded ? "SucceededCheck" : "FailedCheck")
+                        self.testFindAPhotoResultImage.image = NSImage(named: NSImage.Name(rawValue: succeeded ? "SucceededCheck" : "FailedCheck"))
                         if !succeeded {
                             self.testFindAPhotoErrorMessage.stringValue = result.errorMessage!
                         } else {
@@ -117,22 +112,21 @@ class PreferencesWindowController : NSWindowController
         }
     }
 
-    func windowWillClose(_ notification: Notification)
-    {
+    @objc
+    func windowWillClose(_ notification: Notification) {
         updateBaseLocationLookup()
         updateFindAPhotoHost()
-        NSApplication.shared().stopModal()
+        NSApplication.shared.stopModal()
     }
 
-    func updateBaseLocationLookup()
-    {
-        Preferences.baseLocationLookup = openStreetMapHost!.stringValue
-        OpenMapLookupProvider.BaseLocationLookup = Preferences.baseLocationLookup
-        Logger.info("Placename lookups are now via \(OpenMapLookupProvider.BaseLocationLookup)")
+    func updateBaseLocationLookup() {
+        Preferences.baseLocationLookup = locationLookup!.stringValue
+        ReverseNameLookupProvider.set(host: Preferences.baseLocationLookup)
+        Logger.info("Placename lookups are now via \(Preferences.baseLocationLookup)")
+
     }
     
-    func updateFindAPhotoHost()
-    {
+    func updateFindAPhotoHost() {
         Preferences.findAPhotoHost = findAPhotoHost!.stringValue
         Logger.info("FindAPhoto host is now \(Preferences.findAPhotoHost)")
     }

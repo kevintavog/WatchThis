@@ -175,7 +175,7 @@ class SlideshowDriver : NSObject, MediaListDelegate
         }
     }
 
-    func timerFired(_ someTimer: Timer)
+    @objc func timerFired(_ someTimer: Timer)
     {
         Async.main {
             self.nextSlide()

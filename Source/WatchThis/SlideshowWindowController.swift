@@ -38,9 +38,9 @@ class SlideshowWindowController : NSWindowController, NSWindowDelegate, Slidesho
         window?.backgroundColor = NSColor.black
 
         imageView = createImageView()
-        window?.contentView?.addSubview(imageView!, positioned: NSWindowOrderingMode.below, relativeTo: window?.contentView?.subviews[0])
+        window?.contentView?.addSubview(imageView!, positioned: NSWindow.OrderingMode.below, relativeTo: window?.contentView?.subviews[0])
         videoView = createVideoView()
-        window?.contentView?.addSubview(videoView!, positioned: NSWindowOrderingMode.below, relativeTo: window?.contentView?.subviews[0])
+        window?.contentView?.addSubview(videoView!, positioned: NSWindow.OrderingMode.below, relativeTo: window?.contentView?.subviews[0])
 
         imageView?.isHidden = true
         videoView?.isHidden = true
@@ -134,7 +134,7 @@ class SlideshowWindowController : NSWindowController, NSWindowDelegate, Slidesho
         controlsView.isHidden = true
     }
 
-    func hideControlsTimerFired(_ someTimer: Timer)
+    @objc func hideControlsTimerFired(_ someTimer: Timer)
     {
         hideControls()
     }
@@ -161,7 +161,7 @@ class SlideshowWindowController : NSWindowController, NSWindowDelegate, Slidesho
             pauseButton?.isHidden = true
         }
 
-        let isFullScreen = window!.styleMask.contains(NSWindowStyleMask.fullScreen)
+        let isFullScreen = window!.styleMask.contains(NSWindow.StyleMask.fullScreen)
         enterFullScreenButton?.isHidden = isFullScreen
         exitFullScreenButton?.isHidden = !isFullScreen
     }
@@ -212,7 +212,7 @@ class SlideshowWindowController : NSWindowController, NSWindowDelegate, Slidesho
 
         let alert = NSAlert()
         alert.messageText = message
-        alert.alertStyle = NSAlertStyle.warning
+        alert.alertStyle = NSAlert.Style.warning
         alert.addButton(withTitle: "Close")
         alert.runModal()
     }
@@ -220,8 +220,8 @@ class SlideshowWindowController : NSWindowController, NSWindowDelegate, Slidesho
     //  MARK: show image/video
     func displayInfo(_ mediaData: MediaData)
     {
-        let parentPath = mediaData.parentPath
-        let displayInfo = "\(parentPath)"
+        let dateString = mediaData.formattedDate()
+        let displayInfo = "\(dateString)"
         displayInfoString(displayInfo)
 
         displayIndexString("\((mediaList?.currentIndex(driver!))!) of \((mediaList?.totalCount)!)")
@@ -229,12 +229,12 @@ class SlideshowWindowController : NSWindowController, NSWindowDelegate, Slidesho
         if let location = mediaData.location {
             Async.background {
                 var placename = location.placenameAsString(PlaceNameFilter.standard)
-                if placename.characters.count == 0 {
+                if placename.count == 0 {
                     placename = location.toDms()
                 }
 
                 Async.main {
-                    self.displayInfoString("\(parentPath)      \(placename)")
+                    self.displayInfoString("\(dateString)      \(placename)")
                 }
             }
         }
@@ -242,17 +242,17 @@ class SlideshowWindowController : NSWindowController, NSWindowDelegate, Slidesho
 
     func displayInfoString(_ displayInfo: String)
     {
-        let fullRange = NSRange(location: 0, length: displayInfo.characters.count)
+        let fullRange = NSRange(location: 0, length: displayInfo.count)
         let attributeString = NSMutableAttributedString(string: displayInfo)
-        attributeString.addAttribute(NSBackgroundColorAttributeName, value: NSColor(deviceRed: 0, green: 0, blue: 0, alpha: 0.75), range: fullRange)
+        attributeString.addAttribute(NSAttributedStringKey.backgroundColor, value: NSColor(deviceRed: 0, green: 0, blue: 0, alpha: 0.75), range: fullRange)
         infoText.attributedStringValue = attributeString
     }
 
     func displayIndexString(_ index: String)
     {
-        let fullRange = NSRange(location: 0, length: index.characters.count)
+        let fullRange = NSRange(location: 0, length: index.count)
         let attributeString = NSMutableAttributedString(string: index)
-        attributeString.addAttribute(NSBackgroundColorAttributeName, value: NSColor(deviceRed: 0, green: 0, blue: 0, alpha: 0.75), range: fullRange)
+        attributeString.addAttribute(NSAttributedStringKey.backgroundColor, value: NSColor(deviceRed: 0, green: 0, blue: 0, alpha: 0.75), range: fullRange)
         indexText.attributedStringValue = attributeString
     }
 
@@ -317,7 +317,7 @@ class SlideshowWindowController : NSWindowController, NSWindowDelegate, Slidesho
         }
     }
 
-    func videoDidEnd(_ notification: Notification)
+    @objc func videoDidEnd(_ notification: Notification)
     {
         Async.main(after: 2.0) {
             self.driver?.videoDidEnd()
@@ -370,16 +370,16 @@ class SlideshowWindowController : NSWindowController, NSWindowDelegate, Slidesho
     {
         let imageView = NSImageView(frame: (window?.contentView?.frame)!)
         imageView.imageScaling = NSImageScaling.scaleProportionallyDown
-        imageView.autoresizingMask = NSAutoresizingMaskOptions(rawValue: NSAutoresizingMaskOptions.viewHeightSizable.rawValue
-            | NSAutoresizingMaskOptions.viewWidthSizable.rawValue)
+        imageView.autoresizingMask = NSView.AutoresizingMask(rawValue: NSView.AutoresizingMask.height.rawValue
+            | NSView.AutoresizingMask.width.rawValue)
         return imageView
     }
 
     func createVideoView() -> AVPlayerView
     {
         let videoView = AVPlayerView(frame: (window?.contentView?.frame)!)
-        videoView.autoresizingMask = NSAutoresizingMaskOptions(rawValue: NSAutoresizingMaskOptions.viewHeightSizable.rawValue
-            | NSAutoresizingMaskOptions.viewWidthSizable.rawValue)
+        videoView.autoresizingMask = NSView.AutoresizingMask(rawValue: NSView.AutoresizingMask.height.rawValue
+            | NSView.AutoresizingMask.width.rawValue)
         videoView.controlsStyle = .floating
         videoView.showsFrameSteppingButtons = true
         return videoView

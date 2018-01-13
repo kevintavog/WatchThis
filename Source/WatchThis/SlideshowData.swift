@@ -35,7 +35,7 @@ class SlideshowData
         do {
             let fileText = try String(contentsOfFile: fromFile, encoding: String.Encoding.utf8)
 
-            let json = JSON(data: fileText.data(using: String.Encoding.utf8, allowLossyConversion: false)!)
+            let json = try JSON(data: fileText.data(using: String.Encoding.utf8, allowLossyConversion: false)!)
             guard json["name"].string != nil else { throw FileError.invalidSlideshowFile(filename: fromFile, message: "Missing name") }
 
             let slideshowData = SlideshowData()

@@ -217,7 +217,7 @@
 				TargetAttributes = {
 					44CB6D771BA7960200233A18 = {
 						CreatedOnToolsVersion = 7.0;
-						LastSwiftMigration = 0810;
+						LastSwiftMigration = 0920;
 					};
 				};
 			};
@@ -416,7 +416,8 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "WatchThis/WatchThis-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
-				SWIFT_VERSION = 3.0;
+				SWIFT_SWIFT3_OBJC_INFERENCE = On;
+				SWIFT_VERSION = 4.0;
 			};
 			name = Debug;
 		};
@@ -435,7 +436,8 @@
 				PRODUCT_BUNDLE_IDENTIFIER = rangic.WatchThis;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "WatchThis/WatchThis-Bridging-Header.h";
-				SWIFT_VERSION = 3.0;
+				SWIFT_SWIFT3_OBJC_INFERENCE = On;
+				SWIFT_VERSION = 4.0;
 			};
 			name = Release;
 		};

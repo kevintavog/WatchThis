@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="11542" systemVersion="16B2657" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" customObjectInstantitationMethod="direct">
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="13771" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" customObjectInstantitationMethod="direct">
     <dependencies>
         <deployment identifier="macosx"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="11542"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="13771"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
         <customObject id="-2" userLabel="File's Owner" customClass="PreferencesWindowController" customModule="WatchThis" customModuleProvider="target">
             <connections>
                 <outlet property="findAPhotoHost" destination="qHY-iC-IAI" id="Zjf-wV-bCN"/>
+                <outlet property="locationLookup" destination="1GO-gr-wGq" id="AiV-aa-9Ai"/>
                 <outlet property="movieVolume" destination="I9e-q1-dBW" id="wcq-BW-hEs"/>
                 <outlet property="movieVolumeLabel" destination="vEe-14-PMr" id="wg1-n3-fPS"/>
-                <outlet property="openStreetMapHost" destination="1GO-gr-wGq" id="j3V-3W-z3A"/>
                 <outlet property="testFindAPhotoErrorMessage" destination="Trq-Fc-Eyx" id="LN3-i0-zeJ"/>
                 <outlet property="testFindAPhotoIndicator" destination="SWh-w4-ISs" id="EY1-ve-vub"/>
                 <outlet property="testFindAPhotoResultImage" destination="zaa-rh-nO5" id="dZm-uT-hzH"/>
@@ -35,7 +35,7 @@
                     <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="gPT-dX-dWz">
                         <rect key="frame" x="18" y="211" width="146" height="17"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                        <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="OpenStreetMap host:" id="nyD-pm-TZP">
+                        <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="Location lookup:" id="nyD-pm-TZP">
                             <font key="font" metaFont="system"/>
                             <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
                             <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>

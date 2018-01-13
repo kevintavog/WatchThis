@@ -30,8 +30,8 @@ class ShowListWindow : NSWindow, NSDraggingDestination
     {
         var list = [String]()
 
-        if (dragInfo.draggingPasteboard().types?.contains(NSFilenamesPboardType) != nil) {
-            if let fileArray = dragInfo.draggingPasteboard().propertyList(forType: NSFilenamesPboardType) as? [String] {
+        if (dragInfo.draggingPasteboard().types?.contains(ShowListController.FilenamesPboardType) != nil) {
+            if let fileArray = dragInfo.draggingPasteboard().propertyList(forType: ShowListController.FilenamesPboardType) as? [String] {
                 for file in fileArray {
                     var isDirectory:ObjCBool = false
                     if FileManager.default.fileExists(atPath: file, isDirectory: &isDirectory) && isDirectory.boolValue {

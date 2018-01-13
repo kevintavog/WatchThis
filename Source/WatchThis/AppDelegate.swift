@@ -20,10 +20,11 @@ class AppDelegate: NSObject, NSApplicationDelegate
             #else
             defaultDebugLevel = DDLogLevel.info
         #endif
+
         Logger.configure()
         Preferences.setMissingDefaults()
-        OpenMapLookupProvider.BaseLocationLookup = Preferences.baseLocationLookup
-        Logger.info("Placename lookups via \(OpenMapLookupProvider.BaseLocationLookup)")
+        ReverseNameLookupProvider.set(host: Preferences.baseLocationLookup)
+        Logger.info("Placename lookups via \(Preferences.baseLocationLookup)")
 
         listController.addKeyboardShorcutToMenu()
     }
@@ -33,16 +34,16 @@ class AppDelegate: NSObject, NSApplicationDelegate
         return true
     }
 
-    func applicationShouldTerminate(_ sender: NSApplication) -> NSApplicationTerminateReply
+    func applicationShouldTerminate(_ sender: NSApplication) -> NSApplication.TerminateReply
     {
-        let close = listController != nil ? listController!.windowShouldClose(sender) : true
-        return close ? NSApplicationTerminateReply.terminateNow : NSApplicationTerminateReply.terminateCancel
+        let close = listController != nil ? listController!.canClose() : true
+        return close ? NSApplication.TerminateReply.terminateNow : NSApplication.TerminateReply.terminateCancel
     }
     
     @IBAction func preferences(_ sender: AnyObject)
     {
-        let preferencesController = PreferencesWindowController(windowNibName: "Preferences")
-        NSApplication.shared().runModal(for: preferencesController.window!)
+        let preferencesController = PreferencesWindowController(windowNibName: NSNib.Name(rawValue: "Preferences"))
+        NSApplication.shared.runModal(for: preferencesController.window!)
     }
 
     func application(_ application: NSApplication, willPresentError error: Error) -> Error
