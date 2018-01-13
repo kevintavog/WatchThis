@@ -1,7 +1,9 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="8191" systemVersion="14F27" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none">
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="13771" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none">
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="8191"/>
+        <deployment identifier="macosx"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="13771"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
         <customObject id="-2" userLabel="File's Owner" customClass="SlideshowWindowController" customModule="WatchThis" customModuleProvider="target">
@@ -125,24 +127,24 @@ IA
                             </button>
                         </subviews>
                     </customView>
-                    <customView id="zMc-gW-cBa">
-                        <rect key="frame" x="0.0" y="0.0" width="617" height="27"/>
+                    <customView misplaced="YES" id="zMc-gW-cBa">
+                        <rect key="frame" x="0.0" y="0.0" width="617" height="46"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
                         <subviews>
-                            <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" id="Byc-SG-c6g">
-                                <rect key="frame" x="0.0" y="0.0" width="457" height="28"/>
+                            <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" misplaced="YES" id="Byc-SG-c6g">
+                                <rect key="frame" x="0.0" y="0.0" width="340" height="46"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
                                 <textFieldCell key="cell" lineBreakMode="truncatingTail" allowsUndo="NO" sendsActionOnEndEditing="YES" alignment="left" title="The text goes here" drawsBackground="YES" usesSingleLineMode="YES" id="PXQ-KF-Efj">
-                                    <font key="font" metaFont="system" size="21"/>
+                                    <font key="font" metaFont="system" size="36"/>
                                     <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                     <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                 </textFieldCell>
                             </textField>
-                            <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" id="sBc-vL-YfD">
-                                <rect key="frame" x="457" y="0.0" width="160" height="28"/>
+                            <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" misplaced="YES" id="sBc-vL-YfD">
+                                <rect key="frame" x="340" y="0.0" width="277" height="45"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxY="YES"/>
                                 <textFieldCell key="cell" lineBreakMode="truncatingTail" allowsUndo="NO" sendsActionOnEndEditing="YES" alignment="center" title="23456 of 23456" drawsBackground="YES" usesSingleLineMode="YES" id="yky-IC-Cco">
-                                    <font key="font" metaFont="system" size="21"/>
+                                    <font key="font" metaFont="system" size="36"/>
                                     <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                     <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                 </textFieldCell>

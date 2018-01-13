@@ -222,6 +222,7 @@ class SlideshowWindowController : NSWindowController, NSWindowDelegate, Slidesho
     {
         let dateString = mediaData.formattedDate()
         let displayInfo = "\(dateString)"
+        let parentPath = mediaData.parentPath
         displayInfoString(displayInfo)
 
         displayIndexString("\((mediaList?.currentIndex(driver!))!) of \((mediaList?.totalCount)!)")
@@ -230,13 +231,15 @@ class SlideshowWindowController : NSWindowController, NSWindowDelegate, Slidesho
             Async.background {
                 var placename = location.placenameAsString(PlaceNameFilter.standard)
                 if placename.count == 0 {
-                    placename = location.toDms()
+                    placename = parentPath
                 }
 
                 Async.main {
                     self.displayInfoString("\(dateString)      \(placename)")
                 }
             }
+        } else {
+            self.displayInfoString("\(dateString)      \(parentPath)")
         }
     }
 
