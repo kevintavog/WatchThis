@@ -13,7 +13,6 @@ class SlideshowWindowController : NSWindowController, NSWindowDelegate, Slidesho
     @IBOutlet weak var previousButton: NSButton!
     @IBOutlet weak var pauseButton: NSButton!
     @IBOutlet weak var infoText: NSTextField!
-    @IBOutlet weak var indexText: NSTextField!
     @IBOutlet weak var controlsView: NSView!
     @IBOutlet weak var closeButton: NSButton!
     @IBOutlet weak var exitFullScreenButton: NSButton!
@@ -46,7 +45,6 @@ class SlideshowWindowController : NSWindowController, NSWindowDelegate, Slidesho
         videoView?.isHidden = true
 
         infoText.stringValue = ""
-        indexText.stringValue = ""
         updateUiState()
 
         lastMouseMovedTime = Date().timeIntervalSinceReferenceDate
@@ -225,8 +223,6 @@ class SlideshowWindowController : NSWindowController, NSWindowDelegate, Slidesho
         let parentPath = mediaData.parentPath
         displayInfoString(displayInfo)
 
-        displayIndexString("\((mediaList?.currentIndex(driver!))!) of \((mediaList?.totalCount)!)")
-
         if let location = mediaData.location {
             Async.background {
                 var placename = location.placenameAsString(PlaceNameFilter.standard)
@@ -249,14 +245,6 @@ class SlideshowWindowController : NSWindowController, NSWindowDelegate, Slidesho
         let attributeString = NSMutableAttributedString(string: displayInfo)
         attributeString.addAttribute(NSAttributedStringKey.backgroundColor, value: NSColor(deviceRed: 0, green: 0, blue: 0, alpha: 0.75), range: fullRange)
         infoText.attributedStringValue = attributeString
-    }
-
-    func displayIndexString(_ index: String)
-    {
-        let fullRange = NSRange(location: 0, length: index.count)
-        let attributeString = NSMutableAttributedString(string: index)
-        attributeString.addAttribute(NSAttributedStringKey.backgroundColor, value: NSColor(deviceRed: 0, green: 0, blue: 0, alpha: 0.75), range: fullRange)
-        indexText.attributedStringValue = attributeString
     }
 
     func showImage(_ mediaData: MediaData) -> Double?
@@ -371,7 +359,8 @@ class SlideshowWindowController : NSWindowController, NSWindowDelegate, Slidesho
     // MARK: view creation
     func createImageView() -> NSImageView
     {
-        let imageView = NSImageView(frame: (window?.contentView?.frame)!)
+        let textheight = infoText.frame.height
+        let imageView = NSImageView(frame: (window?.contentView?.frame.offsetBy(dx: 0, dy: textheight).insetBy(dx: 0, dy: textheight))!)
         imageView.imageScaling = NSImageScaling.scaleProportionallyDown
         imageView.autoresizingMask = NSView.AutoresizingMask(rawValue: NSView.AutoresizingMask.height.rawValue
             | NSView.AutoresizingMask.width.rawValue)
@@ -380,7 +369,8 @@ class SlideshowWindowController : NSWindowController, NSWindowDelegate, Slidesho
 
     func createVideoView() -> AVPlayerView
     {
-        let videoView = AVPlayerView(frame: (window?.contentView?.frame)!)
+        let textheight = infoText.frame.height
+        let videoView = AVPlayerView(frame: (window?.contentView?.frame.offsetBy(dx: 0, dy: textheight).insetBy(dx: 0, dy: textheight))!)
         videoView.autoresizingMask = NSView.AutoresizingMask(rawValue: NSView.AutoresizingMask.height.rawValue
             | NSView.AutoresizingMask.width.rawValue)
         videoView.controlsStyle = .floating

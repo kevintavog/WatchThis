@@ -12,7 +12,6 @@
                 <outlet property="controlsView" destination="zDo-yA-kVL" id="123-pv-004"/>
                 <outlet property="enterFullScreenButton" destination="ats-TD-5Im" id="Zrp-91-alO"/>
                 <outlet property="exitFullScreenButton" destination="amJ-nK-yQE" id="5oD-Pn-56X"/>
-                <outlet property="indexText" destination="sBc-vL-YfD" id="bGO-vD-WGv"/>
                 <outlet property="infoText" destination="Byc-SG-c6g" id="123-pv-008"/>
                 <outlet property="nextButton" destination="KRq-f6-SxT" id="baQ-oG-b5f"/>
                 <outlet property="pauseButton" destination="oMV-DH-Qkh" id="FNM-o4-x56"/>
@@ -132,18 +131,9 @@ IA
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
                         <subviews>
                             <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" misplaced="YES" id="Byc-SG-c6g">
-                                <rect key="frame" x="0.0" y="0.0" width="340" height="46"/>
+                                <rect key="frame" x="0.0" y="0.0" width="617" height="46"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
                                 <textFieldCell key="cell" lineBreakMode="truncatingTail" allowsUndo="NO" sendsActionOnEndEditing="YES" alignment="left" title="The text goes here" drawsBackground="YES" usesSingleLineMode="YES" id="PXQ-KF-Efj">
-                                    <font key="font" metaFont="system" size="36"/>
-                                    <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
-                                    <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
-                                </textFieldCell>
-                            </textField>
-                            <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" misplaced="YES" id="sBc-vL-YfD">
-                                <rect key="frame" x="340" y="0.0" width="277" height="45"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxY="YES"/>
-                                <textFieldCell key="cell" lineBreakMode="truncatingTail" allowsUndo="NO" sendsActionOnEndEditing="YES" alignment="center" title="23456 of 23456" drawsBackground="YES" usesSingleLineMode="YES" id="yky-IC-Cco">
                                     <font key="font" metaFont="system" size="36"/>
                                     <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                     <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
