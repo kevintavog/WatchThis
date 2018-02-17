@@ -94,7 +94,6 @@ class ShowListController : NSWindowController, NSWindowDelegate, SlideshowListPr
     {
         if let selectedSlideshow = getActiveSlideshow() {
 
-            // TODO: AND search isn't present...
             if selectedSlideshow.folderList.count < 1 && selectedSlideshow.searchQuery == nil {
                 let alert = NSAlert()
                 alert.messageText = "There are no images to show because there are no folders and no search terms in this slideshow."

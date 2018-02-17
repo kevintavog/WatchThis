@@ -258,8 +258,13 @@ class SlideshowWindowController : NSWindowController, NSWindowDelegate, Slidesho
             var nsImage: NSImage
             if let rotation = mediaData.rotation, rotation == ImageOrientation.topLeft.rawValue {
                 nsImage = NSImage(byReferencing: mediaData.url)
-                let imageRep = nsImage.representations[0]
-                nsImage.size = NSSize(width: imageRep.pixelsWide, height: imageRep.pixelsHigh)
+                if nsImage.representations.count > 0 {
+                    let imageRep = nsImage.representations[0]
+                    nsImage.size = NSSize(width: imageRep.pixelsWide, height: imageRep.pixelsHigh)
+                } else {
+                    Logger.error("Failed loading '\(mediaData.url!.absoluteString)'")
+                    self.nextImage(self)
+                }
             } else {
                 let imageSource = CGImageSourceCreateWithURL(mediaData.url! as CFURL, nil)
                 if imageSource == nil {
