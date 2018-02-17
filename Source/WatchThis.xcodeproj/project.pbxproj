@@ -12,6 +12,8 @@
 		440FD7D61BA9239E007FDB56 /* SlideshowDriver.swift in Sources */ = {isa = PBXBuildFile; fileRef = 440FD7D51BA9239E007FDB56 /* SlideshowDriver.swift */; };
 		4422EC8E1BB6E4A3008761A7 /* Preferences.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4422EC8C1BB6E4A3008761A7 /* Preferences.xib */; };
 		4422EC911BB6E4E4008761A7 /* PreferencesWindowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4422EC901BB6E4E4008761A7 /* PreferencesWindowController.swift */; };
+		4444AEE120389BB1007E8CAE /* SingleSlideshowImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4444AEE020389BB1007E8CAE /* SingleSlideshowImageView.swift */; };
+		4444AEE420389C0B007E8CAE /* SlideshowImageViewProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4444AEE320389C0B007E8CAE /* SlideshowImageViewProtocol.swift */; };
 		4451CEE91BA79C0900D09540 /* Quartz.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4451CEE81BA79C0900D09540 /* Quartz.framework */; };
 		447CA6851BD5D76000CA174C /* CocoaLumberjack.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 447CA6831BD5D76000CA174C /* CocoaLumberjack.framework */; };
 		447CA6861BD5D76000CA174C /* CocoaLumberjack.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 447CA6831BD5D76000CA174C /* CocoaLumberjack.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
@@ -73,6 +75,8 @@
 		440FD7D51BA9239E007FDB56 /* SlideshowDriver.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SlideshowDriver.swift; sourceTree = "<group>"; };
 		4422EC8D1BB6E4A3008761A7 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/Preferences.xib; sourceTree = "<group>"; };
 		4422EC901BB6E4E4008761A7 /* PreferencesWindowController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PreferencesWindowController.swift; sourceTree = "<group>"; };
+		4444AEE020389BB1007E8CAE /* SingleSlideshowImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SingleSlideshowImageView.swift; sourceTree = "<group>"; };
+		4444AEE320389C0B007E8CAE /* SlideshowImageViewProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SlideshowImageViewProtocol.swift; sourceTree = "<group>"; };
 		4451CEDF1BA79BDF00D09540 /* Alamofire.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Alamofire.framework; path = Carthage/Build/Mac/Alamofire.framework; sourceTree = "<group>"; };
 		4451CEE01BA79BDF00D09540 /* Async.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Async.framework; path = Carthage/Build/Mac/Async.framework; sourceTree = "<group>"; };
 		4451CEE81BA79C0900D09540 /* Quartz.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Quartz.framework; path = System/Library/Frameworks/Quartz.framework; sourceTree = SDKROOT; };
@@ -181,6 +185,8 @@
 				44F77D5A1BA7D66B000B6072 /* SlideshowListProvider.swift */,
 				440FD7D31BA91079007FDB56 /* SlideshowWindowController.swift */,
 				4489EB381BBCCE6B00CA6462 /* WatchThis-Bridging-Header.h */,
+				4444AEE320389C0B007E8CAE /* SlideshowImageViewProtocol.swift */,
+				4444AEE020389BB1007E8CAE /* SingleSlideshowImageView.swift */,
 			);
 			path = WatchThis;
 			sourceTree = "<group>";
@@ -282,8 +288,10 @@
 				44F77D5D1BA7D793000B6072 /* Notifications.swift in Sources */,
 				44F77D571BA7A7FA000B6072 /* ShowListController.swift in Sources */,
 				44D749C51BAC5E2200DE90B1 /* CocoaTypes.swift in Sources */,
+				4444AEE120389BB1007E8CAE /* SingleSlideshowImageView.swift in Sources */,
 				44CB6D7C1BA7960200233A18 /* AppDelegate.swift in Sources */,
 				44F77D591BA7CF33000B6072 /* ShowListWindow.swift in Sources */,
+				4444AEE420389C0B007E8CAE /* SlideshowImageViewProtocol.swift in Sources */,
 				4489EB341BBB5AA300CA6462 /* MediaList.swift in Sources */,
 				44F77D5B1BA7D66B000B6072 /* SlideshowListProvider.swift in Sources */,
 				440FD7D41BA91079007FDB56 /* SlideshowWindowController.swift in Sources */,

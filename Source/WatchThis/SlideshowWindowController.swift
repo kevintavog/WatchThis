@@ -22,7 +22,7 @@ class SlideshowWindowController : NSWindowController, NSWindowDelegate, Slidesho
 
     var mediaList: MediaList?
     var driver: SlideshowDriver?
-    var imageView: NSImageView?
+    var slideshowImageView: SlideshowImageView?
     var videoView: AVPlayerView!
 
     let secondsToHideControl = 2.0
@@ -36,12 +36,13 @@ class SlideshowWindowController : NSWindowController, NSWindowDelegate, Slidesho
         super.awakeFromNib()
         window?.backgroundColor = NSColor.black
 
-        imageView = createImageView()
-        window?.contentView?.addSubview(imageView!, positioned: NSWindow.OrderingMode.below, relativeTo: window?.contentView?.subviews[0])
+        slideshowImageView = SingleSlideshowImageView()
+        slideshowImageView?.create(window: window, textHeight: infoText.frame.height)
+
         videoView = createVideoView()
         window?.contentView?.addSubview(videoView!, positioned: NSWindow.OrderingMode.below, relativeTo: window?.contentView?.subviews[0])
 
-        imageView?.isHidden = true
+        slideshowImageView?.hide()
         videoView?.isHidden = true
 
         infoText.stringValue = ""
@@ -250,8 +251,8 @@ class SlideshowWindowController : NSWindowController, NSWindowDelegate, Slidesho
     func showImage(_ mediaData: MediaData) -> Double?
     {
         stopVideoPlayer()
-        imageView?.image = nil
-        imageView?.isHidden = false
+        slideshowImageView?.clearImage()
+        slideshowImageView?.show()
         videoView?.isHidden = true
 
         Async.background {
@@ -276,7 +277,7 @@ class SlideshowWindowController : NSWindowController, NSWindowDelegate, Slidesho
             }
 
             Async.main {
-                self.imageView?.image = nsImage;
+                self.slideshowImageView?.setImage(image: nsImage)
             }
         }
         return 0
@@ -286,8 +287,8 @@ class SlideshowWindowController : NSWindowController, NSWindowDelegate, Slidesho
     {
         stopVideoPlayer()
 
-        imageView?.isHidden = true
-        imageView?.image = nil
+        slideshowImageView?.hide()
+        slideshowImageView?.clearImage()
         videoView?.isHidden = false
 
         videoView.player = AVPlayer(url: mediaData.url)
@@ -362,16 +363,6 @@ class SlideshowWindowController : NSWindowController, NSWindowDelegate, Slidesho
 
 
     // MARK: view creation
-    func createImageView() -> NSImageView
-    {
-        let textheight = infoText.frame.height
-        let imageView = NSImageView(frame: (window?.contentView?.frame.offsetBy(dx: 0, dy: textheight).insetBy(dx: 0, dy: textheight))!)
-        imageView.imageScaling = NSImageScaling.scaleProportionallyDown
-        imageView.autoresizingMask = NSView.AutoresizingMask(rawValue: NSView.AutoresizingMask.height.rawValue
-            | NSView.AutoresizingMask.width.rawValue)
-        return imageView
-    }
-
     func createVideoView() -> AVPlayerView
     {
         let textheight = infoText.frame.height
