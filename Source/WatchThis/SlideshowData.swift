@@ -20,6 +20,7 @@ class SlideshowData
     var filename:String?
     var name:String? { didSet { hasChanged = true } }
     var slideSeconds:Double = 10.0 { didSet { hasChanged = true } }
+    var slideSecondsMax: Double = 10.0 { didSet { hasChanged = true } }
     var folderList = [String]() { didSet { hasChanged = true } }
     var searchQuery:String? { didSet { hasChanged = true } }
     fileprivate(set) var hasChanged = false
@@ -41,6 +42,11 @@ class SlideshowData
             let slideshowData = SlideshowData()
             slideshowData.name = json["name"].stringValue
             slideshowData.slideSeconds = json["slideSeconds"].doubleValue
+            if let maxTime = json["slideSecondsMax"].double {
+                slideshowData.slideSecondsMax = maxTime
+            } else {
+                slideshowData.slideSecondsMax = slideshowData.slideSeconds
+            }
 
             for folderJson in json["folders"].arrayValue {
                 slideshowData.folderList.append(folderJson["path"].stringValue)
@@ -69,6 +75,7 @@ class SlideshowData
         var json = JSON([String: AnyObject]())
         json["name"].string = name!
         json["slideSeconds"].double = slideSeconds
+        json["slideSecondsMax"].double = slideSecondsMax
 
         var jsonFolderList = [AnyObject]()
 
@@ -101,6 +108,7 @@ class SlideshowData
         filename = nil
         name = nil
         slideSeconds = 10.0
+        slideSecondsMax = 10.0
         folderList = []
 
         hasChanged = false

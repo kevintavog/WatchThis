@@ -11,6 +11,7 @@ protocol SlideshowDriverDelegate
     func pauseVideo()
     func resumeVideo()
     func showAlert(_ message: String)
+    var numberOfViews: UInt { get }
 }
 
 class SlideshowDriver : NSObject, MediaListDelegate
@@ -26,6 +27,7 @@ class SlideshowDriver : NSObject, MediaListDelegate
     var delegate: SlideshowDriverDelegate
     let slideshowData: SlideshowData
     let mediaList: MediaList
+    let lookupMutex = PThreadMutex()
 
     var timer:Timer? = nil
 
@@ -42,7 +44,16 @@ class SlideshowDriver : NSObject, MediaListDelegate
 
         mediaList.setDelegate(delegate: self)
         mediaList.beginEnumerate() {
-            self.play()
+            self.startInitialViews()
+        }
+    }
+
+    func startInitialViews() {
+        Logger.info("SlideshowDriver.startInitialViews")
+        driverState = .playing
+        setupTimer()
+        for _ in 1...delegate.numberOfViews {
+            nextSlide()
         }
     }
 
@@ -60,7 +71,7 @@ class SlideshowDriver : NSObject, MediaListDelegate
         }
 
         driverState = .playing
-        setupTimer(slideshowData.slideSeconds)
+        setupTimer()
         next()
     }
 
@@ -111,13 +122,15 @@ class SlideshowDriver : NSObject, MediaListDelegate
 
     func nextSlide()
     {
-        mediaList.next(self, completion: { (mediaData: MediaData?) -> () in
-            if mediaData == nil {
-                Logger.error("mediaList.next returned a nil MediaData")
-            } else {
-                self.showFile(mediaData!)
-            }
-        })        
+        lookupMutex.sync {
+            mediaList.next(self, completion: { (mediaData: MediaData?) -> () in
+                if mediaData == nil {
+                    Logger.error("mediaList.next returned a nil MediaData")
+                } else {
+                    self.showFile(mediaData!)
+                }
+            })
+        }
     }
 
     func previous()
@@ -127,7 +140,7 @@ class SlideshowDriver : NSObject, MediaListDelegate
         if let file = mediaList.previous(self) {
             showFile(file)
         } else {
-            setupTimer(slideshowData.slideSeconds)
+            setupTimer()
         }
     }
 
@@ -143,7 +156,7 @@ class SlideshowDriver : NSObject, MediaListDelegate
         delegate.show(mediaData)
         if mediaData.type != SupportedMediaTypes.MediaType.video {
             if driverState == .playing {
-                setupTimer(slideshowData.slideSeconds)
+                setupTimer()
             }
         } else {
             destroyTimer()
@@ -157,14 +170,22 @@ class SlideshowDriver : NSObject, MediaListDelegate
         nextSlide()
     }
 
+    fileprivate func getSlideDuration() -> Double {
+        if slideshowData.slideSeconds == slideshowData.slideSecondsMax {
+            return slideshowData.slideSeconds
+        }
+
+        return slideshowData.slideSeconds + Double(arc4random_uniform(UInt32(slideshowData.slideSecondsMax - slideshowData.slideSeconds) + 1))
+    }
+
     // MARK: Timer management
-    fileprivate func setupTimer(_ durationSeconds: Double)
+    fileprivate func setupTimer()
     {
         if timer != nil {
             timer?.invalidate()
         }
 
-        timer = Timer.scheduledTimer(timeInterval: durationSeconds, target: self, selector: #selector(SlideshowDriver.timerFired(_:)), userInfo: nil, repeats: true)
+        timer = Timer.scheduledTimer(timeInterval: getSlideDuration(), target: self, selector: #selector(SlideshowDriver.timerFired(_:)), userInfo: nil, repeats: true)
     }
 
     fileprivate func destroyTimer()

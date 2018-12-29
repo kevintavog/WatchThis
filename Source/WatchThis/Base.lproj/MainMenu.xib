@@ -1,7 +1,9 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="8191" systemVersion="14F27" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" customObjectInstantitationMethod="direct">
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="13771" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" customObjectInstantitationMethod="direct">
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="8191"/>
+        <deployment identifier="macosx"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="13771"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
         <customObject id="-2" userLabel="File's Owner" customClass="NSApplication">
@@ -360,6 +362,18 @@ DQ
                                     <action selector="pause:" target="-1" id="gu8-AH-1ai"/>
                                 </connections>
                             </menuItem>
+                            <menuItem title="View 1" keyEquivalent="1" id="C7S-rh-c97">
+                                <modifierMask key="keyEquivalentModifierMask"/>
+                                <connections>
+                                    <action selector="viewOne:" target="-1" id="JWz-82-1Ws"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem title="View 4" keyEquivalent="4" id="Tf2-LN-eke">
+                                <modifierMask key="keyEquivalentModifierMask"/>
+                                <connections>
+                                    <action selector="viewFour:" target="-1" id="sf7-dt-w8d"/>
+                                </connections>
+                            </menuItem>
                             <menuItem isSeparatorItem="YES" id="I0f-fq-iBM"/>
                             <menuItem title="Enter Full Screen" keyEquivalent="f" id="Rmu-zv-n5o">
                                 <modifierMask key="keyEquivalentModifierMask" control="YES" command="YES"/>
@@ -438,7 +452,7 @@ DQ
                                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                 <subviews>
                                                     <tableView verticalHuggingPriority="750" tag="1" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" alternatingRowBackgroundColors="YES" multipleSelection="NO" emptySelection="NO" autosaveColumns="NO" rowHeight="28" id="WFW-R0-oU7">
-                                                        <rect key="frame" x="0.0" y="0.0" width="564" height="30"/>
+                                                        <rect key="frame" x="0.0" y="0.0" width="564" height="246"/>
                                                         <autoresizingMask key="autoresizingMask"/>
                                                         <size key="intercellSpacing" width="3" height="2"/>
                                                         <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
@@ -464,7 +478,6 @@ DQ
                                                         </connections>
                                                     </tableView>
                                                 </subviews>
-                                                <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
                                             </clipView>
                                             <scroller key="horizontalScroller" hidden="YES" verticalHuggingPriority="750" horizontal="YES" id="L5q-MI-EUg">
                                                 <rect key="frame" x="1" y="-15" width="0.0" height="16"/>
@@ -519,10 +532,10 @@ DQ
                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                             <clipView key="contentView" id="kIC-av-VT9">
                                                 <rect key="frame" x="1" y="1" width="560" height="208"/>
-                                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                                <autoresizingMask key="autoresizingMask"/>
                                                 <subviews>
                                                     <tableView verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" alternatingRowBackgroundColors="YES" autosaveColumns="NO" rowHeight="28" id="2EC-ok-ggT">
-                                                        <rect key="frame" x="0.0" y="0.0" width="560" height="30"/>
+                                                        <rect key="frame" x="0.0" y="0.0" width="560" height="208"/>
                                                         <autoresizingMask key="autoresizingMask"/>
                                                         <size key="intercellSpacing" width="3" height="2"/>
                                                         <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
@@ -548,7 +561,6 @@ DQ
                                                         </connections>
                                                     </tableView>
                                                 </subviews>
-                                                <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
                                             </clipView>
                                             <scroller key="horizontalScroller" hidden="YES" verticalHuggingPriority="750" horizontal="YES" id="B1h-cG-A7k">
                                                 <rect key="frame" x="1" y="-15" width="0.0" height="16"/>
@@ -691,5 +703,11 @@ DQ
             </connections>
             <point key="canvasLocation" x="419" y="333"/>
         </window>
+        <menuItem title="Pause / Resume" keyEquivalent=" " id="FPV-hb-6jk">
+            <modifierMask key="keyEquivalentModifierMask"/>
+            <connections>
+                <action selector="pause:" target="-1" id="fNd-CL-DRX"/>
+            </connections>
+        </menuItem>
     </objects>
 </document>

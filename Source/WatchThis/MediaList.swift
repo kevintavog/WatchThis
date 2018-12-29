@@ -17,11 +17,10 @@ class MediaList
     fileprivate let slideshowData: SlideshowData
     fileprivate var mediaList:[MediaData] = []
     internal fileprivate(set) var totalCount = 0
-    fileprivate let mutex = Mutex()
     fileprivate var visitedFiles = [String:String]()
 
     fileprivate var searchResults: FindAPhotoResults?
-    fileprivate var searchIndices: [Int] = []           // The valid search indices - items are removed randomly
+    fileprivate var searchItems: [MediaData] = []           // The remaining search items - items are removed randomly
 
     fileprivate var previousList = [SlideshowDriver:PreviousList]()
 
@@ -47,7 +46,7 @@ class MediaList
             return
         }
 
-        if (isFolderBased() && mediaList.count == 0) || (isSearchBased() && searchIndices.count == 0) {
+        if (isFolderBased() && mediaList.count == 0) || (isSearchBased() && searchItems.count == 0) {
             beginEnumerate {
                 self.nextRandom(driver, completion: completion)
                 return
@@ -70,16 +69,14 @@ class MediaList
             list.add(item, index: totalCount - mediaList.count)
             completion(item)
             return
-        } else if isSearchBased() && searchIndices.count > 0 {
-            let index = Int(arc4random_uniform(UInt32(searchIndices.count)))
+        } else if isSearchBased() && searchItems.count > 0 {
+            let index = Int(arc4random_uniform(UInt32(searchItems.count)))
+            objc_sync_enter(self)
+            let mediaData = searchItems[index]
+            searchItems.remove(at: index)
+            objc_sync_exit(self)
 
-            searchResults?.itemAtIndex(index: searchIndices[index], completion: { (mediaData: MediaData?) -> () in
-                self.searchIndices.remove(at: index)
-                if mediaData != nil {
-                    list.add(mediaData!, index: self.totalCount - self.searchIndices.count)
-                }
-                completion(mediaData)
-            })
+            completion(mediaData)
             return
         } else {
             Logger.error("Unsupported slideshow (nextRandom)")
@@ -97,7 +94,7 @@ class MediaList
             if isFolderBased() {
                 return totalCount - mediaList.count
             } else if isSearchBased() {
-                return totalCount - searchIndices.count
+                return totalCount - searchItems.count
             } else {
                 Logger.error("Unsupported slideshow (currentIndex)")
                 return 0
@@ -149,7 +146,7 @@ class MediaList
             if self.isFolderBased() {
                 self.enumerateFolders(onAvailable)
             } else if self.isSearchBased() {
-                self.getFirstSearchItem(onAvailable)
+                self.enumerateSearch(onAvailable)
             } else {
                 Logger.warn("Unsupported slideshow type (neither file nor search based)")
             }
@@ -157,29 +154,53 @@ class MediaList
     }
 
     // MARK: Handle FindAPhoto search
-    fileprivate func getFirstSearchItem(_ onAvailable: @escaping () ->())
-    {
-        searchIndices = [Int]()
-        FindAPhotoResults.search(Preferences.findAPhotoHost, text: self.slideshowData.searchQuery!, first: 1, count: 1, completion: { (results: FindAPhotoResults) -> () in
+    fileprivate func enumerateSearch(_ onAvailable: @escaping () ->()) {
+        searchItems = [MediaData]()
+        var offset = 1
+        self.totalCount = 0
+        var notifyAvailable = true
+        repeat {
+            if let ids = synchronousSearch(offset: offset) {
+                offset += ids.count
+                objc_sync_enter(self)
+                self.searchItems.append(contentsOf: ids)
+                objc_sync_exit(self)
+            } else {
+                return
+            }
+
+            if notifyAvailable {
+                notifyAvailable = false
+                Async.main {
+                    onAvailable()
+                }
+            }
+        } while (offset < self.totalCount)
+    }
+
+    fileprivate func synchronousSearch(offset: Int) -> [MediaData]? {
+        let responseCompleted = DispatchSemaphore(value: 0)
+
+        var failed = false
+        var md = [MediaData]()
+
+        FindAPhotoResults.search(Preferences.findAPhotoHost, text: self.slideshowData.searchQuery!, first: offset, count: 100, completion: { (results: FindAPhotoResults) -> () in
             self.searchResults = results
             if results.hasError {
                 self.delegate?.mediaListError(results.errorMessage!)
-                return
+                failed = true
             } else {
                 self.totalCount = results.totalMatches!
-                self.searchIndices = Array(repeating: Int(0), count: self.totalCount)
-                for index in 1...self.totalCount {
-                    self.searchIndices[index - 1] = index
-                }
+                md = results.items
             }
-
-            Async.main {
-                onAvailable()
-            }
+            responseCompleted.signal()
         })
+
+
+        responseCompleted.wait()
+        return failed ? nil : md
     }
-
-
+    
     // MARK: Enumerate folders/files
     fileprivate func enumerateFolders(_ onAvailable: @escaping () ->())
     {

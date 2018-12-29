@@ -37,15 +37,14 @@ class SlideshowWindowController : NSWindowController, NSWindowDelegate, Slidesho
         window?.backgroundColor = NSColor.black
 
         slideshowImageView = SingleSlideshowImageView()
-        slideshowImageView?.create(window: window, textHeight: infoText.frame.height)
+        slideshowImageView?.create(window: window, textField: infoText)
 
         videoView = createVideoView()
         window?.contentView?.addSubview(videoView!, positioned: NSWindow.OrderingMode.below, relativeTo: window?.contentView?.subviews[0])
 
-        slideshowImageView?.hide()
         videoView?.isHidden = true
+        infoText?.isHidden = true
 
-        infoText.stringValue = ""
         updateUiState()
 
         lastMouseMovedTime = Date().timeIntervalSinceReferenceDate
@@ -53,6 +52,8 @@ class SlideshowWindowController : NSWindowController, NSWindowDelegate, Slidesho
 
         showControls()
     }
+
+    var numberOfViews: UInt { get { return slideshowImageView!.numberOfViews } }
 
     func setDataModel(_ data: SlideshowData, mediaList: MediaList)
     {
@@ -91,6 +92,23 @@ class SlideshowWindowController : NSWindowController, NSWindowDelegate, Slidesho
     @IBAction func closeSlideshow(_ sender: AnyObject)
     {
         driver?.stop()
+    }
+
+    @IBAction func viewOne(_ sender: AnyObject) {
+        slideshowImageView?.close()
+        slideshowImageView = SingleSlideshowImageView()
+        slideshowImageView?.create(window: window, textField: infoText)
+        driver?.nextSlide()
+    }
+
+    @IBAction func viewFour(_ sender: AnyObject) {
+        slideshowImageView?.close()
+        slideshowImageView = MultiSlideshowImageView()
+        slideshowImageView?.create(window: window, textField: infoText)
+
+        for _ in 1...Int(slideshowImageView!.numberOfViews) {
+            driver?.nextSlide()
+        }
     }
 
     @IBAction func toggleFullScreen(_ sender: AnyObject)
@@ -219,40 +237,92 @@ class SlideshowWindowController : NSWindowController, NSWindowDelegate, Slidesho
     //  MARK: show image/video
     func displayInfo(_ mediaData: MediaData)
     {
-        let dateString = mediaData.formattedDate()
-        let displayInfo = "\(dateString)"
-        let parentPath = mediaData.parentPath
-        displayInfoString(displayInfo)
+        displayInfoString(mediaData, "")
 
         if let location = mediaData.location {
             Async.background {
-                var placename = location.placenameAsString(PlaceNameFilter.standard)
+                let placename = location.placenameAsString(PlaceNameFilter.standard)
+                var missingLocation = ""
                 if placename.count == 0 {
-                    placename = parentPath
+                    missingLocation = mediaData.parentPath
                 }
 
                 Async.main {
-                    self.displayInfoString("\(dateString)      \(placename)")
+                    self.displayInfoString(mediaData, missingLocation)
                 }
             }
         } else {
-            self.displayInfoString("\(dateString)      \(parentPath)")
+            self.displayInfoString(mediaData, mediaData.parentPath)
         }
     }
 
-    func displayInfoString(_ displayInfo: String)
-    {
-        let fullRange = NSRange(location: 0, length: displayInfo.count)
-        let attributeString = NSMutableAttributedString(string: displayInfo)
-        attributeString.addAttribute(NSAttributedStringKey.backgroundColor, value: NSColor(deviceRed: 0, green: 0, blue: 0, alpha: 0.75), range: fullRange)
-        infoText.attributedStringValue = attributeString
+    func displayInfoString(_ mediaData: MediaData, _ missingLocation: String) {
+        // Try to get text that will fit - but only try so hard
+        let viewId = mediaData.url!.path
+        var level = 1
+        var info = displayInfoAttempt(mediaData, missingLocation, level)
+        while level < 4 {
+            if !slideshowImageView!.isTextTruncated(text: info, viewId: viewId) {
+                break
+            }
+            level += 1
+            info = displayInfoAttempt(mediaData, missingLocation, level)
+        }
+
+        slideshowImageView?.setText(text: info, viewId: viewId)
     }
 
-    func showImage(_ mediaData: MediaData) -> Double?
-    {
+    func displayInfoAttempt(_ mediaData: MediaData, _ missingLocation: String, _ level: Int) -> String {
+        switch level {
+        case 1:
+            if let location = mediaData.location, location.hasPlacename() {
+                let placename = location.placenameAsString(PlaceNameFilter.standard)
+                return "\(mediaData.formattedDate())   \(placename)"
+            } else {
+                return "\(mediaData.formattedDate())   \(missingLocation)"
+            }
+
+        case 2:
+            if let location = mediaData.location, location.hasPlacename() {
+                let placename = location.placenameAsString(PlaceNameFilter.city)
+                return "\(mediaData.formattedDate())   \(placename)"
+            } else {
+                return "\(mediaData.formattedDate())"
+            }
+
+        case 3:
+            if let location = mediaData.location, location.hasPlacename() {
+                let placename = location.placenameAsString(PlaceNameFilter.cityNoCountry)
+                return "\(mediaData.formattedDate())   \(placename)"
+            } else {
+                return "\(mediaData.formattedDate())"
+            }
+            
+        case 4:
+            if let location = mediaData.location, location.hasPlacename() {
+                return location.placenameAsString(PlaceNameFilter.city)
+            } else {
+                return "\(mediaData.formattedDate())"
+            }
+            
+        default:
+            if let location = mediaData.location, location.hasPlacename() {
+                let placename = location.placenameAsString(PlaceNameFilter.standard)
+                return "\(mediaData.formattedDate())   \(placename)"
+            } else {
+                if missingLocation.count > 0 {
+                    return missingLocation
+                }
+                return mediaData.formattedDate()
+            }
+        }
+    }
+
+    func showImage(_ mediaData: MediaData) -> Double? {
+        let viewId = mediaData.url!.path
         stopVideoPlayer()
-        slideshowImageView?.clearImage()
-        slideshowImageView?.show()
+//        slideshowImageView?.clearImage(viewId: viewId)
+        slideshowImageView?.showImage(show: true, viewId: viewId)
         videoView?.isHidden = true
 
         Async.background {
@@ -277,7 +347,7 @@ class SlideshowWindowController : NSWindowController, NSWindowDelegate, Slidesho
             }
 
             Async.main {
-                self.slideshowImageView?.setImage(image: nsImage)
+                self.slideshowImageView?.setImage(image: nsImage, viewId: viewId)
             }
         }
         return 0
@@ -287,8 +357,8 @@ class SlideshowWindowController : NSWindowController, NSWindowDelegate, Slidesho
     {
         stopVideoPlayer()
 
-        slideshowImageView?.hide()
-        slideshowImageView?.clearImage()
+//        slideshowImageView?.showImage(show: false, viewIndex: viewIndex)
+//        slideshowImageView?.clearImage(viewIndex: viewIndex)
         videoView?.isHidden = false
 
         videoView.player = AVPlayer(url: mediaData.url)
@@ -297,7 +367,6 @@ class SlideshowWindowController : NSWindowController, NSWindowDelegate, Slidesho
         player.actionAtItemEnd = .none
 
         player.addObserver(self, forKeyPath: "volume", options: .new, context: nil)
-//        player.addObserver(self, forKeyPath: "rate", options: .New, context: nil)
         Notifications.addObserver(self, selector: #selector(SlideshowWindowController.videoDidEnd(_:)), name: NSNotification.Name.AVPlayerItemDidPlayToEndTime.rawValue, object: player.currentItem)
 
         videoView.player?.play()
@@ -359,6 +428,10 @@ class SlideshowWindowController : NSWindowController, NSWindowDelegate, Slidesho
     func windowDidExitFullScreen(_ notification: Notification)
     {
         updateUiState()
+    }
+
+    func windowDidResize(_ notification: Notification) {
+        slideshowImageView?.windowResized(window: window)
     }
 
 
