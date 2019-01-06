@@ -126,6 +126,9 @@ class SlideshowDriver : NSObject, MediaListDelegate
             mediaList.next(self, completion: { (mediaData: MediaData?) -> () in
                 if mediaData == nil {
                     Logger.error("mediaList.next returned a nil MediaData")
+                    Async.main {
+                        self.nextSlide()
+                    }
                 } else {
                     self.showFile(mediaData!)
                 }
@@ -153,13 +156,15 @@ class SlideshowDriver : NSObject, MediaListDelegate
             }
             return
         }
-        delegate.show(mediaData)
-        if mediaData.type != SupportedMediaTypes.MediaType.video {
-            if driverState == .playing {
-                setupTimer()
+        Async.main {
+            self.delegate.show(mediaData)
+            if mediaData.type != SupportedMediaTypes.MediaType.video {
+                if self.driverState == .playing {
+                    self.setupTimer()
+                }
+            } else {
+                self.destroyTimer()
             }
-        } else {
-            destroyTimer()
         }
     }
 
