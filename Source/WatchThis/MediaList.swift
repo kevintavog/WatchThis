@@ -51,9 +51,9 @@ class MediaList
                 self.nextRandom(driver, completion: completion)
                 return
             }
+        } else {
+            nextRandom(driver, completion: completion)
         }
-        
-        nextRandom(driver, completion: completion)
     }
 
     fileprivate func nextRandom(_ driver: SlideshowDriver, completion: @escaping(_ mediaData: MediaData?) -> ())
