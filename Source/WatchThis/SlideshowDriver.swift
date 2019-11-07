@@ -171,7 +171,6 @@ class SlideshowDriver : NSObject, MediaListDelegate
     // MARK: Updates from client
     func videoDidEnd()
     {
-        Logger.info("SlideshowDriver.videoDidEnd")
         nextSlide()
     }
 

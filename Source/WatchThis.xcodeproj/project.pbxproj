@@ -12,10 +12,6 @@
 		440FD7D61BA9239E007FDB56 /* SlideshowDriver.swift in Sources */ = {isa = PBXBuildFile; fileRef = 440FD7D51BA9239E007FDB56 /* SlideshowDriver.swift */; };
 		4422EC8E1BB6E4A3008761A7 /* Preferences.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4422EC8C1BB6E4A3008761A7 /* Preferences.xib */; };
 		4422EC911BB6E4E4008761A7 /* PreferencesWindowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4422EC901BB6E4E4008761A7 /* PreferencesWindowController.swift */; };
-		4444AEE120389BB1007E8CAE /* SingleSlideshowImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4444AEE020389BB1007E8CAE /* SingleSlideshowImageView.swift */; };
-		4444AEE420389C0B007E8CAE /* SlideshowImageViewProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4444AEE320389C0B007E8CAE /* SlideshowImageViewProtocol.swift */; };
-		4444AEE62038A126007E8CAE /* MultiSlideshowImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4444AEE52038A126007E8CAE /* MultiSlideshowImageView.swift */; };
-		4444AEE9203A32E3007E8CAE /* ViewPanel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4444AEE8203A32E3007E8CAE /* ViewPanel.swift */; };
 		4451CEE91BA79C0900D09540 /* Quartz.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4451CEE81BA79C0900D09540 /* Quartz.framework */; };
 		447CA6851BD5D76000CA174C /* CocoaLumberjack.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 447CA6831BD5D76000CA174C /* CocoaLumberjack.framework */; };
 		447CA6861BD5D76000CA174C /* CocoaLumberjack.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 447CA6831BD5D76000CA174C /* CocoaLumberjack.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
@@ -25,6 +21,7 @@
 		4489EB371BBB6F9A00CA6462 /* PreviousFiles.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4489EB361BBB6F9A00CA6462 /* PreviousFiles.swift */; };
 		44936FCB1DDA92070011DAE1 /* SwiftyJSON.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 44936FCA1DDA92070011DAE1 /* SwiftyJSON.framework */; };
 		44936FCC1DDA92070011DAE1 /* SwiftyJSON.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 44936FCA1DDA92070011DAE1 /* SwiftyJSON.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		44955E812373B3E4003DB8AA /* MediaContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44955E802373B3E4003DB8AA /* MediaContainer.swift */; };
 		4499DE861BACE09A00BB8D36 /* RangicCore.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 4482AFF61BA79E320068E976 /* RangicCore.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		44CB6D7C1BA7960200233A18 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44CB6D7B1BA7960200233A18 /* AppDelegate.swift */; };
 		44CB6D7E1BA7960200233A18 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 44CB6D7D1BA7960200233A18 /* Assets.xcassets */; };
@@ -77,10 +74,6 @@
 		440FD7D51BA9239E007FDB56 /* SlideshowDriver.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SlideshowDriver.swift; sourceTree = "<group>"; };
 		4422EC8D1BB6E4A3008761A7 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/Preferences.xib; sourceTree = "<group>"; };
 		4422EC901BB6E4E4008761A7 /* PreferencesWindowController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PreferencesWindowController.swift; sourceTree = "<group>"; };
-		4444AEE020389BB1007E8CAE /* SingleSlideshowImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SingleSlideshowImageView.swift; sourceTree = "<group>"; };
-		4444AEE320389C0B007E8CAE /* SlideshowImageViewProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SlideshowImageViewProtocol.swift; sourceTree = "<group>"; };
-		4444AEE52038A126007E8CAE /* MultiSlideshowImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MultiSlideshowImageView.swift; sourceTree = "<group>"; };
-		4444AEE8203A32E3007E8CAE /* ViewPanel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewPanel.swift; sourceTree = "<group>"; };
 		4451CEDF1BA79BDF00D09540 /* Alamofire.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Alamofire.framework; path = Carthage/Build/Mac/Alamofire.framework; sourceTree = "<group>"; };
 		4451CEE01BA79BDF00D09540 /* Async.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Async.framework; path = Carthage/Build/Mac/Async.framework; sourceTree = "<group>"; };
 		4451CEE81BA79C0900D09540 /* Quartz.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Quartz.framework; path = System/Library/Frameworks/Quartz.framework; sourceTree = SDKROOT; };
@@ -92,6 +85,7 @@
 		4489EB361BBB6F9A00CA6462 /* PreviousFiles.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PreviousFiles.swift; sourceTree = "<group>"; };
 		4489EB381BBCCE6B00CA6462 /* WatchThis-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "WatchThis-Bridging-Header.h"; sourceTree = "<group>"; };
 		44936FCA1DDA92070011DAE1 /* SwiftyJSON.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftyJSON.framework; path = Carthage/Build/Mac/SwiftyJSON.framework; sourceTree = "<group>"; };
+		44955E802373B3E4003DB8AA /* MediaContainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MediaContainer.swift; sourceTree = "<group>"; };
 		44CB6D781BA7960200233A18 /* WatchThis.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = WatchThis.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		44CB6D7B1BA7960200233A18 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		44CB6D7D1BA7960200233A18 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -178,6 +172,7 @@
 				44CB6D7B1BA7960200233A18 /* AppDelegate.swift */,
 				44D749C41BAC5E2200DE90B1 /* CocoaTypes.swift */,
 				4489EB331BBB5AA300CA6462 /* MediaList.swift */,
+				44955E802373B3E4003DB8AA /* MediaContainer.swift */,
 				44F77D5C1BA7D793000B6072 /* Notifications.swift */,
 				44F77D601BA851B4000B6072 /* Preferences.swift */,
 				4422EC901BB6E4E4008761A7 /* PreferencesWindowController.swift */,
@@ -189,10 +184,6 @@
 				44F77D5A1BA7D66B000B6072 /* SlideshowListProvider.swift */,
 				440FD7D31BA91079007FDB56 /* SlideshowWindowController.swift */,
 				4489EB381BBCCE6B00CA6462 /* WatchThis-Bridging-Header.h */,
-				4444AEE320389C0B007E8CAE /* SlideshowImageViewProtocol.swift */,
-				4444AEE020389BB1007E8CAE /* SingleSlideshowImageView.swift */,
-				4444AEE52038A126007E8CAE /* MultiSlideshowImageView.swift */,
-				4444AEE8203A32E3007E8CAE /* ViewPanel.swift */,
 			);
 			path = WatchThis;
 			sourceTree = "<group>";
@@ -238,6 +229,7 @@
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
 			knownRegions = (
+				English,
 				en,
 				Base,
 			);
@@ -289,18 +281,15 @@
 				44F77D5F1BA7D864000B6072 /* SlideshowData.swift in Sources */,
 				4422EC911BB6E4E4008761A7 /* PreferencesWindowController.swift in Sources */,
 				4489EB371BBB6F9A00CA6462 /* PreviousFiles.swift in Sources */,
-				4444AEE62038A126007E8CAE /* MultiSlideshowImageView.swift in Sources */,
 				44F77D611BA851B4000B6072 /* Preferences.swift in Sources */,
 				440FD7D61BA9239E007FDB56 /* SlideshowDriver.swift in Sources */,
 				44F77D5D1BA7D793000B6072 /* Notifications.swift in Sources */,
 				44F77D571BA7A7FA000B6072 /* ShowListController.swift in Sources */,
 				44D749C51BAC5E2200DE90B1 /* CocoaTypes.swift in Sources */,
-				4444AEE120389BB1007E8CAE /* SingleSlideshowImageView.swift in Sources */,
 				44CB6D7C1BA7960200233A18 /* AppDelegate.swift in Sources */,
 				44F77D591BA7CF33000B6072 /* ShowListWindow.swift in Sources */,
-				4444AEE420389C0B007E8CAE /* SlideshowImageViewProtocol.swift in Sources */,
-				4444AEE9203A32E3007E8CAE /* ViewPanel.swift in Sources */,
 				4489EB341BBB5AA300CA6462 /* MediaList.swift in Sources */,
+				44955E812373B3E4003DB8AA /* MediaContainer.swift in Sources */,
 				44F77D5B1BA7D66B000B6072 /* SlideshowListProvider.swift in Sources */,
 				440FD7D41BA91079007FDB56 /* SlideshowWindowController.swift in Sources */,
 			);
@@ -375,7 +364,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				MACOSX_DEPLOYMENT_TARGET = 10.11;
+				MACOSX_DEPLOYMENT_TARGET = 10.13;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = macosx;
@@ -424,7 +413,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				MACOSX_DEPLOYMENT_TARGET = 10.11;
+				MACOSX_DEPLOYMENT_TARGET = 10.13;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = macosx;
 				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";

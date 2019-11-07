@@ -73,6 +73,7 @@ class MediaList
             let index = Int(arc4random_uniform(UInt32(searchItems.count)))
             objc_sync_enter(self)
             let mediaData = searchItems[index]
+            list.add(mediaData, index: index)
             searchItems.remove(at: index)
             objc_sync_exit(self)
 
