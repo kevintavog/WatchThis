@@ -22,8 +22,6 @@ class SlideshowWindowController : NSWindowController, NSWindowDelegate, Slidesho
 
     var mediaList: MediaList?
     var driver: SlideshowDriver?
-//    var slideshowImageView: SlideshowImageView?
-//    var videoView: SlideshowVideoView?
 
     var mediaContainer = MediaContainer(numPanels: 1)
 
@@ -181,7 +179,7 @@ class SlideshowWindowController : NSWindowController, NSWindowDelegate, Slidesho
         NSCursor.setHiddenUntilMouseMoves(true)
 
         Logger.info("Show \(mediaData.url.path)")
-        mediaContainer.show(mediaData: mediaData)
+        mediaContainer.show(mediaData: mediaData, driver: driver)
     }
 
     func stateChanged(_ currentState: SlideshowDriver.DriverState) {
@@ -190,10 +188,12 @@ class SlideshowWindowController : NSWindowController, NSWindowDelegate, Slidesho
 
     func pauseVideo() {
         Logger.info("controller.pauseVideo")
+        mediaContainer.pauseVideo()
     }
 
     func resumeVideo() {
         Logger.info("controller.resumeVideo")
+        mediaContainer.resumeVideo()
     }
     
     func showAlert(_ message: String) {
@@ -205,29 +205,6 @@ class SlideshowWindowController : NSWindowController, NSWindowDelegate, Slidesho
         alert.addButton(withTitle: "Close")
         alert.runModal()
     }
-
-
-//
-//    override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey:Any]?, context: UnsafeMutableRawPointer?) {
-//        switch keyPath! {
-//        case "volume":
-//            if let volume = change![NSKeyValueChangeKey.newKey] as? Float {
-//                Preferences.videoPlayerVolume = volume
-//            }
-//
-//        case "rate":
-//            if let rate = change![NSKeyValueChangeKey.newKey] as? Float {
-//                if rate == 0 {
-//                    driver!.pause()
-//                } else {
-//                    driver!.resume()
-//                }
-//            }
-//
-//        default:
-//            Logger.error("Unhandled kv change: \(String(describing: keyPath))")
-//        }
-//    }
 
 
     // MARK: NSWindowDelegate

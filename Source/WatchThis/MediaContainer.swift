@@ -34,13 +34,25 @@ class MediaContainer {
         }
     }
 
-    func show(mediaData: MediaData) {
-        oldestPanel().show(mediaData: mediaData)
+    func show(mediaData: MediaData, driver: SlideshowDriver?) {
+        oldestPanel().show(mediaData: mediaData, driver: driver)
     }
 
     func resize(_ window: NSWindow?) {
         for idx in 0..<panels.count {
             panels[idx].resize(numPanels, window, UInt(idx))
+        }
+    }
+
+    func pauseVideo() {
+        for idx in 0..<panels.count {
+            panels[idx].pauseVideo()
+        }
+    }
+
+    func resumeVideo() {
+        for idx in 0..<panels.count {
+            panels[idx].resumeVideo()
         }
     }
 
@@ -57,7 +69,7 @@ class MediaContainer {
 class MediaPanel {
     let index: Int
     let border: CGFloat
-    var videoView: AVPlayerView!
+    var videoView: AVPlayerView?
     var imageView: NSImageView?
     var infoText: NSTextField? = nil
     var textHeight: CGFloat = 0
@@ -68,12 +80,20 @@ class MediaPanel {
         self.border = CGFloat(border)
     }
 
-    func show(mediaData: MediaData) {
+    func pauseVideo() {
+        videoView?.player?.pause()
+    }
+
+    func resumeVideo() {
+        videoView?.player?.play()
+    }
+
+    func show(mediaData: MediaData, driver: SlideshowDriver?) {
         self.lastUpdated = Date()
         switch mediaData.type! {
         case .image:
             displayInfo(mediaData)
-            let _ = showImage(mediaData)
+            let _ = showImage(mediaData, driver)
         case .video:
             displayInfo(mediaData)
             showVideo(mediaData)
@@ -82,7 +102,7 @@ class MediaPanel {
         }
     }
 
-    func showImage(_ mediaData: MediaData) {
+    func showImage(_ mediaData: MediaData, _ driver: SlideshowDriver?) {
         videoView?.isHidden = true
         videoView?.player = nil
         imageView?.image = nil
@@ -97,7 +117,7 @@ class MediaPanel {
                     nsImage.size = NSSize(width: imageRep.pixelsWide, height: imageRep.pixelsHigh)
                 } else {
                     Logger.error("Failed loading '\(mediaData.url!.absoluteString)'")
-//                    self.nextImage(self)
+                    driver?.next()
                 }
             } else {
                 let imageSource = CGImageSourceCreateWithURL(mediaData.url! as CFURL, nil)
@@ -119,9 +139,6 @@ class MediaPanel {
         let player = AVPlayer(url: mediaData.url)
         player.volume = Preferences.videoPlayerVolume
         player.actionAtItemEnd = .none
-        
-//        player.addObserver(self, forKeyPath: "volume", options: .new, context: nil)
-//        Notifications.addObserver(self, selector: #selector(SlideshowWindowController.videoDidEnd(_:)), name: NSNotification.Name.AVPlayerItemDidPlayToEndTime.rawValue, object: player.currentItem)
 
         videoView?.player = player
 
@@ -191,11 +208,11 @@ class MediaPanel {
 
     func createVideoView(window: NSWindow?, frame: NSRect) {
         videoView = AVPlayerView(frame: frame)
-        videoView.autoresizingMask = NSView.AutoresizingMask(rawValue: NSView.AutoresizingMask.height.rawValue
+        videoView?.autoresizingMask = NSView.AutoresizingMask(rawValue: NSView.AutoresizingMask.height.rawValue
             | NSView.AutoresizingMask.width.rawValue)
-        videoView.controlsStyle = .none
-        videoView.showsFrameSteppingButtons = true
-        window?.contentView?.addSubview(videoView, positioned: NSWindow.OrderingMode.below, relativeTo: window?.contentView)
+        videoView?.controlsStyle = .none
+        videoView?.showsFrameSteppingButtons = true
+        window?.contentView?.addSubview(videoView!, positioned: NSWindow.OrderingMode.below, relativeTo: window?.contentView)
     }
 
     func createTextField(window: NSWindow?, textField: NSTextField?, frame: NSRect) {

@@ -64,7 +64,7 @@ class SlideshowDriver : NSObject, MediaListDelegate
             return
         }
 
-        if driverState == .paused && mediaList.mostRecent(self)?.type == SupportedMediaTypes.MediaType.video {
+        if driverState == .paused {
             driverState = .playing
             delegate.resumeVideo()
             return
@@ -81,10 +81,7 @@ class SlideshowDriver : NSObject, MediaListDelegate
         if driverState != .paused {
             driverState = .paused
             destroyTimer()
-
-            if mediaList.mostRecent(self)?.type == SupportedMediaTypes.MediaType.video {
-                delegate.pauseVideo()
-            }
+            delegate.pauseVideo()
         }
     }
 
@@ -158,12 +155,12 @@ class SlideshowDriver : NSObject, MediaListDelegate
         }
         Async.main {
             self.delegate.show(mediaData)
-            if mediaData.type != SupportedMediaTypes.MediaType.video {
-                if self.driverState == .playing {
+            if self.driverState == .playing {
+                if mediaData.type == SupportedMediaTypes.MediaType.video {
+                    self.startTimer(mediaData.durationSeconds + 3.0)
+                } else {
                     self.setupTimer()
                 }
-            } else {
-                self.destroyTimer()
             }
         }
     }
@@ -185,11 +182,20 @@ class SlideshowDriver : NSObject, MediaListDelegate
     // MARK: Timer management
     fileprivate func setupTimer()
     {
+        startTimer(getSlideDuration())
+    }
+
+    fileprivate func startTimer(_ durationSeconds: Double) {
         if timer != nil {
             timer?.invalidate()
         }
-
-        timer = Timer.scheduledTimer(timeInterval: getSlideDuration(), target: self, selector: #selector(SlideshowDriver.timerFired(_:)), userInfo: nil, repeats: true)
+        
+        timer = Timer.scheduledTimer(
+            timeInterval: durationSeconds,
+            target: self,
+            selector: #selector(SlideshowDriver.timerFired(_:)),
+            userInfo: nil,
+            repeats: true)
     }
 
     fileprivate func destroyTimer()
