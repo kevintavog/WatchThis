@@ -28,6 +28,7 @@ class SlideshowDriver : NSObject, MediaListDelegate
     let slideshowData: SlideshowData
     let mediaList: MediaList
     let lookupMutex = PThreadMutex()
+    var durationSecondsOverride = 0.0
 
     var timer:Timer? = nil
 
@@ -165,18 +166,23 @@ class SlideshowDriver : NSObject, MediaListDelegate
         }
     }
 
-    // MARK: Updates from client
-    func videoDidEnd()
-    {
-        nextSlide()
+    func changeSlideshowDuration(secondsChange: Double) -> (Double, Double) {
+        durationSecondsOverride += secondsChange
+        
+        let low = max(1.0, slideshowData.slideSeconds + durationSecondsOverride)
+        let high = slideshowData.slideSeconds + durationSecondsOverride
+        return (low, high)
     }
 
     fileprivate func getSlideDuration() -> Double {
-        if slideshowData.slideSeconds == slideshowData.slideSecondsMax {
-            return slideshowData.slideSeconds
+        var seconds = slideshowData.slideSeconds
+        if slideshowData.slideSeconds != slideshowData.slideSecondsMax {
+            seconds = slideshowData.slideSeconds
+                        + Double(arc4random_uniform(UInt32(slideshowData.slideSecondsMax - slideshowData.slideSeconds) + 1))
         }
 
-        return slideshowData.slideSeconds + Double(arc4random_uniform(UInt32(slideshowData.slideSecondsMax - slideshowData.slideSeconds) + 1))
+Logger.warn("Duration override = \(durationSecondsOverride)")
+        return max(1.0, seconds + durationSecondsOverride)
     }
 
     // MARK: Timer management

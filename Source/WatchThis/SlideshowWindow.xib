@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="13771" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none">
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="14490.70" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none">
     <dependencies>
         <deployment identifier="macosx"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="13771"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="14490.70"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
@@ -10,6 +10,7 @@
             <connections>
                 <outlet property="closeButton" destination="IvJ-Kb-P7t" id="vhl-tE-gNw"/>
                 <outlet property="controlsView" destination="zDo-yA-kVL" id="123-pv-004"/>
+                <outlet property="durationText" destination="EbF-Wt-rNA" id="cPR-aL-P09"/>
                 <outlet property="enterFullScreenButton" destination="ats-TD-5Im" id="Zrp-91-alO"/>
                 <outlet property="exitFullScreenButton" destination="amJ-nK-yQE" id="5oD-Pn-56X"/>
                 <outlet property="infoText" destination="Byc-SG-c6g" id="123-pv-008"/>
@@ -22,18 +23,18 @@
         </customObject>
         <customObject id="-1" userLabel="First Responder" customClass="FirstResponder"/>
         <customObject id="-3" userLabel="Application" customClass="NSObject"/>
-        <window title="Slideshow" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" oneShot="NO" showsToolbarButton="NO" frameAutosaveName="SlideshowWindow" animationBehavior="default" id="2">
+        <window title="Slideshow" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" frameAutosaveName="SlideshowWindow" animationBehavior="default" id="2">
             <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES" resizable="YES"/>
             <windowCollectionBehavior key="collectionBehavior" fullScreenPrimary="YES"/>
             <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
-            <rect key="contentRect" x="0.0" y="55" width="617" height="453"/>
+            <rect key="contentRect" x="0.0" y="55" width="991" height="453"/>
             <rect key="screenRect" x="0.0" y="0.0" width="1920" height="1177"/>
             <view key="contentView" wantsLayer="YES" id="3">
-                <rect key="frame" x="0.0" y="0.0" width="617" height="453"/>
+                <rect key="frame" x="0.0" y="0.0" width="991" height="453"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
                     <customView id="zDo-yA-kVL">
-                        <rect key="frame" x="55" y="54" width="506" height="74"/>
+                        <rect key="frame" x="240" y="54" width="506" height="74"/>
                         <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
                             <button focusRingType="none" verticalHuggingPriority="750" id="Uhy-M5-iyS">
@@ -126,12 +127,12 @@ IA
                             </button>
                         </subviews>
                     </customView>
-                    <customView misplaced="YES" id="zMc-gW-cBa">
-                        <rect key="frame" x="0.0" y="0.0" width="617" height="46"/>
+                    <customView id="zMc-gW-cBa">
+                        <rect key="frame" x="0.0" y="0.0" width="991" height="46"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
                         <subviews>
-                            <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" misplaced="YES" id="Byc-SG-c6g">
-                                <rect key="frame" x="0.0" y="0.0" width="617" height="46"/>
+                            <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" id="Byc-SG-c6g">
+                                <rect key="frame" x="0.0" y="0.0" width="991" height="46"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
                                 <textFieldCell key="cell" lineBreakMode="truncatingTail" allowsUndo="NO" sendsActionOnEndEditing="YES" alignment="center" title="The text goes here" drawsBackground="YES" usesSingleLineMode="YES" id="PXQ-KF-Efj">
                                     <font key="font" metaFont="system" size="36"/>
@@ -141,12 +142,21 @@ IA
                             </textField>
                         </subviews>
                     </customView>
+                    <textField verticalHuggingPriority="750" textCompletion="NO" id="EbF-Wt-rNA">
+                        <rect key="frame" x="20" y="54" width="182" height="55"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                        <textFieldCell key="cell" lineBreakMode="truncatingTail" allowsUndo="NO" sendsActionOnEndEditing="YES" alignment="center" title="20 - 25" drawsBackground="YES" id="cb0-cX-f7P">
+                            <font key="font" metaFont="system" size="46"/>
+                            <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                            <color key="backgroundColor" red="0.97416322969543145" green="0.97416322969543145" blue="0.97416322969543145" alpha="0.0" colorSpace="custom" customColorSpace="sRGB"/>
+                        </textFieldCell>
+                    </textField>
                 </subviews>
             </view>
             <connections>
                 <outlet property="delegate" destination="-2" id="5Br-by-4X5"/>
             </connections>
-            <point key="canvasLocation" x="310.5" y="307.5"/>
+            <point key="canvasLocation" x="497.5" y="307.5"/>
         </window>
     </objects>
     <resources>

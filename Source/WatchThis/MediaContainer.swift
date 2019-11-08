@@ -262,7 +262,7 @@ class MediaPanel {
 
     func textFrameForIndex(_ window: NSWindow?, _ viewIndex: UInt, _ numPanels: UInt) -> NSRect {
         if numPanels == 1 {
-            return window!.contentView!.frame
+            return NSMakeRect(0, 0, (window?.contentView?.frame.width)!, textHeight)
         }
 
         let panelWidth = (window?.contentView?.frame.width)! / 2

@@ -19,7 +19,8 @@ class SlideshowWindowController : NSWindowController, NSWindowDelegate, Slidesho
     @IBOutlet weak var enterFullScreenButton: NSButton!
     @IBOutlet weak var nextButton: NSButton!
     @IBOutlet weak var playButton: NSButton!
-
+    @IBOutlet weak var durationText: NSTextField!
+    
     var mediaList: MediaList?
     var driver: SlideshowDriver?
 
@@ -37,6 +38,7 @@ class SlideshowWindowController : NSWindowController, NSWindowDelegate, Slidesho
         window?.backgroundColor = NSColor.black
 
         infoText?.isHidden = true
+        durationText?.isHidden = true
 
         mediaContainer.create(window: window, textField: infoText)
 
@@ -112,6 +114,28 @@ class SlideshowWindowController : NSWindowController, NSWindowDelegate, Slidesho
         window?.toggleFullScreen(sender);
     }
 
+    @IBAction func increaseSlideshowDuration(_ sender: AnyObject) {
+        let (low, high) = driver?.changeSlideshowDuration(secondsChange: 5.0) ?? (0.0, 0.0)
+        showDuration(low, high)
+    }
+
+    @IBAction func decreaseSlideshowDuration(_ sender: AnyObject) {
+        let (low, high) = driver?.changeSlideshowDuration(secondsChange: -5.0) ?? (0.0, 0.0)
+        showDuration(low, high)
+    }
+
+    func showDuration(_ low: Double, _ high: Double) {
+        if low == high {
+            durationText?.stringValue = "\(Int(low))"
+        } else {
+            durationText?.stringValue = "\(Int(low)) - \(Int(high))"
+        }
+        durationText?.isHidden = false
+
+        DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(3000)) {
+            self.durationText?.isHidden = true
+        }
+    }
 
     // MARK: Control view management
     override func mouseMoved(with theEvent: NSEvent) {
