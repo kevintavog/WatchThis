@@ -65,12 +65,13 @@ class SlideshowDriver : NSObject, MediaListDelegate
             return
         }
 
-        if driverState == .paused {
+        if driverState == .paused && mediaList.mostRecent(self)?.type == SupportedMediaTypes.MediaType.video {
             driverState = .playing
             delegate.resumeVideo()
             return
         }
 
+        delegate.resumeVideo()
         driverState = .playing
         setupTimer()
         next()
@@ -168,9 +169,12 @@ class SlideshowDriver : NSObject, MediaListDelegate
 
     func changeSlideshowDuration(secondsChange: Double) -> (Double, Double) {
         durationSecondsOverride += secondsChange
-        
+        if slideshowData.slideSeconds + durationSecondsOverride < 0 {
+            durationSecondsOverride = -slideshowData.slideSeconds
+        }
+
         let low = max(1.0, slideshowData.slideSeconds + durationSecondsOverride)
-        let high = slideshowData.slideSeconds + durationSecondsOverride
+        let high = low + (slideshowData.slideSecondsMax - slideshowData.slideSeconds)
         return (low, high)
     }
 
@@ -181,7 +185,6 @@ class SlideshowDriver : NSObject, MediaListDelegate
                         + Double(arc4random_uniform(UInt32(slideshowData.slideSecondsMax - slideshowData.slideSeconds) + 1))
         }
 
-Logger.warn("Duration override = \(durationSecondsOverride)")
         return max(1.0, seconds + durationSecondsOverride)
     }
 

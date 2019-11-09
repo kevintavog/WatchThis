@@ -115,12 +115,20 @@ class SlideshowWindowController : NSWindowController, NSWindowDelegate, Slidesho
     }
 
     @IBAction func increaseSlideshowDuration(_ sender: AnyObject) {
-        let (low, high) = driver?.changeSlideshowDuration(secondsChange: 5.0) ?? (0.0, 0.0)
+        var change = 5.0
+        if NSEvent.modifierFlags.contains(.function) {
+            change = 1.0
+        }
+        let (low, high) = driver?.changeSlideshowDuration(secondsChange: change) ?? (0.0, 0.0)
         showDuration(low, high)
     }
 
     @IBAction func decreaseSlideshowDuration(_ sender: AnyObject) {
-        let (low, high) = driver?.changeSlideshowDuration(secondsChange: -5.0) ?? (0.0, 0.0)
+        var change = -5.0
+        if NSEvent.modifierFlags.contains(.function) {
+            change = -1.0
+        }
+        let (low, high) = driver?.changeSlideshowDuration(secondsChange: change) ?? (0.0, 0.0)
         showDuration(low, high)
     }
 
