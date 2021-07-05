@@ -7,30 +7,31 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		440DB4C326938174003593BC /* AVKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 440DB4C226938174003593BC /* AVKit.framework */; };
 		440FD7CF1BA90FD6007FDB56 /* SlideshowWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 440FD7CE1BA90FD6007FDB56 /* SlideshowWindow.xib */; };
 		440FD7D41BA91079007FDB56 /* SlideshowWindowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 440FD7D31BA91079007FDB56 /* SlideshowWindowController.swift */; };
 		440FD7D61BA9239E007FDB56 /* SlideshowDriver.swift in Sources */ = {isa = PBXBuildFile; fileRef = 440FD7D51BA9239E007FDB56 /* SlideshowDriver.swift */; };
 		4422EC8E1BB6E4A3008761A7 /* Preferences.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4422EC8C1BB6E4A3008761A7 /* Preferences.xib */; };
 		4422EC911BB6E4E4008761A7 /* PreferencesWindowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4422EC901BB6E4E4008761A7 /* PreferencesWindowController.swift */; };
 		4451CEE91BA79C0900D09540 /* Quartz.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4451CEE81BA79C0900D09540 /* Quartz.framework */; };
-		447CA6851BD5D76000CA174C /* CocoaLumberjack.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 447CA6831BD5D76000CA174C /* CocoaLumberjack.framework */; };
-		447CA6861BD5D76000CA174C /* CocoaLumberjack.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 447CA6831BD5D76000CA174C /* CocoaLumberjack.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		447CA6871BD5D76000CA174C /* CocoaLumberjackSwift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 447CA6841BD5D76000CA174C /* CocoaLumberjackSwift.framework */; };
-		447CA6881BD5D76000CA174C /* CocoaLumberjackSwift.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 447CA6841BD5D76000CA174C /* CocoaLumberjackSwift.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		4489EB341BBB5AA300CA6462 /* MediaList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4489EB331BBB5AA300CA6462 /* MediaList.swift */; };
 		4489EB371BBB6F9A00CA6462 /* PreviousFiles.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4489EB361BBB6F9A00CA6462 /* PreviousFiles.swift */; };
-		44936FCB1DDA92070011DAE1 /* SwiftyJSON.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 44936FCA1DDA92070011DAE1 /* SwiftyJSON.framework */; };
-		44936FCC1DDA92070011DAE1 /* SwiftyJSON.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 44936FCA1DDA92070011DAE1 /* SwiftyJSON.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		44955E812373B3E4003DB8AA /* MediaContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44955E802373B3E4003DB8AA /* MediaContainer.swift */; };
+		4499D8F12693ABA6000CF34A /* CocoaLumberjack.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4499D8EB2693ABA6000CF34A /* CocoaLumberjack.framework */; };
+		4499D8F22693ABA6000CF34A /* CocoaLumberjack.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 4499D8EB2693ABA6000CF34A /* CocoaLumberjack.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		4499D8F32693ABA6000CF34A /* SwiftyJSON.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4499D8ED2693ABA6000CF34A /* SwiftyJSON.framework */; };
+		4499D8F42693ABA6000CF34A /* SwiftyJSON.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 4499D8ED2693ABA6000CF34A /* SwiftyJSON.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		4499D8F52693ABA6000CF34A /* Async.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4499D8EE2693ABA6000CF34A /* Async.framework */; };
+		4499D8F62693ABA6000CF34A /* Async.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 4499D8EE2693ABA6000CF34A /* Async.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		4499D8F72693ABA6000CF34A /* Alamofire.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4499D8EF2693ABA6000CF34A /* Alamofire.framework */; };
+		4499D8F82693ABA6000CF34A /* Alamofire.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 4499D8EF2693ABA6000CF34A /* Alamofire.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		4499D8F92693ABA6000CF34A /* CocoaLumberjackSwift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4499D8F02693ABA6000CF34A /* CocoaLumberjackSwift.framework */; };
+		4499D8FA2693ABA6000CF34A /* CocoaLumberjackSwift.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 4499D8F02693ABA6000CF34A /* CocoaLumberjackSwift.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		4499DE861BACE09A00BB8D36 /* RangicCore.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 4482AFF61BA79E320068E976 /* RangicCore.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		44CB6D7C1BA7960200233A18 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44CB6D7B1BA7960200233A18 /* AppDelegate.swift */; };
 		44CB6D7E1BA7960200233A18 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 44CB6D7D1BA7960200233A18 /* Assets.xcassets */; };
 		44CB6D811BA7960200233A18 /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 44CB6D7F1BA7960200233A18 /* MainMenu.xib */; };
 		44D749C51BAC5E2200DE90B1 /* CocoaTypes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44D749C41BAC5E2200DE90B1 /* CocoaTypes.swift */; };
-		44F77D511BA7A68C000B6072 /* Alamofire.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 44F77D4F1BA7A68C000B6072 /* Alamofire.framework */; };
-		44F77D521BA7A68C000B6072 /* Alamofire.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 44F77D4F1BA7A68C000B6072 /* Alamofire.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		44F77D531BA7A68C000B6072 /* Async.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 44F77D501BA7A68C000B6072 /* Async.framework */; };
-		44F77D541BA7A68C000B6072 /* Async.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 44F77D501BA7A68C000B6072 /* Async.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		44F77D571BA7A7FA000B6072 /* ShowListController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44F77D561BA7A7FA000B6072 /* ShowListController.swift */; };
 		44F77D591BA7CF33000B6072 /* ShowListWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44F77D581BA7CF33000B6072 /* ShowListWindow.swift */; };
 		44F77D5B1BA7D66B000B6072 /* SlideshowListProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44F77D5A1BA7D66B000B6072 /* SlideshowListProvider.swift */; };
@@ -56,12 +57,12 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
+				4499D8F22693ABA6000CF34A /* CocoaLumberjack.framework in Embed Frameworks */,
+				4499D8F62693ABA6000CF34A /* Async.framework in Embed Frameworks */,
+				4499D8FA2693ABA6000CF34A /* CocoaLumberjackSwift.framework in Embed Frameworks */,
 				4499DE861BACE09A00BB8D36 /* RangicCore.framework in Embed Frameworks */,
-				44F77D521BA7A68C000B6072 /* Alamofire.framework in Embed Frameworks */,
-				44936FCC1DDA92070011DAE1 /* SwiftyJSON.framework in Embed Frameworks */,
-				447CA6861BD5D76000CA174C /* CocoaLumberjack.framework in Embed Frameworks */,
-				44F77D541BA7A68C000B6072 /* Async.framework in Embed Frameworks */,
-				447CA6881BD5D76000CA174C /* CocoaLumberjackSwift.framework in Embed Frameworks */,
+				4499D8F82693ABA6000CF34A /* Alamofire.framework in Embed Frameworks */,
+				4499D8F42693ABA6000CF34A /* SwiftyJSON.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -69,31 +70,30 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		440DB4C226938174003593BC /* AVKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVKit.framework; path = System/Library/Frameworks/AVKit.framework; sourceTree = SDKROOT; };
 		440FD7CE1BA90FD6007FDB56 /* SlideshowWindow.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SlideshowWindow.xib; sourceTree = "<group>"; };
 		440FD7D31BA91079007FDB56 /* SlideshowWindowController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SlideshowWindowController.swift; sourceTree = "<group>"; };
 		440FD7D51BA9239E007FDB56 /* SlideshowDriver.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SlideshowDriver.swift; sourceTree = "<group>"; };
 		4422EC8D1BB6E4A3008761A7 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/Preferences.xib; sourceTree = "<group>"; };
 		4422EC901BB6E4E4008761A7 /* PreferencesWindowController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PreferencesWindowController.swift; sourceTree = "<group>"; };
-		4451CEDF1BA79BDF00D09540 /* Alamofire.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Alamofire.framework; path = Carthage/Build/Mac/Alamofire.framework; sourceTree = "<group>"; };
-		4451CEE01BA79BDF00D09540 /* Async.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Async.framework; path = Carthage/Build/Mac/Async.framework; sourceTree = "<group>"; };
 		4451CEE81BA79C0900D09540 /* Quartz.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Quartz.framework; path = System/Library/Frameworks/Quartz.framework; sourceTree = SDKROOT; };
 		4451CEEE1BA79CDA00D09540 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
-		447CA6831BD5D76000CA174C /* CocoaLumberjack.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CocoaLumberjack.framework; path = Carthage/Build/Mac/CocoaLumberjack.framework; sourceTree = "<group>"; };
-		447CA6841BD5D76000CA174C /* CocoaLumberjackSwift.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CocoaLumberjackSwift.framework; path = Carthage/Build/Mac/CocoaLumberjackSwift.framework; sourceTree = "<group>"; };
 		4482AFF11BA79E320068E976 /* RangicCore.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RangicCore.xcodeproj; path = ../../RangicCore/source/RangicCore.xcodeproj; sourceTree = "<group>"; };
 		4489EB331BBB5AA300CA6462 /* MediaList.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MediaList.swift; sourceTree = "<group>"; };
 		4489EB361BBB6F9A00CA6462 /* PreviousFiles.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PreviousFiles.swift; sourceTree = "<group>"; };
 		4489EB381BBCCE6B00CA6462 /* WatchThis-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "WatchThis-Bridging-Header.h"; sourceTree = "<group>"; };
-		44936FCA1DDA92070011DAE1 /* SwiftyJSON.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftyJSON.framework; path = Carthage/Build/Mac/SwiftyJSON.framework; sourceTree = "<group>"; };
 		44955E802373B3E4003DB8AA /* MediaContainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MediaContainer.swift; sourceTree = "<group>"; };
+		4499D8EB2693ABA6000CF34A /* CocoaLumberjack.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CocoaLumberjack.framework; path = Carthage/Build/Mac/CocoaLumberjack.framework; sourceTree = "<group>"; };
+		4499D8ED2693ABA6000CF34A /* SwiftyJSON.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftyJSON.framework; path = Carthage/Build/Mac/SwiftyJSON.framework; sourceTree = "<group>"; };
+		4499D8EE2693ABA6000CF34A /* Async.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Async.framework; path = Carthage/Build/Mac/Async.framework; sourceTree = "<group>"; };
+		4499D8EF2693ABA6000CF34A /* Alamofire.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Alamofire.framework; path = Carthage/Build/Mac/Alamofire.framework; sourceTree = "<group>"; };
+		4499D8F02693ABA6000CF34A /* CocoaLumberjackSwift.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CocoaLumberjackSwift.framework; path = Carthage/Build/Mac/CocoaLumberjackSwift.framework; sourceTree = "<group>"; };
 		44CB6D781BA7960200233A18 /* WatchThis.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = WatchThis.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		44CB6D7B1BA7960200233A18 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		44CB6D7D1BA7960200233A18 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		44CB6D801BA7960200233A18 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/MainMenu.xib; sourceTree = "<group>"; };
 		44CB6D821BA7960200233A18 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		44D749C41BAC5E2200DE90B1 /* CocoaTypes.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CocoaTypes.swift; sourceTree = "<group>"; };
-		44F77D4F1BA7A68C000B6072 /* Alamofire.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Alamofire.framework; path = Carthage/Build/Mac/Alamofire.framework; sourceTree = "<group>"; };
-		44F77D501BA7A68C000B6072 /* Async.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Async.framework; path = Carthage/Build/Mac/Async.framework; sourceTree = "<group>"; };
 		44F77D561BA7A7FA000B6072 /* ShowListController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ShowListController.swift; sourceTree = "<group>"; };
 		44F77D581BA7CF33000B6072 /* ShowListWindow.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ShowListWindow.swift; sourceTree = "<group>"; };
 		44F77D5A1BA7D66B000B6072 /* SlideshowListProvider.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SlideshowListProvider.swift; sourceTree = "<group>"; };
@@ -107,12 +107,13 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4499D8F32693ABA6000CF34A /* SwiftyJSON.framework in Frameworks */,
+				4499D8F72693ABA6000CF34A /* Alamofire.framework in Frameworks */,
 				4451CEE91BA79C0900D09540 /* Quartz.framework in Frameworks */,
-				44F77D511BA7A68C000B6072 /* Alamofire.framework in Frameworks */,
-				44936FCB1DDA92070011DAE1 /* SwiftyJSON.framework in Frameworks */,
-				447CA6851BD5D76000CA174C /* CocoaLumberjack.framework in Frameworks */,
-				44F77D531BA7A68C000B6072 /* Async.framework in Frameworks */,
-				447CA6871BD5D76000CA174C /* CocoaLumberjackSwift.framework in Frameworks */,
+				4499D8F12693ABA6000CF34A /* CocoaLumberjack.framework in Frameworks */,
+				4499D8F92693ABA6000CF34A /* CocoaLumberjackSwift.framework in Frameworks */,
+				440DB4C326938174003593BC /* AVKit.framework in Frameworks */,
+				4499D8F52693ABA6000CF34A /* Async.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -122,10 +123,14 @@
 		4451CEF21BA79D2E00D09540 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				4499D8EF2693ABA6000CF34A /* Alamofire.framework */,
+				4499D8EE2693ABA6000CF34A /* Async.framework */,
+				4499D8EB2693ABA6000CF34A /* CocoaLumberjack.framework */,
+				4499D8F02693ABA6000CF34A /* CocoaLumberjackSwift.framework */,
+				4499D8ED2693ABA6000CF34A /* SwiftyJSON.framework */,
+				440DB4C226938174003593BC /* AVKit.framework */,
 				4451CEEE1BA79CDA00D09540 /* AVFoundation.framework */,
 				4451CEE81BA79C0900D09540 /* Quartz.framework */,
-				4451CEDF1BA79BDF00D09540 /* Alamofire.framework */,
-				4451CEE01BA79BDF00D09540 /* Async.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -142,11 +147,6 @@
 			isa = PBXGroup;
 			children = (
 				44CB6D7A1BA7960200233A18 /* WatchThis */,
-				44F77D4F1BA7A68C000B6072 /* Alamofire.framework */,
-				44F77D501BA7A68C000B6072 /* Async.framework */,
-				447CA6831BD5D76000CA174C /* CocoaLumberjack.framework */,
-				447CA6841BD5D76000CA174C /* CocoaLumberjackSwift.framework */,
-				44936FCA1DDA92070011DAE1 /* SwiftyJSON.framework */,
 				4451CEF21BA79D2E00D09540 /* Frameworks */,
 				44CB6D791BA7960200233A18 /* Products */,
 				4482AFF11BA79E320068E976 /* RangicCore.xcodeproj */,
@@ -205,6 +205,8 @@
 			dependencies = (
 			);
 			name = WatchThis;
+			packageProductDependencies = (
+			);
 			productName = WatchThis;
 			productReference = 44CB6D781BA7960200233A18 /* WatchThis.app */;
 			productType = "com.apple.product-type.application";
@@ -215,25 +217,26 @@
 		44CB6D701BA7960200233A18 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 1010;
+				LastUpgradeCheck = 1250;
 				ORGANIZATIONNAME = rangic.com;
 				TargetAttributes = {
 					44CB6D771BA7960200233A18 = {
 						CreatedOnToolsVersion = 7.0;
-						LastSwiftMigration = 0920;
+						LastSwiftMigration = 1250;
 					};
 				};
 			};
 			buildConfigurationList = 44CB6D731BA7960200233A18 /* Build configuration list for PBXProject "WatchThis" */;
 			compatibilityVersion = "Xcode 3.2";
-			developmentRegion = English;
+			developmentRegion = en;
 			hasScannedForEncodings = 0;
 			knownRegions = (
-				English,
 				en,
 				Base,
 			);
 			mainGroup = 44CB6D6F1BA7960200233A18;
+			packageReferences = (
+			);
 			productRefGroup = 44CB6D791BA7960200233A18 /* Products */;
 			projectDirPath = "";
 			projectReferences = (
@@ -322,6 +325,7 @@
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_MODULES = YES;
@@ -340,6 +344,7 @@
 				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
 				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
 				CLANG_WARN_STRICT_PROTOTYPES = YES;
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
@@ -377,6 +382,7 @@
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_MODULES = YES;
@@ -395,6 +401,7 @@
 				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
 				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
 				CLANG_WARN_STRICT_PROTOTYPES = YES;
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
@@ -415,6 +422,7 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				MACOSX_DEPLOYMENT_TARGET = 10.13;
 				MTL_ENABLE_DEBUG_INFO = NO;
+				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = macosx;
 				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
 			};
@@ -425,6 +433,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_IDENTITY = "-";
 				COMBINE_HIDPI_IMAGES = YES;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -432,13 +441,14 @@
 				);
 				INFOPLIST_FILE = WatchThis/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
+				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				"OTHER_SWIFT_FLAGS[arch=*]" = "-DDEBUG";
 				PRODUCT_BUNDLE_IDENTIFIER = rangic.WatchThis;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "WatchThis/WatchThis-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_SWIFT3_OBJC_INFERENCE = On;
-				SWIFT_VERSION = 4.0;
+				SWIFT_VERSION = 5.0;
 			};
 			name = Debug;
 		};
@@ -447,6 +457,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_IDENTITY = "-";
 				COMBINE_HIDPI_IMAGES = YES;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -454,11 +465,12 @@
 				);
 				INFOPLIST_FILE = WatchThis/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
+				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				PRODUCT_BUNDLE_IDENTIFIER = rangic.WatchThis;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "WatchThis/WatchThis-Bridging-Header.h";
 				SWIFT_SWIFT3_OBJC_INFERENCE = On;
-				SWIFT_VERSION = 4.0;
+				SWIFT_VERSION = 5.0;
 			};
 			name = Release;
 		};

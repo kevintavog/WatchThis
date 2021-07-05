@@ -103,7 +103,7 @@ class ShowListController : NSWindowController, NSWindowDelegate, SlideshowListPr
                 return
             }
 
-            let slideshowController = SlideshowWindowController(windowNibName: NSNib.Name(rawValue: "SlideshowWindow"))
+            let slideshowController = SlideshowWindowController(windowNibName: "SlideshowWindow")
             slideshowController.window?.makeKeyAndOrderFront(self)
             slideshowController.setDataModel(selectedSlideshow, mediaList: MediaList(data: selectedSlideshow))
 

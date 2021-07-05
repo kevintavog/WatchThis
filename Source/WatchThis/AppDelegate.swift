@@ -16,9 +16,9 @@ class AppDelegate: NSObject, NSApplicationDelegate
     func applicationDidFinishLaunching(_ aNotification: Notification)
     {
         #if DEBUG
-            defaultDebugLevel = DDLogLevel.verbose
+            dynamicLogLevel = DDLogLevel.verbose
             #else
-            defaultDebugLevel = DDLogLevel.info
+            dynamicLogLevel = DDLogLevel.info
         #endif
 
         Logger.configure()
@@ -42,7 +42,7 @@ class AppDelegate: NSObject, NSApplicationDelegate
     
     @IBAction func preferences(_ sender: AnyObject)
     {
-        let preferencesController = PreferencesWindowController(windowNibName: NSNib.Name(rawValue: "Preferences"))
+        let preferencesController = PreferencesWindowController(windowNibName: "Preferences")
         NSApplication.shared.runModal(for: preferencesController.window!)
     }
 

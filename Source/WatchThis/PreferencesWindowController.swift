@@ -57,7 +57,7 @@ class PreferencesWindowController : NSWindowController
 
                 let succeeded = response.description.count > 0
                 let imageName = succeeded ? "SucceededCheck" : "FailedCheck"
-                self.testOsmResultImage.image = NSImage(named: NSImage.Name(rawValue: imageName))
+                self.testOsmResultImage.image = NSImage(named: imageName)
 
                 if !succeeded {
                     Logger.info("Response: \(response)")
@@ -101,7 +101,7 @@ class PreferencesWindowController : NSWindowController
                         self.testFindAPhotoIndicator.stopAnimation(sender)
                         
                         let succeeded = !result.hasError
-                        self.testFindAPhotoResultImage.image = NSImage(named: NSImage.Name(rawValue: succeeded ? "SucceededCheck" : "FailedCheck"))
+                        self.testFindAPhotoResultImage.image = NSImage(named: succeeded ? "SucceededCheck" : "FailedCheck")
                         if !succeeded {
                             self.testFindAPhotoErrorMessage.stringValue = result.errorMessage!
                         } else {
